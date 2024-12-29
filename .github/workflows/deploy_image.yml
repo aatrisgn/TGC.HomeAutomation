@@ -1,0 +1,47 @@
+name: Build TGC.DHT Docker Image
+
+on:
+#   push:
+#     branches: ["main"]
+#   pull_request:
+#     branches: ["main"]
+  workflow_dispatch:
+
+jobs:
+  build_job:
+    runs-on: ubuntu-latest
+    env:
+      image_name: tgc-dht-api
+      project_name: TGC.DHT.Api
+
+    steps:
+    - uses: actions/checkout@v3
+
+    - name: Setup NuGet
+      uses: NuGet/setup-nuget@v1.0.5
+
+    - name: Setup .NET
+      uses: actions/setup-dotnet@v3
+      with:
+        dotnet-version: 8.0.x
+
+    - name: Restore dependencies
+      run: dotnet restore src/$project_name/$project_name.csproj
+
+    - name: Build
+      run: dotnet build src/$project_name/$project_name.csproj --no-restore
+
+    - name: 'Build and push image'
+      uses: azure/docker-login@v1
+      with:
+        login-server: ${{ secrets.REGISTRY_LOGIN_SERVER }}
+        username: ${{ secrets.REGISTRY_USERNAME }}
+        password: ${{ secrets.REGISTRY_PASSWORD }}
+    - run: |
+        cd src/$project_name
+
+        docker build . -t ${{ secrets.REGISTRY_LOGIN_SERVER }}/$image_name:${{ github.sha }}
+        docker push ${{ secrets.REGISTRY_LOGIN_SERVER }}/$image_name:${{ github.sha }}
+
+        docker build . -t ${{ secrets.REGISTRY_LOGIN_SERVER }}/$image_name:latest
+        docker push ${{ secrets.REGISTRY_LOGIN_SERVER }}/$image_name:latest
