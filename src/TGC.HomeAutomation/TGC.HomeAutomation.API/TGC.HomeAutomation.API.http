@@ -1,0 +1,6 @@
+@TGC.HomeAutomation.API_HostAddress = http://localhost:5298
+
+GET {{TGC.HomeAutomation.API_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
