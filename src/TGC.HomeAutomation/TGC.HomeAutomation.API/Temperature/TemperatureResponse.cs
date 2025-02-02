@@ -2,7 +2,7 @@ namespace TGC.HomeAutomation.API.Temperature;
 
 public record TemperatureResponse
 {
-	public float Temperature { get; init; }
+	public double Temperature { get; init; }
 	public DateTime Created { get; init; }
 
 	public static TemperatureResponse FromEntity(TemperatureEntity entity)

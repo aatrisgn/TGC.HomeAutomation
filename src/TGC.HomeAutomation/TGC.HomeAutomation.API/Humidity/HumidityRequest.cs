@@ -4,7 +4,7 @@ namespace TGC.HomeAutomation.API.Temperature;
 
 public record HumidityRequest
 {
-	public float Humidity { get; init; }
+	public double Humidity { get; init; }
 	public Guid SensorId { get; init; }
 
 	public HumidityRequest(float humidity)

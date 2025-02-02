@@ -1,19 +1,9 @@
-using TGC.AzureTableStorage.IoC;
+using TGC.HomeAutomation.API;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
-
-builder.Services.AddControllers();
-// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
-builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
-
-builder.Services.AddAzureTableStorage(configuration =>
-{
-	configuration.AccountConnectionString = "";
-	configuration.StubServices = false;
-});
+// All injections are/should be handled inside extension
+builder.Services.AddHomeAutomationApiInjections();
 
 var app = builder.Build();
 

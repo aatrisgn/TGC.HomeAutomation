@@ -2,7 +2,7 @@ namespace TGC.HomeAutomation.API.Temperature;
 
 public record TemperatureRequest
 {
-	public float Temperature { get; init; }
+	public double Temperature { get; init; }
 
 	public TemperatureRequest(float temperature)
 	{
