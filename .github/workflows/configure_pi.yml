@@ -42,6 +42,9 @@ jobs:
         echo "Running: sudo apt update && sudo apt-get upgrade -y"
         sudo apt -y install software-properties-common
 
+        echo "Running: sudo apt-get install python3-launchpadlib"
+        sudo apt-get install python3-launchpadlib
+
         echo "Running: sudo apt-add-repository --yes --update ppa:ansible/ansible"
         sudo apt-add-repository --yes --update ppa:ansible/ansible
 
