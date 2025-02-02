@@ -1,0 +1,18 @@
+- name: Setup Raspberry PIs
+  hosts: localhost
+  become: true
+  vars:
+    # clientid: "{{ clientid }}"
+    # objectid: "{{ objectid }}"
+    # name: "{{ name }}"
+    # secret: "{{ secret }}"
+    # tenant: "51f2b856-c214-467f-b811-ebe0e9c4092f"
+  tasks:
+    - name: Install Docker
+      ansible.builtin.include_tasks: ./playbooks/install_docker.yml
+    
+    - name: Install AZ ClI
+      ansible.builtin.include_tasks: ./playbooks/install_az_cli.yml
+
+    # - name: Az container reg
+    #   ansible.builtin.include_tasks: ../tasks/pull_image.yml
