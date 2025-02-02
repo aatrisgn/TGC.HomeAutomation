@@ -33,10 +33,6 @@ jobs:
       uses: actions/checkout@v2
       
     - run: |
-        echo "Hello, world!"
-      name: "Test script"
-    
-    - run: |
         echo "Installing Ansible..."
 
         echo "Running: sudo apt update && sudo apt-get upgrade -y"
@@ -52,7 +48,14 @@ jobs:
         sudo apt -y install ansible
 
         echo "Finished installing!"
-      name: "Test script"
+      name: "Install Ansible"
+    
+    - run: |
+        sudo apt update -y && sudo apt upgrade -y
+        curl -fsSL https://get.docker.com -o get-docker.sh
+        sudo sh get-docker.sh
+        sudo docker version
+      name: "Install Docker"
 
 
         
