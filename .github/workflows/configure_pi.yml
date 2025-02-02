@@ -35,3 +35,21 @@ jobs:
     - run: |
         echo "Hello, world!"
       name: "Test script"
+    
+    - run: |
+        echo "Installing Ansible..."
+
+        echo "Running: sudo apt update && sudo apt-get upgrade -y"
+        sudo apt -y install software-properties-common
+
+        echo "Running: sudo apt-add-repository --yes --update ppa:ansible/ansible"
+        sudo apt-add-repository --yes --update ppa:ansible/ansible
+
+        echo "Running: sudo apt -y install ansible"
+        sudo apt -y install ansible
+
+        echo "Finished installing!"
+      name: "Test script"
+
+
+        
