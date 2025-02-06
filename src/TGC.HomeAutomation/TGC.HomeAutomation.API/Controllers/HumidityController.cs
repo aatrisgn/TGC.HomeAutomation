@@ -5,9 +5,7 @@ using TGC.HomeAutomation.API.Temperature;
 
 namespace TGC.HomeAutomation.API.Controllers;
 
-[ApiController]
-[Route("[controller]")]
-public class HumidityController : ControllerBase
+public class HumidityController : HAControllerBase
 {
 	private readonly IAzureTableStorageRepository<HumidityEntity> _tableStorageRepository;
 
@@ -18,6 +16,7 @@ public class HumidityController : ControllerBase
 
 	[HttpGet]
 	[Route("inside/current")]
+	[ProducesResponseType(StatusCodes.Status200OK)]
 	public async Task<HumidityResponse> GetCurrentInside()
 	{
 		DateTime dateTime = DateTime.UtcNow.AddDays(-7);
@@ -28,6 +27,7 @@ public class HumidityController : ControllerBase
 
 	[HttpGet]
 	[Route("outside/current")]
+	[ProducesResponseType(StatusCodes.Status200OK)]
 	public async Task<HumidityResponse> GetCurrentOutside()
 	{
 		DateTime dateTime = DateTime.UtcNow.AddDays(-7);
@@ -38,6 +38,7 @@ public class HumidityController : ControllerBase
 
 	[HttpGet]
 	[Route("inside/{startDate}/{endDate}")]
+	[ProducesResponseType(StatusCodes.Status200OK)]
 	public async Task<HumidityResponse> GetCurrentOutside(DateTime startDate, DateTime endDate)
 	{
 		DateTime dateTime = DateTime.UtcNow.AddDays(-7);
@@ -48,6 +49,7 @@ public class HumidityController : ControllerBase
 
 	[HttpPost]
 	[Route("inside")]
+	[ProducesResponseType(StatusCodes.Status200OK)]
 	public async Task<HumidityResponse> Create([FromBody] HumidityRequest request)
 	{
 		var newEntity = request.ToEntity();

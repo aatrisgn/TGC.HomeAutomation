@@ -4,9 +4,7 @@ using TGC.HomeAutomation.API.Temperature;
 
 namespace TGC.HomeAutomation.API.Controllers;
 
-[ApiController]
-[Route("[controller]")]
-public class TemperatureController : ControllerBase
+public class TemperatureController : HAControllerBase
 {
 	private readonly IAzureTableStorageRepository<TemperatureEntity> _tableStorageRepository;
 
@@ -17,6 +15,7 @@ public class TemperatureController : ControllerBase
 
 	[HttpGet]
 	[Route("inside/current")]
+	[ProducesResponseType(StatusCodes.Status200OK)]
 	public async Task<TemperatureResponse> GetCurrentInside()
 	{
 		DateTime dateTime = DateTime.UtcNow.AddDays(-1);
@@ -27,6 +26,7 @@ public class TemperatureController : ControllerBase
 
 	[HttpGet]
 	[Route("outside/current")]
+	[ProducesResponseType(StatusCodes.Status200OK)]
 	public async Task<TemperatureResponse> GetCurrentOutside()
 	{
 		DateTime dateTime = DateTime.UtcNow.AddDays(-7);
@@ -37,6 +37,7 @@ public class TemperatureController : ControllerBase
 
 	[HttpGet]
 	[Route("inside/{startDate}/{endDate}")]
+	[ProducesResponseType(StatusCodes.Status200OK)]
 	public async Task<IEnumerable<TemperatureResponse>> GetCurrentOutside(DateTime startDate, DateTime endDate)
 	{
 		var results = await _tableStorageRepository.GetAllAsync(t => t.Created >= startDate && t.Created <= endDate);
@@ -46,6 +47,7 @@ public class TemperatureController : ControllerBase
 
 	[HttpPost]
 	[Route("inside")]
+	[ProducesResponseType(StatusCodes.Status200OK)]
 	public async Task<TemperatureResponse> Create([FromBody] TemperatureRequest request)
 	{
 		var newEntity = request.ToEntity();

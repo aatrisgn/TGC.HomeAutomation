@@ -27,7 +27,7 @@ permissions:
 jobs:
   build_job:
     runs-on: ubuntu-latest
-    environment: ENVIRONMENT_REFERENCE #Should be changed, lol
+    environment: dev #Should be changed, lol
     defaults:
       run:
         working-directory: ./Terraform

@@ -5,7 +5,11 @@ namespace TGC.HomeAutomation.API.Temperature;
 public record HumidityRequest
 {
 	public double Humidity { get; init; }
-	public Guid SensorId { get; init; }
+	public string? MacAddress { get; init; }
+
+	public HumidityRequest()
+	{
+	}
 
 	public HumidityRequest(float humidity)
 	{
@@ -14,6 +18,6 @@ public record HumidityRequest
 
 	public HumidityEntity ToEntity()
 	{
-		return new HumidityEntity { Humidity = Humidity, SensorId = SensorId, Created = DateTime.UtcNow };
+		return new HumidityEntity { Humidity = Humidity, MacAddress = MacAddress ?? string.Empty, Created = DateTime.UtcNow };
 	}
 }

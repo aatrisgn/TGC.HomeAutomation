@@ -6,6 +6,6 @@ namespace TGC.HomeAutomation.API.Humidity;
 public class HumidityEntity : AzureTableItem
 {
 	public double Humidity { get; set; }
-	public Guid SensorId { get; set; }
+	public string MacAddress { get; init; } = string.Empty;
 	public DateTime Created { get; set; }
 }
