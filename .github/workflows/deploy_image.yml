@@ -14,6 +14,7 @@ permissions:
 jobs:
   build_job:
     runs-on: ubuntu-latest
+    name: Build and deploy to ACR
     environment: dev
     env:
       image_name: tgc-ha-api
@@ -56,7 +57,7 @@ jobs:
           az acr login --name tgclzdevacr.azurecr.io --expose-token
 
     - run: |
-        cd src/$project_name
+        cd src/TGC.HomeAutomation/TGC.HomeAutomation.API
 
         docker build . -t $acr_registry/$image_name:${{ github.sha }}
         docker push $acr_registry/$image_name:${{ github.sha }}
