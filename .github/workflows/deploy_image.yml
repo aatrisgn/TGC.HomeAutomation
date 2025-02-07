@@ -57,7 +57,7 @@ jobs:
           az acr login --name tgclzdevacr.azurecr.io --expose-token
 
     - run: |
-        az acr login --name tgclzdevacr.azurecr.io --expose-token
+        az acr login --name tgclzdevacr.azurecr.io
         cd src/TGC.HomeAutomation
 
         docker build . -t $acr_registry/$image_name:${{ github.sha }}
