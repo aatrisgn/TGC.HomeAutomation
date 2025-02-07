@@ -49,18 +49,17 @@ jobs:
         tenant-id: ${{ secrets.HOMEAUTOMATION_DEV_TENANT_ID }}
         subscription-id: ${{ secrets.HOMEAUTOMATION_DEV_SUBSCRIPTION_ID }}
 
-    - name: Log in to ACR
+    - name: Build and push to ACR
       uses: azure/cli@v2
       with:
         azcliversion: latest
         inlineScript: |
           az acr login --name tgclzdevacr.azurecr.io --expose-token
 
-    - run: |
-        cd src/TGC.HomeAutomation
+          cd src/TGC.HomeAutomation
 
-        docker build . -t $acr_registry/$image_name:${{ github.sha }}
-        docker push $acr_registry/$image_name:${{ github.sha }}
+          docker build . -t $acr_registry/$image_name:${{ github.sha }}
+          docker build . -t $acr_registry/$image_name:latest
 
-        docker build . -t $acr_registry/$image_name:latest
-        docker push $acr_registry/$image_name:latest
+          docker push $acr_registry/$image_name:${{ github.sha }}
+          docker push $acr_registry/$image_name:latest
