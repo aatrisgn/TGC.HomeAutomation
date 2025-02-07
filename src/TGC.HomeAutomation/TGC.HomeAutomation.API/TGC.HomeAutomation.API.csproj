@@ -4,7 +4,7 @@
         <TargetFramework>net8.0</TargetFramework>
         <Nullable>enable</Nullable>
         <ImplicitUsings>enable</ImplicitUsings>
-        <DockerDefaultTargetOS>linux-arm64</DockerDefaultTargetOS>
+        <!--<DockerDefaultTargetOS>linux-arm64</DockerDefaultTargetOS>-->
     </PropertyGroup>
 
     <ItemGroup>
