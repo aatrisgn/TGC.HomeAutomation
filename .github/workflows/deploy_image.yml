@@ -14,6 +14,7 @@ permissions:
 jobs:
   build_job:
     runs-on: ubuntu-latest
+    environment: dev
     env:
       image_name: tgc-ha-api
       project_name: TGC.HomeAutomation
