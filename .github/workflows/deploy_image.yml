@@ -31,6 +31,9 @@ jobs:
       with:
         dotnet-version: 8.0.x
 
+    - run: |
+        docker --version
+
     - name: Restore dependencies
       run: dotnet restore $api_path
 
@@ -49,7 +52,7 @@ jobs:
       with:
         azcliversion: latest
         inlineScript: |
-          az acr login --name tgclzdevacr.azurecr.io
+          az acr login --name tgclzdevacr
 
     # - run: |
     #     cd src/$project_name
