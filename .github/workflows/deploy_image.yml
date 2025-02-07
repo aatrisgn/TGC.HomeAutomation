@@ -63,6 +63,7 @@ jobs:
   deploy_raspberry:
     runs-on: [self-hosted]
     environment: dev
+    needs: build_job
 
     steps:
     - name: Checkout code
