@@ -6,7 +6,7 @@ EXPOSE 8080
 EXPOSE 8081
 
 #FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
-FROM mcr.microsoft.com/dotnet/sdk:8.0-noble-arm64v8 AS build
+FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
 ARG BUILD_CONFIGURATION=Release
 WORKDIR /src
 COPY ["TGC.HomeAutomation.API/TGC.HomeAutomation.API.csproj", "TGC.HomeAutomation.API/"]
