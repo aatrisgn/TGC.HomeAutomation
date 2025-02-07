@@ -14,7 +14,7 @@ name: Deploy Terraform
 
 on:
   push:
-    branches: ["main"]
+    #branches: ["main"]
   pull_request:
     branches: ["main"]
   workflow_dispatch:
