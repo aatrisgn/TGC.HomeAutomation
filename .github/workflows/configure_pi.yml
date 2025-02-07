@@ -3,7 +3,7 @@ name: Run on Self-Hosted Agents
 on: 
   push:
     branches:
-      - main
+      - main2
 
 jobs:
   build:

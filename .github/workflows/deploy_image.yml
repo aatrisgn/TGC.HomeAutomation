@@ -61,6 +61,7 @@ jobs:
       name: "Build and publish to ACR"
 
   deploy_raspberry:
+    name: "Deploy to Raspberries"
     runs-on: [self-hosted]
     environment: dev
     needs: build_job
@@ -82,7 +83,7 @@ jobs:
     - run: |
         az acr login --name tgclzdevacr.azurecr.io
 
-        docker pull . -t $acr_registry/$image_name:latest
+        docker pull $acr_registry/$image_name:latest
         docker run -d $image_name
 
       name: "Build and publish to ACR"
