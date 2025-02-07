@@ -52,7 +52,7 @@ jobs:
       with:
         azcliversion: latest
         inlineScript: |
-          az acr login --name tgclzdevacr
+          az acr login --name tgclzdevacr --expose-token
 
     # - run: |
     #     cd src/$project_name
