@@ -64,6 +64,9 @@ jobs:
     runs-on: [self-hosted]
     environment: dev
     needs: build_job
+    env:
+      image_name: tgc-ha-api
+      acr_registry: tgclzdevacr.azurecr.io
 
     steps:
     - name: Checkout code
@@ -75,3 +78,11 @@ jobs:
         client-id: ${{ secrets.HOMEAUTOMATION_DEV_CLIENT_ID }}
         tenant-id: ${{ secrets.HOMEAUTOMATION_DEV_TENANT_ID }}
         subscription-id: ${{ secrets.HOMEAUTOMATION_DEV_SUBSCRIPTION_ID }}
+    
+    - run: |
+        az acr login --name tgclzdevacr.azurecr.io
+
+        docker pull . -t $acr_registry/$image_name:latest
+        docker run -d $image_name
+
+      name: "Build and publish to ACR"
