@@ -1,28 +1,9 @@
-#https://forums.docker.com/t/install-docker-on-raspberry-pi-os-64-bit/115977
-
-# version: '3'
-# services:
-#   homeassistant:
-#     container_name: homeassistant
-#     image: "ghcr.io/home-assistant/home-assistant:stable"
-#     volumes:
-#       - /opt/homeassistant/config:/config
-#       - /etc/localtime:/etc/localtime:ro
-#     restart: unless-stopped
-#     privileged: true
-#     network_mode: host
-
-
-# sudo docker compose up -d
-
-# port 8123
-
 name: Run on Self-Hosted Agents
 
 on: 
   push:
     branches:
-      - main
+      - main2
 
 jobs:
   build:
@@ -53,7 +34,7 @@ jobs:
     - run: |
         # Add Docker's official GPG key:
         sudo add-apt-repository -r https://ppa.launchpadcontent.net/ansible/ansible/ubuntu/
-        
+
         sudo apt-get update
         sudo apt-get install ca-certificates curl
         sudo install -m 0755 -d /etc/apt/keyrings

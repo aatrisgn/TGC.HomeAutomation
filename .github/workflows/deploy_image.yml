@@ -11,8 +11,9 @@ jobs:
   build_job:
     runs-on: ubuntu-latest
     env:
-      image_name: tgc-dht-api
-      project_name: TGC.DHT.Api
+      image_name: tgc-ha-api
+      project_name: TGC.HomeAutomation
+      api_path: src/TGC.HomeAutomation/TGC.HomeAutomation.API/TGC.HomeAutomation.API.csproj
 
     steps:
     - uses: actions/checkout@v3
@@ -26,22 +27,30 @@ jobs:
         dotnet-version: 8.0.x
 
     - name: Restore dependencies
-      run: dotnet restore src/$project_name/$project_name.csproj
+      run: dotnet restore $api_path
 
     - name: Build
-      run: dotnet build src/$project_name/$project_name.csproj --no-restore
+      run: dotnet build $api_path --no-restore
 
-    - name: 'Build and push image'
-      uses: azure/docker-login@v1
+    - name: 'Az CLI login'
+      uses: azure/login@v2
       with:
-        login-server: ${{ secrets.REGISTRY_LOGIN_SERVER }}
-        username: ${{ secrets.REGISTRY_USERNAME }}
-        password: ${{ secrets.REGISTRY_PASSWORD }}
-    - run: |
-        cd src/$project_name
+        client-id: ${{ secrets.HOMEAUTOMATION_DEV_CLIENT_ID }}
+        tenant-id: ${{ secrets.HOMEAUTOMATION_DEV_TENANT_ID }}
+        subscription-id: ${{ secrets.HOMEAUTOMATION_DEV_SUBSCRIPTION_ID }}
 
-        docker build . -t ${{ secrets.REGISTRY_LOGIN_SERVER }}/$image_name:${{ github.sha }}
-        docker push ${{ secrets.REGISTRY_LOGIN_SERVER }}/$image_name:${{ github.sha }}
+    - name: Log in to ACR
+      uses: azure/cli@v2
+      with:
+        azcliversion: latest
+        inlineScript: |
+          az acr login --name tgclzdevacr.azurecr.io
 
-        docker build . -t ${{ secrets.REGISTRY_LOGIN_SERVER }}/$image_name:latest
-        docker push ${{ secrets.REGISTRY_LOGIN_SERVER }}/$image_name:latest
+    # - run: |
+    #     cd src/$project_name
+
+    #     docker build . -t ${{ secrets.REGISTRY_LOGIN_SERVER }}/$image_name:${{ github.sha }}
+    #     docker push ${{ secrets.REGISTRY_LOGIN_SERVER }}/$image_name:${{ github.sha }}
+
+    #     docker build . -t ${{ secrets.REGISTRY_LOGIN_SERVER }}/$image_name:latest
+    #     docker push ${{ secrets.REGISTRY_LOGIN_SERVER }}/$image_name:latest
