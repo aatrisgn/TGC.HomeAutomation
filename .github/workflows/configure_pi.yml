@@ -1,9 +1,11 @@
-name: Run on Self-Hosted Agents
+name: Configure self-hosted runners
 
 on: 
   push:
     branches:
-      - main2
+      - main
+    paths:
+    - '.github/workflows/configure_pi.yml'
 
 jobs:
   build:

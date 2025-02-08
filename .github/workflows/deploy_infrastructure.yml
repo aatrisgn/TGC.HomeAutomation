@@ -10,13 +10,17 @@
 #
 # # # # # # # # # # # # # # # # # # # # # # # # #
 
-name: Deploy Terraform
+name: Deploy Infrastructure
 
 on:
-  #push:
-    #branches: ["main"]
-  #pull_request:
-    #branches: ["main"]
+  push:
+    branches: ["main"]
+    paths:
+    - 'terraform/**'
+  pull_request:
+    branches: ["main"]
+    paths:
+    - 'terraform/**'
   workflow_dispatch:
 
 permissions:

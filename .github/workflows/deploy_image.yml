@@ -1,10 +1,14 @@
-name: Build TGC.DHT Docker Image
+name: Build & deploy TGC.DHT
 
 on:
   push:
     branches: ["main"]
+    paths:
+    - '!.github/workflows/configure_pi.yml'
   pull_request:
     branches: ["main"]
+    paths:
+    - '!.github/workflows/configure_pi.yml'
   workflow_dispatch:
 
 permissions:
