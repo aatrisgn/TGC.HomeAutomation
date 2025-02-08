@@ -84,6 +84,6 @@ jobs:
         az acr login --name tgclzdevacr.azurecr.io
 
         docker pull $acr_registry/$image_name:latest
-        docker run -d $acr_registry/$image_name
+        docker run -d -p 8080:8080 $acr_registry/$image_name
 
       name: "Build and publish to ACR"
