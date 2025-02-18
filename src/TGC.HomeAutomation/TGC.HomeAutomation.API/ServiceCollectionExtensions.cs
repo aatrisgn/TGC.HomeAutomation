@@ -1,5 +1,6 @@
 using Microsoft.FeatureManagement;
 using TGC.AzureTableStorage.IoC;
+using TGC.HomeAutomation.API.Device;
 
 namespace TGC.HomeAutomation.API;
 
@@ -13,6 +14,9 @@ public static class ServiceCollectionExtensions
 		services.AddSwaggerGen();
 
 		services.AddFeatureManagement();
+
+		services.AddScoped<IDeviceAPIKeyGenerator, DeviceAPIKeyGenerator>();
+		services.AddScoped<IDeviceService, DeviceService>();
 
 		services.AddAzureTableStorage(configuration =>
 		{

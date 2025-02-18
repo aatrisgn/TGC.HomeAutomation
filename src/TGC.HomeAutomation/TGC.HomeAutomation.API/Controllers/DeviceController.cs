@@ -1,49 +1,61 @@
 using Microsoft.AspNetCore.Mvc;
+using TGC.HomeAutomation.API.Device;
+using TGC.HomeAutomation.API.Sensor;
+using TGC.HomeAutomation.API.Temperature;
 
 namespace TGC.HomeAutomation.API.Controllers;
 
 public class DeviceController : HAControllerBase
 {
+	private readonly IDeviceService _deviceService;
+	public DeviceController(IDeviceService deviceService)
+	{
+		_deviceService = deviceService;
+	}
+
 	[HttpGet]
 	[ProducesResponseType(StatusCodes.Status200OK)]
-	public Task<string> GetAllDevices()
+	public async Task<IEnumerable<DeviceResponse>> GetAllDevices()
 	{
-		return Task.FromResult("OK");
+		return await _deviceService.GetAllAsync();
 	}
 
 	[HttpGet]
 	[Route("{id}")]
 	[ProducesResponseType(StatusCodes.Status200OK)]
 	[ProducesResponseType(StatusCodes.Status404NotFound)]
-	public Task<string> GetSingleDeviceById(Guid id)
+	public async Task<IActionResult> GetSingleDeviceById(Guid id)
 	{
-		return Task.FromResult("OK");
+		var locatedDevice = await _deviceService.GetByIdAsync(id);
+		return locatedDevice != null ? Ok(locatedDevice) : NotFound();
 	}
 
 	[HttpPost]
 	[ProducesResponseType(StatusCodes.Status200OK)]
 	[ProducesResponseType(StatusCodes.Status400BadRequest)]
-	public Task<string> CreateNewDevice()
+	public async Task<DeviceResponse> CreateNewDevice([FromBody] DeviceRequest deviceRequest)
 	{
-		return Task.FromResult("OK");
+		var newDevice = await _deviceService.CreateAsync(deviceRequest);
+		return newDevice;
 	}
 
 	[HttpPut]
 	[Route("{id}")]
 	[ProducesResponseType(StatusCodes.Status200OK)]
 	[ProducesResponseType(StatusCodes.Status400BadRequest)]
-	public Task<string> UpdateSingleDevice(Guid id)
+	public async Task<DeviceResponse> UpdateSingleDevice([FromBody] DeviceRequest deviceRequest, Guid id)
 	{
-		return Task.FromResult("OK");
+		var updatedDevice = await _deviceService.UpdateAsync(deviceRequest);
+		return updatedDevice;
 	}
 
 	[HttpDelete]
 	[Route("{id}")]
-	[ProducesResponseType(StatusCodes.Status200OK)]
+	[ProducesResponseType(StatusCodes.Status204NoContent)]
 	[ProducesResponseType(StatusCodes.Status400BadRequest)]
 	[ProducesResponseType(StatusCodes.Status404NotFound)]
-	public Task<string> DeleteDevice(Guid id)
+	public async Task DeleteDevice(Guid id)
 	{
-		return Task.FromResult("OK");
+		await _deviceService.DeleteByIdAsync(id);
 	}
 }
