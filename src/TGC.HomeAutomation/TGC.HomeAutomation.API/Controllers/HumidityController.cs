@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using TGC.AzureTableStorage;
 using TGC.HomeAutomation.API.Humidity;
@@ -48,6 +49,7 @@ public class HumidityController : HAControllerBase
 	}
 
 	[HttpPost]
+	[Authorize]
 	[Route("inside")]
 	[ProducesResponseType(StatusCodes.Status200OK)]
 	public async Task<HumidityResponse> Create([FromBody] HumidityRequest request)

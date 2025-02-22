@@ -1,5 +1,7 @@
 using Microsoft.FeatureManagement;
+using Microsoft.OpenApi.Models;
 using TGC.AzureTableStorage.IoC;
+using TGC.HomeAutomation.API.Authentication;
 using TGC.HomeAutomation.API.Device;
 
 namespace TGC.HomeAutomation.API;
@@ -10,13 +12,45 @@ public static class ServiceCollectionExtensions
 	{
 		services.AddControllers();
 		// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
+
+		services.AddOpenApiDocument(document =>
+		{
+			document.Title = "TGC.HomeAutomation API Spec";
+			document.Description = "API for exposing data to Angular Client. Be aware this API is not ready for consumption by third-party. Breaking changes can occur without notice.";
+		});
+
 		services.AddEndpointsApiExplorer();
-		services.AddSwaggerGen();
+		services.AddSwaggerGen(options =>
+		{
+			options.AddSecurityDefinition("x-device-api-key", new OpenApiSecurityScheme
+			{
+				Name = "x-device-api-key",
+				In = ParameterLocation.Header,
+				Description = "API key for device",
+				Type = SecuritySchemeType.ApiKey
+			});
+
+			options.AddSecurityDefinition("x-device-id", new OpenApiSecurityScheme
+			{
+				Name = "x-device-id",
+				In = ParameterLocation.Header,
+				Description = "ID of device to authorize",
+				Type = SecuritySchemeType.ApiKey
+			});
+			options.OperationFilter<AuthorizationHeaderParameterOperationFilter>();
+		});
 
 		services.AddFeatureManagement();
 
 		services.AddScoped<IDeviceAPIKeyGenerator, DeviceAPIKeyGenerator>();
 		services.AddScoped<IDeviceService, DeviceService>();
+		services.AddScoped<IAPIKeyRepository, MockAPIKeyRepository>();
+
+		//Should be changed to default to Entra once that's implemented
+		services.AddAuthentication(ApiKeyAuthSchemeOptions.DefaultScheme)
+			.AddScheme<ApiKeyAuthSchemeOptions, ApiKeyAuthSchemeHandler>(
+				ApiKeyAuthSchemeOptions.DefaultScheme,
+				options => { });
 
 		services.AddAzureTableStorage(configuration =>
 		{

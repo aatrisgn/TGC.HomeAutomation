@@ -6,13 +6,14 @@ import { SharedModule } from 'src/app/theme/shared/shared.module';
 import { ProductSaleComponent } from './product-sale/product-sale.component';
 
 import { ChartDB } from 'src/app/fack-db/chartData';
+
 // 3rd party import
 
 import { ApexOptions, ChartComponent, NgApexchartsModule } from 'ng-apexcharts';
 @Component({
   selector: 'app-dash-analytics',
   standalone: true,
-  imports: [SharedModule, NgApexchartsModule, ProductSaleComponent],
+  imports: [SharedModule, NgApexchartsModule, ProductSaleComponent, DeviceClient],
   templateUrl: './dash-analytics.component.html',
   styleUrls: ['./dash-analytics.component.scss']
 })
