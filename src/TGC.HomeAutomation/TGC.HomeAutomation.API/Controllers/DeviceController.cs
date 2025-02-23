@@ -14,7 +14,7 @@ public class DeviceController : HAControllerBase
 	}
 
 	[HttpGet]
-	[ProducesResponseType(StatusCodes.Status200OK)]
+	[ProducesResponseType(typeof(IEnumerable<DeviceResponse>), StatusCodes.Status200OK)]
 	public async Task<IEnumerable<DeviceResponse>> GetAllDevices()
 	{
 		return await _deviceService.GetAllAsync();
@@ -22,7 +22,7 @@ public class DeviceController : HAControllerBase
 
 	[HttpGet]
 	[Route("{id}")]
-	[ProducesResponseType(StatusCodes.Status200OK)]
+	[ProducesResponseType(typeof(DeviceResponse), StatusCodes.Status200OK)]
 	[ProducesResponseType(StatusCodes.Status404NotFound)]
 	public async Task<IActionResult> GetSingleDeviceById(Guid id)
 	{
@@ -31,7 +31,7 @@ public class DeviceController : HAControllerBase
 	}
 
 	[HttpPost]
-	[ProducesResponseType(StatusCodes.Status200OK)]
+	[ProducesResponseType(typeof(DeviceResponse), StatusCodes.Status200OK)]
 	[ProducesResponseType(StatusCodes.Status400BadRequest)]
 	public async Task<DeviceResponse> CreateNewDevice([FromBody] DeviceRequest deviceRequest)
 	{
@@ -41,7 +41,7 @@ public class DeviceController : HAControllerBase
 
 	[HttpPut]
 	[Route("{id}")]
-	[ProducesResponseType(StatusCodes.Status200OK)]
+	[ProducesResponseType(typeof(DeviceResponse), StatusCodes.Status200OK)]
 	[ProducesResponseType(StatusCodes.Status400BadRequest)]
 	public async Task<DeviceResponse> UpdateSingleDevice([FromBody] DeviceRequest deviceRequest, Guid id)
 	{

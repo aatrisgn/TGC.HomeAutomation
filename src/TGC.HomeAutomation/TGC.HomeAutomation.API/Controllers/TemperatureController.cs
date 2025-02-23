@@ -16,7 +16,7 @@ public class TemperatureController : HAControllerBase
 
 	[HttpGet]
 	[Route("inside/current")]
-	[ProducesResponseType(StatusCodes.Status200OK)]
+	[ProducesResponseType(typeof(TemperatureResponse), StatusCodes.Status200OK)]
 	public async Task<TemperatureResponse> GetCurrentInside()
 	{
 		DateTime dateTime = DateTime.UtcNow.AddDays(-1);
@@ -27,7 +27,7 @@ public class TemperatureController : HAControllerBase
 
 	[HttpGet]
 	[Route("outside/current")]
-	[ProducesResponseType(StatusCodes.Status200OK)]
+	[ProducesResponseType(typeof(TemperatureResponse), StatusCodes.Status200OK)]
 	public async Task<TemperatureResponse> GetCurrentOutside()
 	{
 		DateTime dateTime = DateTime.UtcNow.AddDays(-7);
@@ -38,7 +38,7 @@ public class TemperatureController : HAControllerBase
 
 	[HttpGet]
 	[Route("inside/{startDate}/{endDate}")]
-	[ProducesResponseType(StatusCodes.Status200OK)]
+	[ProducesResponseType(typeof(IEnumerable<TemperatureResponse>), StatusCodes.Status200OK)]
 	public async Task<IEnumerable<TemperatureResponse>> GetCurrentOutside(DateTime startDate, DateTime endDate)
 	{
 		var results = await _tableStorageRepository.GetAllAsync(t => t.Created >= startDate && t.Created <= endDate);

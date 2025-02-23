@@ -59,6 +59,18 @@ public static class ServiceCollectionExtensions
 			configuration.StubServices = false;
 		});
 
+		services.AddCors(options =>
+		{
+			options.AddPolicy(name: "ALLOW_DEVELOPMENT_CORS_ORIGINS_POLICY",
+				builder =>
+				{
+					builder.WithOrigins("http://localhost:4200")
+						.AllowAnyMethod()
+						.AllowAnyHeader()
+						.AllowCredentials();
+				});
+		});
+
 		return services;
 	}
 }
