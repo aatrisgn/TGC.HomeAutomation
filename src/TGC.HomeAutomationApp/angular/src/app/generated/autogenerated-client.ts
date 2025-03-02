@@ -1059,6 +1059,7 @@ export class DeviceResponse implements IDeviceResponse {
     name?: string | undefined;
     macAddress?: string | undefined;
     created?: Date;
+    id?: string;
 
     constructor(data?: IDeviceResponse) {
         if (data) {
@@ -1074,6 +1075,7 @@ export class DeviceResponse implements IDeviceResponse {
             this.name = _data["name"];
             this.macAddress = _data["macAddress"];
             this.created = _data["created"] ? new Date(_data["created"].toString()) : <any>undefined;
+            this.id = _data["id"];
         }
     }
 
@@ -1089,6 +1091,7 @@ export class DeviceResponse implements IDeviceResponse {
         data["name"] = this.name;
         data["macAddress"] = this.macAddress;
         data["created"] = this.created ? this.created.toISOString() : <any>undefined;
+        data["id"] = this.id;
         return data;
     }
 }
@@ -1097,6 +1100,7 @@ export interface IDeviceResponse {
     name?: string | undefined;
     macAddress?: string | undefined;
     created?: Date;
+    id?: string;
 }
 
 export class DeviceRequest implements IDeviceRequest {

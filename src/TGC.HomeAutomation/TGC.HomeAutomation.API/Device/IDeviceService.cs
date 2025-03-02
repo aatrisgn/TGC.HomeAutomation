@@ -9,5 +9,5 @@ public interface IDeviceService
 	Task<DeviceResponse?> GetByIdAsync(Guid id);
 	Task<DeviceResponse> CreateAsync(DeviceRequest deviceRequest);
 	Task<DeviceResponse> UpdateAsync(Guid id, DeviceRequest deviceRequest);
-	Task DeleteByIdAsync(Guid id);
+	Task<Guid> DeleteByIdAsync(Guid id);
 }

@@ -38,8 +38,10 @@ public class DeviceService : IDeviceService
 		throw new NotImplementedException();
 	}
 
-	public Task DeleteByIdAsync(Guid id)
+	public async Task<Guid> DeleteByIdAsync(Guid id)
 	{
-		throw new NotImplementedException();
+		var allEntities = await _deviceRepository.GetAllAsync(e => true);
+		var specificEntity = allEntities.Single(e => e.RowKey == id.ToString());
+		return await _deviceRepository.DeleteAsync(specificEntity);
 	}
 }

@@ -19,8 +19,19 @@ export class DeviceTableComponent {
   }
 
   ngOnInit() {
+    this.loadDevices();
+  }
+
+  loadDevices(){
     this.deviceClient.getAllDevices().subscribe(data => {
       this.deviceData = data;
+    })
+  }
+
+  deleteDevice(id:string){
+    console.log(id)
+    this.deviceClient.deleteDevice(id).subscribe(data => {
+      this.loadDevices();
     })
   }
 }

@@ -6,6 +6,7 @@
           <th>Name</th>
           <th>MacAddress</th>
           <th>Created</th>
+          <th></th>
         </tr>
       </thead>
       <tbody>
@@ -13,6 +14,7 @@
           <td>{{ device.name }}</td>
           <td>{{ device.macAddress }}</td>
           <td>{{ device.created }}</td>
+          <td><i (click)="deleteDevice(device.id!)" class="delete-device-btn feather icon-trash-2"></i></td>
         </tr>
       </tbody>
     </table>

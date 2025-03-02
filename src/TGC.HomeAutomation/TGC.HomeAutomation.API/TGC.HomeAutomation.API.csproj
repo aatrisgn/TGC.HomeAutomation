@@ -17,7 +17,7 @@
           <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
         </PackageReference>
         <PackageReference Include="Swashbuckle.AspNetCore" Version="6.4.0"/>
-        <PackageReference Include="TGC.AzureTableStorage" Version="0.5.3" />
+        <PackageReference Include="TGC.AzureTableStorage" Version="0.6.0" />
         <PackageReference Include="TGC.CSharpCodingStandards" Version="2.1.0" />
     </ItemGroup>
 
