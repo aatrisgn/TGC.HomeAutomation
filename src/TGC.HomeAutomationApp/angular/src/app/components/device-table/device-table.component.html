@@ -1,0 +1,20 @@
+<app-card cardTitle="Devices" [options]="false" blockClass="table-border-style">
+  <div class="table-responsive">
+    <table class="table table-hover">
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>MacAddress</th>
+          <th>Created</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let device of deviceData">
+          <td>{{ device.name }}</td>
+          <td>{{ device.macAddress }}</td>
+          <td>{{ device.created }}</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</app-card>

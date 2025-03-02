@@ -21,6 +21,14 @@ const routes: Routes = [
         loadComponent: () => import('./demo/dashboard/dash-analytics.component')
       },
       {
+        path: 'devices',
+        loadComponent: () => import('./pages/devices/devices.component')
+      },
+      {
+        path: 'add-devices',
+        loadComponent: () => import('./pages/devices/add-device/add-devices.component')
+      },
+      {
         path: 'component',
         loadChildren: () => import('./demo/ui-element/ui-basic.module').then((m) => m.UiBasicModule)
       },

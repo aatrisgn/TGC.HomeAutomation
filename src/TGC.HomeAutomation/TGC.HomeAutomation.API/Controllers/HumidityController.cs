@@ -16,7 +16,7 @@ public class HumidityController : HAControllerBase
 	}
 
 	[HttpGet]
-	[Route("inside/current")]
+	[Route("humidities/inside/current")]
 	[ProducesResponseType(typeof(HumidityResponse), StatusCodes.Status200OK)]
 	public async Task<HumidityResponse> GetCurrentInside()
 	{
@@ -27,7 +27,7 @@ public class HumidityController : HAControllerBase
 	}
 
 	[HttpGet]
-	[Route("outside/current")]
+	[Route("humidities/outside/current")]
 	[ProducesResponseType(typeof(HumidityResponse), StatusCodes.Status200OK)]
 	public async Task<HumidityResponse> GetCurrentOutside()
 	{
@@ -38,7 +38,7 @@ public class HumidityController : HAControllerBase
 	}
 
 	[HttpGet]
-	[Route("inside/{startDate}/{endDate}")]
+	[Route("humidities/inside/{startDate}/{endDate}")]
 	[ProducesResponseType(typeof(HumidityResponse), StatusCodes.Status200OK)]
 	public async Task<HumidityResponse> GetCurrentOutside(DateTime startDate, DateTime endDate)
 	{
@@ -50,7 +50,7 @@ public class HumidityController : HAControllerBase
 
 	[HttpPost]
 	[Authorize]
-	[Route("inside")]
+	[Route("humidities/inside")]
 	[ProducesResponseType(StatusCodes.Status200OK)]
 	public async Task<HumidityResponse> Create([FromBody] HumidityRequest request)
 	{

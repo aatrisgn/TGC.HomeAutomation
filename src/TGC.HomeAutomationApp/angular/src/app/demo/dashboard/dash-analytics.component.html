@@ -1,11 +1,11 @@
 <div class="row">
   <!-- order-card start -->
-  <div class="col-md-6 ">
+  <div class="col-md-3 ">
     <app-card [hidHeader]="true" cardClass="bg-c-white order-card">
       <h6>Outdoor Temperature</h6>
       <h2 class="text-end">
         <i class="feather icon-shopping-cart float-start"></i>
-        <span>1234</span>
+        <span>{{ outdoorTemperature }}</span>
       </h2>
       <p class="m-b-0">
         Some very good text
@@ -13,12 +13,38 @@
       </p>
     </app-card>
   </div>
-  <div class="col-md-6 ">
+  <div class="col-md-3 ">
     <app-card [hidHeader]="true" cardClass="bg-c-white order-card">
-      <h6>Outdoor Humidity.</h6>
+      <h6>Indoor Temperature</h6>
       <h2 class="text-end">
         <i class="feather icon-shopping-cart float-start"></i>
-        <span>1234</span>
+        <span>{{ indoorTemperature }}</span>
+      </h2>
+      <p class="m-b-0">
+        Some very good text
+        <span class="float-end">355</span>
+      </p>
+    </app-card>
+  </div>
+  <div class="col-md-3 ">
+    <app-card [hidHeader]="true" cardClass="bg-c-white order-card">
+      <h6>Outdoor Humidity</h6>
+      <h2 class="text-end">
+        <i class="feather icon-shopping-cart float-start"></i>
+        <span>{{ outdoorHumidity }}</span>
+      </h2>
+      <p class="m-b-0">
+        Some very good text
+        <span class="float-end">355</span>
+      </p>
+    </app-card>
+  </div>
+  <div class="col-md-3 ">
+    <app-card [hidHeader]="true" cardClass="bg-c-white order-card">
+      <h6>Indoor Humidity.</h6>
+      <h2 class="text-end">
+        <i class="feather icon-shopping-cart float-start"></i>
+        <span>{{ indoorHumidity }}</span>
       </h2>
       <p class="m-b-0">
         Some very good text
@@ -88,40 +114,7 @@
     </app-card>
   </div>
   <div class="col-xl-12">
-    <app-card cardTitle="Devices" [options]="false" blockClass="table-border-style">
-      <div class="table-responsive">
-        <table class="table table-hover">
-          <thead>
-            <tr>
-              <th>#</th>
-              <th>First Name</th>
-              <th>Last Name</th>
-              <th>Username</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <th scope="row">1</th>
-              <td>Mark</td>
-              <td>Otto</td>
-              <td>&#64;mdo</td>
-            </tr>
-            <tr>
-              <th scope="row">2</th>
-              <td>Jacob</td>
-              <td>Thornton</td>
-              <td>&#64;fat</td>
-            </tr>
-            <tr>
-              <th scope="row">3</th>
-              <td>Larry</td>
-              <td>the Bird</td>
-              <td>&#64;twitter</td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
-    </app-card>
+    <app-device-table/>
   </div>
   <div class="col-xl-6 col-md-12">
     <div class="row">
@@ -245,30 +238,6 @@
       </div>
     </app-card>
   </div>
-  <div class="col-md-6 col-lg-4">
-    <app-card [hidHeader]="true" blockClass="text-center">
-      <i class="fa fa-envelope-open text-c-blue d-block f-40"></i>
-      <h4 class="m-t-20">
-        <span class="text-c-blue">8.62k</span>
-        Subscribers
-      </h4>
-      <p class="m-b-20">Your main list is growing</p>
-      <button class="btn btn-primery btn-sm btn-round">Manage List</button>
-    </app-card>
-  </div>
-  <div class="col-md-6 col-lg-4">
-    <app-card [hidHeader]="true" blockClass="text-center">
-      <i class="fab fa-twitter text-c-green d-block f-40"></i>
-      <h4 class="m-t-20">
-        <span class="text-c-green">+40</span>
-        Followers
-      </h4>
-      <p class="m-b-20">Your main list is growing</p>
-      <button class="btn btn-success btn-sm btn-round">Check Theme Out</button>
-    </app-card>
-  </div>
-  <!-- account-section end -->
-
   <!-- conversion-section start -->
   <div class="col-lg-4 col-md-12">
     <app-card [hidHeader]="true" footerClass="border border-top-0 p-0 overflow-hidden" [isCardFooter]="true">
@@ -308,111 +277,6 @@
       <div class="app-card-footer"></div>
     </app-card>
   </div>
-  <div class="col-lg-8 col-md-12">
-    <app-card cardTitle="Activity Feed" blockClass="m-t-10" [options]="false">
-      <ul class="feed-blog ps-0">
-        <li class="active-feed">
-          <div class="feed-user-img">
-            <img src="assets/images/user/avatar-4.jpg" class="img-radius" alt="User-Profile-Image" />
-          </div>
-          <h6>
-            <span class="badge bg-danger">File</span>
-            Eddie uploaded new files:
-            <small class="text-muted ms-1">2 hours ago</small>
-          </h6>
-          <p class="m-b-15 m-t-15">
-            hii
-            <b>&#64;everone</b>
-            Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy
-            text ever since the 1500s.
-          </p>
-          <div class="row">
-            @for (image of images; track image) {
-              <div class="col-auto text-center">
-                <img src="{{ image.src }}" alt="img" class="img-fluid wid-100" />
-                <h6 class="m-t-15 m-b-0">{{ image.title }}</h6>
-                <p class="text-muted m-b-0">
-                  <small>{{ image.size }}</small>
-                </p>
-              </div>
-            }
-          </div>
-        </li>
-        <li class="diactive-feed">
-          <div class="feed-user-img">
-            <img src="assets/images/user/avatar-2.jpg" class="img-radius" alt="User-Profile-Image" />
-          </div>
-          <h6>
-            <span class="badge bg-success">Task</span>
-            Sarah marked the Pending Review:
-            <span class="text-c-green">Trash Can Icon Design</span>
-            <small class="text-muted">2 hours ago</small>
-          </h6>
-        </li>
-        <li class="diactive-feed">
-          <div class="feed-user-img">
-            <img src="assets/images/user/avatar-1.jpg" class="img-radius" alt="User-Profile-Image" />
-          </div>
-          <h6>
-            <span class="badge bg-primary">comment</span>
-            abc posted a task:
-            <span class="text-c-green">Design a new Homepage</span>
-            <small class="text-muted">6 hours ago</small>
-          </h6>
-          <p class="m-b-15 m-t-15">
-            hii
-            <b>&#64;everone</b>
-            Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy
-            text ever since the 1500s.
-          </p>
-        </li>
-      </ul>
-    </app-card>
-  </div>
   <!-- conversion-section end -->
-  <div class="col-md-12">
-    <app-card cardTitle="Campaign Monitor" cardClass="tab-card tab-content" blockClass="nav-fill" [options]="false">
-      <ul ngbNav #nav="ngbNav" aria-busy="true" class="nav-pills">
-        <li [ngbNavItem]="1" class="flex">
-          <a ngbNavLink>
-            <i class="fa fa-home m-r-10"></i>
-            Home
-          </a>
-          <ng-template ngbNavContent>
-            <div class="table-responsive">
-              <app-product-sale></app-product-sale>
-            </div>
-          </ng-template>
-        </li>
-        <li [ngbNavItem]="2" class="flex">
-          <a ngbNavLink>
-            <i class="fa fa-key m-r-10"></i>
-            Security
-          </a>
-          <ng-template ngbNavContent>
-            <app-product-sale></app-product-sale>
-          </ng-template>
-        </li>
-        <li [ngbNavItem]="3" class="flex">
-          <a ngbNavLink>
-            <i class="fa fa-play-circle m-r-10"></i>
-            Entertainment
-          </a>
-          <ng-template ngbNavContent>
-            <app-product-sale></app-product-sale>
-          </ng-template>
-        </li>
-        <li [ngbNavItem]="4" class="flex">
-          <a ngbNavLink>
-            <i class="fa fa-database m-r-10"></i>
-            Big Data
-          </a>
-          <ng-template ngbNavContent>
-            <app-product-sale></app-product-sale>
-          </ng-template>
-        </li>
-      </ul>
-      <div [ngbNavOutlet]="nav" class="mt-2"></div>
-    </app-card>
-  </div>
+
 </div>

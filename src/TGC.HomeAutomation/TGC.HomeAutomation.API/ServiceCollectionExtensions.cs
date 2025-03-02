@@ -10,7 +10,6 @@ public static class ServiceCollectionExtensions
 {
 	public static IServiceCollection AddHomeAutomationApiInjections(this IServiceCollection services)
 	{
-		services.AddControllers();
 		// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 
 		services.AddOpenApiDocument(document =>
@@ -66,10 +65,11 @@ public static class ServiceCollectionExtensions
 				{
 					builder.WithOrigins("http://localhost:4200")
 						.AllowAnyMethod()
-						.AllowAnyHeader()
-						.AllowCredentials();
+						.AllowAnyHeader();
 				});
 		});
+
+		services.AddControllers();
 
 		return services;
 	}

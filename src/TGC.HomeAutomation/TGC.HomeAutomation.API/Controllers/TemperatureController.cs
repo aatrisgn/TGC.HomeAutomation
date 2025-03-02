@@ -15,7 +15,7 @@ public class TemperatureController : HAControllerBase
 	}
 
 	[HttpGet]
-	[Route("inside/current")]
+	[Route("temperatures/inside/current")]
 	[ProducesResponseType(typeof(TemperatureResponse), StatusCodes.Status200OK)]
 	public async Task<TemperatureResponse> GetCurrentInside()
 	{
@@ -26,7 +26,7 @@ public class TemperatureController : HAControllerBase
 	}
 
 	[HttpGet]
-	[Route("outside/current")]
+	[Route("temperatures/outside/current")]
 	[ProducesResponseType(typeof(TemperatureResponse), StatusCodes.Status200OK)]
 	public async Task<TemperatureResponse> GetCurrentOutside()
 	{
@@ -37,7 +37,7 @@ public class TemperatureController : HAControllerBase
 	}
 
 	[HttpGet]
-	[Route("inside/{startDate}/{endDate}")]
+	[Route("temperatures/inside/{startDate}/{endDate}")]
 	[ProducesResponseType(typeof(IEnumerable<TemperatureResponse>), StatusCodes.Status200OK)]
 	public async Task<IEnumerable<TemperatureResponse>> GetCurrentOutside(DateTime startDate, DateTime endDate)
 	{
@@ -48,7 +48,7 @@ public class TemperatureController : HAControllerBase
 
 	[HttpPost]
 	[Authorize]
-	[Route("inside")]
+	[Route("temperatures/inside")]
 	[ProducesResponseType(StatusCodes.Status200OK)]
 	public async Task<TemperatureResponse> Create([FromBody] TemperatureRequest request)
 	{

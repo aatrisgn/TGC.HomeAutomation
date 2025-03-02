@@ -27,7 +27,7 @@ export class DeviceClient {
     }
 
     getAllDevices(): Observable<DeviceResponse[]> {
-        let url_ = this.baseUrl + "/api/Device";
+        let url_ = this.baseUrl + "/api/devices";
         url_ = url_.replace(/[?&]$/, "");
 
         let options_ : any = {
@@ -100,7 +100,7 @@ export class DeviceClient {
     }
 
     createNewDevice(deviceRequest: DeviceRequest): Observable<DeviceResponse> {
-        let url_ = this.baseUrl + "/api/Device";
+        let url_ = this.baseUrl + "/api/devices";
         url_ = url_.replace(/[?&]$/, "");
 
         const content_ = JSON.stringify(deviceRequest);
@@ -177,7 +177,7 @@ export class DeviceClient {
     }
 
     getSingleDeviceById(id: string): Observable<DeviceResponse> {
-        let url_ = this.baseUrl + "/api/Device/{id}";
+        let url_ = this.baseUrl + "/api/devices/{id}";
         if (id === undefined || id === null)
             throw new Error("The parameter 'id' must be defined.");
         url_ = url_.replace("{id}", encodeURIComponent("" + id));
@@ -253,7 +253,7 @@ export class DeviceClient {
     }
 
     updateSingleDevice(id: string, deviceRequest: DeviceRequest): Observable<DeviceResponse> {
-        let url_ = this.baseUrl + "/api/Device/{id}";
+        let url_ = this.baseUrl + "/api/devices/{id}";
         if (id === undefined || id === null)
             throw new Error("The parameter 'id' must be defined.");
         url_ = url_.replace("{id}", encodeURIComponent("" + id));
@@ -333,7 +333,7 @@ export class DeviceClient {
     }
 
     deleteDevice(id: string): Observable<void> {
-        let url_ = this.baseUrl + "/api/Device/{id}";
+        let url_ = this.baseUrl + "/api/devices/{id}";
         if (id === undefined || id === null)
             throw new Error("The parameter 'id' must be defined.");
         url_ = url_.replace("{id}", encodeURIComponent("" + id));
@@ -424,7 +424,7 @@ export class HumidityClient {
     }
 
     getCurrentInside(): Observable<HumidityResponse> {
-        let url_ = this.baseUrl + "/api/Humidity/inside/current";
+        let url_ = this.baseUrl + "/api/humidities/inside/current";
         url_ = url_.replace(/[?&]$/, "");
 
         let options_ : any = {
@@ -490,7 +490,7 @@ export class HumidityClient {
     }
 
     getCurrentOutside(): Observable<HumidityResponse> {
-        let url_ = this.baseUrl + "/api/Humidity/outside/current";
+        let url_ = this.baseUrl + "/api/humidities/outside/current";
         url_ = url_.replace(/[?&]$/, "");
 
         let options_ : any = {
@@ -556,7 +556,7 @@ export class HumidityClient {
     }
 
     getCurrentOutside2(startDate: Date, endDate: Date): Observable<HumidityResponse> {
-        let url_ = this.baseUrl + "/api/Humidity/inside/{startDate}/{endDate}";
+        let url_ = this.baseUrl + "/api/humidities/inside/{startDate}/{endDate}";
         if (startDate === undefined || startDate === null)
             throw new Error("The parameter 'startDate' must be defined.");
         url_ = url_.replace("{startDate}", encodeURIComponent(startDate ? "" + startDate.toISOString() : "null"));
@@ -628,7 +628,7 @@ export class HumidityClient {
     }
 
     create(request: HumidityRequest): Observable<HumidityResponse> {
-        let url_ = this.baseUrl + "/api/Humidity/inside";
+        let url_ = this.baseUrl + "/api/humidities/inside";
         url_ = url_.replace(/[?&]$/, "");
 
         const content_ = JSON.stringify(request);
@@ -710,7 +710,7 @@ export class TemperatureClient {
     }
 
     getCurrentInside(): Observable<TemperatureResponse> {
-        let url_ = this.baseUrl + "/api/Temperature/inside/current";
+        let url_ = this.baseUrl + "/api/temperatures/inside/current";
         url_ = url_.replace(/[?&]$/, "");
 
         let options_ : any = {
@@ -776,7 +776,7 @@ export class TemperatureClient {
     }
 
     getCurrentOutside(): Observable<TemperatureResponse> {
-        let url_ = this.baseUrl + "/api/Temperature/outside/current";
+        let url_ = this.baseUrl + "/api/temperatures/outside/current";
         url_ = url_.replace(/[?&]$/, "");
 
         let options_ : any = {
@@ -842,7 +842,7 @@ export class TemperatureClient {
     }
 
     getCurrentOutsideAll(startDate: Date, endDate: Date): Observable<TemperatureResponse[]> {
-        let url_ = this.baseUrl + "/api/Temperature/inside/{startDate}/{endDate}";
+        let url_ = this.baseUrl + "/api/temperatures/inside/{startDate}/{endDate}";
         if (startDate === undefined || startDate === null)
             throw new Error("The parameter 'startDate' must be defined.");
         url_ = url_.replace("{startDate}", encodeURIComponent(startDate ? "" + startDate.toISOString() : "null"));
@@ -921,7 +921,7 @@ export class TemperatureClient {
     }
 
     create(request: TemperatureRequest): Observable<TemperatureResponse> {
-        let url_ = this.baseUrl + "/api/Temperature/inside";
+        let url_ = this.baseUrl + "/api/temperatures/inside";
         url_ = url_.replace(/[?&]$/, "");
 
         const content_ = JSON.stringify(request);
@@ -1100,8 +1100,8 @@ export interface IDeviceResponse {
 }
 
 export class DeviceRequest implements IDeviceRequest {
-    name?: string;
-    macAdrress?: string;
+    name?: string | undefined;
+    macAddress?: string | undefined;
 
     constructor(data?: IDeviceRequest) {
         if (data) {
@@ -1115,7 +1115,7 @@ export class DeviceRequest implements IDeviceRequest {
     init(_data?: any) {
         if (_data) {
             this.name = _data["name"];
-            this.macAdrress = _data["macAdrress"];
+            this.macAddress = _data["macAddress"];
         }
     }
 
@@ -1129,14 +1129,14 @@ export class DeviceRequest implements IDeviceRequest {
     toJSON(data?: any) {
         data = typeof data === 'object' ? data : {};
         data["name"] = this.name;
-        data["macAdrress"] = this.macAdrress;
+        data["macAddress"] = this.macAddress;
         return data;
     }
 }
 
 export interface IDeviceRequest {
-    name?: string;
-    macAdrress?: string;
+    name?: string | undefined;
+    macAddress?: string | undefined;
 }
 
 export class HumidityResponse implements IHumidityResponse {

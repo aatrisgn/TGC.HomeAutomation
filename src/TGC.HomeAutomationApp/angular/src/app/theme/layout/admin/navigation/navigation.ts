@@ -41,17 +41,17 @@ export const NavigationItems: NavigationItem[] = [
     icon: 'icon-group',
     children: [
       {
-        id: 'manage-devices',
-        title: 'Manage device(s)',
-        type: 'item',
-        url: '/devices',
-        icon: 'feather icon-home'
-      },
-      {
         id: 'add-devices',
         title: 'Add device',
         type: 'item',
         url: '/add-devices',
+        icon: 'feather icon-home'
+      },
+      {
+        id: 'manage-devices',
+        title: 'Manage devices',
+        type: 'item',
+        url: '/devices',
         icon: 'feather icon-home'
       }
     ]

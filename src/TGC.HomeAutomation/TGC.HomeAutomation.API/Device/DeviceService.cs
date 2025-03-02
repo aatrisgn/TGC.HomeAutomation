@@ -26,12 +26,14 @@ public class DeviceService : IDeviceService
 		return specificEntity == null ? null : DeviceResponse.FromEntity(specificEntity);
 	}
 
-	public Task<DeviceResponse> CreateAsync(DeviceRequest deviceRequest)
+	public async Task<DeviceResponse> CreateAsync(DeviceRequest deviceRequest)
 	{
-		throw new NotImplementedException();
+		await _deviceRepository.CreateAsync(deviceRequest.ToEntity());
+		var createdDevice = await _deviceRepository.GetSingleAsync(d => d.Name == deviceRequest.Name && d.MacAddress == deviceRequest.MacAddress);
+		return DeviceResponse.FromEntity(createdDevice);
 	}
 
-	public Task<DeviceResponse> UpdateAsync(DeviceRequest deviceRequest)
+	public Task<DeviceResponse> UpdateAsync(Guid id, DeviceRequest deviceRequest)
 	{
 		throw new NotImplementedException();
 	}
