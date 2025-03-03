@@ -2,6 +2,8 @@
 Microsoft Visual Studio Solution File, Format Version 12.00
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TGC.HomeAutomation.API", "TGC.HomeAutomation.API\TGC.HomeAutomation.API.csproj", "{E1FD8364-89D4-4019-AF71-D3672FC50829}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TGC.HomeAutomation.TestDevice", "TGC.HomeAutomation.TestDevice\TGC.HomeAutomation.TestDevice.csproj", "{1FD9C8A7-F277-4C65-96AB-13F5EE8DD31C}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -12,5 +14,9 @@ Global
 		{E1FD8364-89D4-4019-AF71-D3672FC50829}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{E1FD8364-89D4-4019-AF71-D3672FC50829}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{E1FD8364-89D4-4019-AF71-D3672FC50829}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1FD9C8A7-F277-4C65-96AB-13F5EE8DD31C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1FD9C8A7-F277-4C65-96AB-13F5EE8DD31C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1FD9C8A7-F277-4C65-96AB-13F5EE8DD31C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1FD9C8A7-F277-4C65-96AB-13F5EE8DD31C}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal

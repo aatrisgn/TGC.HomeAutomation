@@ -555,7 +555,7 @@ export class HumidityClient {
         return _observableOf(null as any);
     }
 
-    getCurrentOutside2(startDate: Date, endDate: Date): Observable<HumidityResponse> {
+    getCurrentOutsideAll(startDate: Date, endDate: Date): Observable<HumidityResponse[]> {
         let url_ = this.baseUrl + "/api/humidities/inside/{startDate}/{endDate}";
         if (startDate === undefined || startDate === null)
             throw new Error("The parameter 'startDate' must be defined.");
@@ -574,20 +574,20 @@ export class HumidityClient {
         };
 
         return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_ : any) => {
-            return this.processGetCurrentOutside2(response_);
+            return this.processGetCurrentOutsideAll(response_);
         })).pipe(_observableCatch((response_: any) => {
             if (response_ instanceof HttpResponseBase) {
                 try {
-                    return this.processGetCurrentOutside2(response_ as any);
+                    return this.processGetCurrentOutsideAll(response_ as any);
                 } catch (e) {
-                    return _observableThrow(e) as any as Observable<HumidityResponse>;
+                    return _observableThrow(e) as any as Observable<HumidityResponse[]>;
                 }
             } else
-                return _observableThrow(response_) as any as Observable<HumidityResponse>;
+                return _observableThrow(response_) as any as Observable<HumidityResponse[]>;
         }));
     }
 
-    protected processGetCurrentOutside2(response: HttpResponseBase): Observable<HumidityResponse> {
+    protected processGetCurrentOutsideAll(response: HttpResponseBase): Observable<HumidityResponse[]> {
         const status = response.status;
         const responseBlob =
             response instanceof HttpResponse ? response.body :
@@ -616,7 +616,14 @@ export class HumidityClient {
             return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
             let result200: any = null;
             let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            result200 = HumidityResponse.fromJS(resultData200);
+            if (Array.isArray(resultData200)) {
+                result200 = [] as any;
+                for (let item of resultData200)
+                    result200!.push(HumidityResponse.fromJS(item));
+            }
+            else {
+                result200 = <any>null;
+            }
             return _observableOf(result200);
             }));
         } else if (status !== 200 && status !== 204) {
@@ -627,7 +634,7 @@ export class HumidityClient {
         return _observableOf(null as any);
     }
 
-    create(request: HumidityRequest): Observable<HumidityResponse> {
+    create(request: HumidityRequest): Observable<void> {
         let url_ = this.baseUrl + "/api/humidities/inside";
         url_ = url_.replace(/[?&]$/, "");
 
@@ -639,7 +646,6 @@ export class HumidityClient {
             responseType: "blob",
             headers: new HttpHeaders({
                 "Content-Type": "application/json",
-                "Accept": "application/json"
             })
         };
 
@@ -650,14 +656,14 @@ export class HumidityClient {
                 try {
                     return this.processCreate(response_ as any);
                 } catch (e) {
-                    return _observableThrow(e) as any as Observable<HumidityResponse>;
+                    return _observableThrow(e) as any as Observable<void>;
                 }
             } else
-                return _observableThrow(response_) as any as Observable<HumidityResponse>;
+                return _observableThrow(response_) as any as Observable<void>;
         }));
     }
 
-    protected processCreate(response: HttpResponseBase): Observable<HumidityResponse> {
+    protected processCreate(response: HttpResponseBase): Observable<void> {
         const status = response.status;
         const responseBlob =
             response instanceof HttpResponse ? response.body :
@@ -684,10 +690,7 @@ export class HumidityClient {
             }));
         } else if (status === 200) {
             return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
-            let result200: any = null;
-            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            result200 = HumidityResponse.fromJS(resultData200);
-            return _observableOf(result200);
+            return _observableOf(null as any);
             }));
         } else if (status !== 200 && status !== 204) {
             return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
@@ -920,7 +923,7 @@ export class TemperatureClient {
         return _observableOf(null as any);
     }
 
-    create(request: TemperatureRequest): Observable<TemperatureResponse> {
+    create(request: TemperatureRequest): Observable<void> {
         let url_ = this.baseUrl + "/api/temperatures/inside";
         url_ = url_.replace(/[?&]$/, "");
 
@@ -932,7 +935,6 @@ export class TemperatureClient {
             responseType: "blob",
             headers: new HttpHeaders({
                 "Content-Type": "application/json",
-                "Accept": "application/json"
             })
         };
 
@@ -943,14 +945,14 @@ export class TemperatureClient {
                 try {
                     return this.processCreate(response_ as any);
                 } catch (e) {
-                    return _observableThrow(e) as any as Observable<TemperatureResponse>;
+                    return _observableThrow(e) as any as Observable<void>;
                 }
             } else
-                return _observableThrow(response_) as any as Observable<TemperatureResponse>;
+                return _observableThrow(response_) as any as Observable<void>;
         }));
     }
 
-    protected processCreate(response: HttpResponseBase): Observable<TemperatureResponse> {
+    protected processCreate(response: HttpResponseBase): Observable<void> {
         const status = response.status;
         const responseBlob =
             response instanceof HttpResponse ? response.body :
@@ -977,10 +979,7 @@ export class TemperatureClient {
             }));
         } else if (status === 200) {
             return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
-            let result200: any = null;
-            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            result200 = TemperatureResponse.fromJS(resultData200);
-            return _observableOf(result200);
+            return _observableOf(null as any);
             }));
         } else if (status !== 200 && status !== 204) {
             return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {

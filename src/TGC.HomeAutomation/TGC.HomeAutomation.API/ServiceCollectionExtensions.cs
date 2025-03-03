@@ -3,6 +3,8 @@ using Microsoft.OpenApi.Models;
 using TGC.AzureTableStorage.IoC;
 using TGC.HomeAutomation.API.Authentication;
 using TGC.HomeAutomation.API.Device;
+using TGC.HomeAutomation.API.Humidity;
+using TGC.HomeAutomation.API.Temperature;
 
 namespace TGC.HomeAutomation.API;
 
@@ -10,8 +12,6 @@ public static class ServiceCollectionExtensions
 {
 	public static IServiceCollection AddHomeAutomationApiInjections(this IServiceCollection services)
 	{
-		// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
-
 		services.AddOpenApiDocument(document =>
 		{
 			document.Title = "TGC.HomeAutomation API Spec";
@@ -44,6 +44,8 @@ public static class ServiceCollectionExtensions
 		services.AddScoped<IDeviceAPIKeyGenerator, DeviceAPIKeyGenerator>();
 		services.AddScoped<IDeviceService, DeviceService>();
 		services.AddScoped<IAPIKeyRepository, MockAPIKeyRepository>();
+		services.AddScoped<ITemperatureService, TemperatureService>();
+		services.AddScoped<IHumidityService, HumidityService>();
 
 		//Should be changed to default to Entra once that's implemented
 		services.AddAuthentication(ApiKeyAuthSchemeOptions.DefaultScheme)

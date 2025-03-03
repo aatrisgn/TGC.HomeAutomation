@@ -1,6 +1,5 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using TGC.AzureTableStorage;
 using TGC.HomeAutomation.API.Humidity;
 using TGC.HomeAutomation.API.Temperature;
 
@@ -8,11 +7,10 @@ namespace TGC.HomeAutomation.API.Controllers;
 
 public class HumidityController : HAControllerBase
 {
-	private readonly IAzureTableStorageRepository<HumidityEntity> _tableStorageRepository;
-
-	public HumidityController(IAzureTableStorageRepository<HumidityEntity> tableStorageRepository)
+	private readonly IHumidityService _humidityService;
+	public HumidityController(IHumidityService humidityService)
 	{
-		_tableStorageRepository = tableStorageRepository;
+		_humidityService = humidityService;
 	}
 
 	[HttpGet]
@@ -20,10 +18,7 @@ public class HumidityController : HAControllerBase
 	[ProducesResponseType(typeof(HumidityResponse), StatusCodes.Status200OK)]
 	public async Task<HumidityResponse> GetCurrentInside()
 	{
-		DateTime dateTime = DateTime.UtcNow.AddDays(-7);
-		var results = await _tableStorageRepository.GetAllAsync(t => t.Created >= dateTime);
-
-		return results.Select(t => HumidityResponse.FromEntity(t)).First();
+		return await _humidityService.GetCurrentInside();
 	}
 
 	[HttpGet]
@@ -31,31 +26,23 @@ public class HumidityController : HAControllerBase
 	[ProducesResponseType(typeof(HumidityResponse), StatusCodes.Status200OK)]
 	public async Task<HumidityResponse> GetCurrentOutside()
 	{
-		DateTime dateTime = DateTime.UtcNow.AddDays(-7);
-		var results = await _tableStorageRepository.GetAllAsync(t => t.Created >= dateTime);
-
-		return results.Select(t => HumidityResponse.FromEntity(t)).First();
+		return await _humidityService.GetCurrentOutside();
 	}
 
 	[HttpGet]
 	[Route("humidities/inside/{startDate}/{endDate}")]
-	[ProducesResponseType(typeof(HumidityResponse), StatusCodes.Status200OK)]
-	public async Task<HumidityResponse> GetCurrentOutside(DateTime startDate, DateTime endDate)
+	[ProducesResponseType(typeof(IEnumerable<HumidityResponse>), StatusCodes.Status200OK)]
+	public async Task<IEnumerable<HumidityResponse>> GetCurrentOutside(DateTime startDate, DateTime endDate)
 	{
-		DateTime dateTime = DateTime.UtcNow.AddDays(-7);
-		var results = await _tableStorageRepository.GetAllAsync(t => t.Created >= dateTime);
-
-		return results.Select(t => HumidityResponse.FromEntity(t)).First();
+		return await _humidityService.GetAverageBy10Minutes(startDate, endDate);
 	}
 
 	[HttpPost]
 	[Authorize]
 	[Route("humidities/inside")]
 	[ProducesResponseType(StatusCodes.Status200OK)]
-	public async Task<HumidityResponse> Create([FromBody] HumidityRequest request)
+	public async Task Create([FromBody] HumidityRequest request)
 	{
-		var newEntity = request.ToEntity();
-		await _tableStorageRepository.CreateAsync(newEntity);
-		return HumidityResponse.FromEntity(newEntity);
+		await _humidityService.AddRead(request);
 	}
 }

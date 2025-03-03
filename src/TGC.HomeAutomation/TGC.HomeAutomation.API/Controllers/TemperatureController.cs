@@ -1,17 +1,15 @@
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using TGC.AzureTableStorage;
 using TGC.HomeAutomation.API.Temperature;
 
 namespace TGC.HomeAutomation.API.Controllers;
 
 public class TemperatureController : HAControllerBase
 {
-	private readonly IAzureTableStorageRepository<TemperatureEntity> _tableStorageRepository;
+	private readonly ITemperatureService _temperatureService;
 
-	public TemperatureController(IAzureTableStorageRepository<TemperatureEntity> tableStorageRepository)
+	public TemperatureController(ITemperatureService temperatureService)
 	{
-		_tableStorageRepository = tableStorageRepository;
+		_temperatureService = temperatureService;
 	}
 
 	[HttpGet]
@@ -19,10 +17,7 @@ public class TemperatureController : HAControllerBase
 	[ProducesResponseType(typeof(TemperatureResponse), StatusCodes.Status200OK)]
 	public async Task<TemperatureResponse> GetCurrentInside()
 	{
-		DateTime dateTime = DateTime.UtcNow.AddDays(-1);
-		var results = await _tableStorageRepository.GetAllAsync(t => t.Created >= dateTime);
-
-		return results.Select(t => TemperatureResponse.FromEntity(t)).OrderBy(t => t.Created).First();
+		return await _temperatureService.GetCurrentInside();
 	}
 
 	[HttpGet]
@@ -30,10 +25,7 @@ public class TemperatureController : HAControllerBase
 	[ProducesResponseType(typeof(TemperatureResponse), StatusCodes.Status200OK)]
 	public async Task<TemperatureResponse> GetCurrentOutside()
 	{
-		DateTime dateTime = DateTime.UtcNow.AddDays(-7);
-		var results = await _tableStorageRepository.GetAllAsync(t => t.Created >= dateTime);
-
-		return results.Select(t => TemperatureResponse.FromEntity(t)).First();
+		return await _temperatureService.GetCurrentOutside();
 	}
 
 	[HttpGet]
@@ -41,19 +33,14 @@ public class TemperatureController : HAControllerBase
 	[ProducesResponseType(typeof(IEnumerable<TemperatureResponse>), StatusCodes.Status200OK)]
 	public async Task<IEnumerable<TemperatureResponse>> GetCurrentOutside(DateTime startDate, DateTime endDate)
 	{
-		var results = await _tableStorageRepository.GetAllAsync(t => t.Created >= startDate && t.Created <= endDate);
-
-		return results.Select(t => TemperatureResponse.FromEntity(t));
+		return await _temperatureService.GetAccumulatedByHour(startDate, endDate);
 	}
 
 	[HttpPost]
-	[Authorize]
 	[Route("temperatures/inside")]
 	[ProducesResponseType(StatusCodes.Status200OK)]
-	public async Task<TemperatureResponse> Create([FromBody] TemperatureRequest request)
+	public async Task Create([FromBody] TemperatureRequest request)
 	{
-		var newEntity = request.ToEntity();
-		await _tableStorageRepository.CreateAsync(newEntity);
-		return TemperatureResponse.FromEntity(newEntity);
+		await _temperatureService.AddRead(request);
 	}
 }
