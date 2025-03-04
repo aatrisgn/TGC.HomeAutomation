@@ -413,7 +413,7 @@ export class DeviceClient {
 }
 
 @Injectable()
-export class HumidityClient {
+export class MeasureClient {
     private http: HttpClient;
     private baseUrl: string;
     protected jsonParseReviver: ((key: string, value: any) => any) | undefined = undefined;
@@ -423,8 +423,11 @@ export class HumidityClient {
         this.baseUrl = baseUrl ?? "";
     }
 
-    getCurrentInside(): Observable<HumidityResponse> {
-        let url_ = this.baseUrl + "/api/humidities/inside/current";
+    getCurrentInside(measureType: string): Observable<MeasureResponse> {
+        let url_ = this.baseUrl + "/api/measure/{measureType}/inside/current";
+        if (measureType === undefined || measureType === null)
+            throw new Error("The parameter 'measureType' must be defined.");
+        url_ = url_.replace("{measureType}", encodeURIComponent("" + measureType));
         url_ = url_.replace(/[?&]$/, "");
 
         let options_ : any = {
@@ -442,14 +445,14 @@ export class HumidityClient {
                 try {
                     return this.processGetCurrentInside(response_ as any);
                 } catch (e) {
-                    return _observableThrow(e) as any as Observable<HumidityResponse>;
+                    return _observableThrow(e) as any as Observable<MeasureResponse>;
                 }
             } else
-                return _observableThrow(response_) as any as Observable<HumidityResponse>;
+                return _observableThrow(response_) as any as Observable<MeasureResponse>;
         }));
     }
 
-    protected processGetCurrentInside(response: HttpResponseBase): Observable<HumidityResponse> {
+    protected processGetCurrentInside(response: HttpResponseBase): Observable<MeasureResponse> {
         const status = response.status;
         const responseBlob =
             response instanceof HttpResponse ? response.body :
@@ -478,7 +481,7 @@ export class HumidityClient {
             return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
             let result200: any = null;
             let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            result200 = HumidityResponse.fromJS(resultData200);
+            result200 = MeasureResponse.fromJS(resultData200);
             return _observableOf(result200);
             }));
         } else if (status !== 200 && status !== 204) {
@@ -489,8 +492,11 @@ export class HumidityClient {
         return _observableOf(null as any);
     }
 
-    getCurrentOutside(): Observable<HumidityResponse> {
-        let url_ = this.baseUrl + "/api/humidities/outside/current";
+    getCurrentOutside(measureType: string): Observable<MeasureResponse> {
+        let url_ = this.baseUrl + "/api/measure/{measureType}/outside/current";
+        if (measureType === undefined || measureType === null)
+            throw new Error("The parameter 'measureType' must be defined.");
+        url_ = url_.replace("{measureType}", encodeURIComponent("" + measureType));
         url_ = url_.replace(/[?&]$/, "");
 
         let options_ : any = {
@@ -508,14 +514,14 @@ export class HumidityClient {
                 try {
                     return this.processGetCurrentOutside(response_ as any);
                 } catch (e) {
-                    return _observableThrow(e) as any as Observable<HumidityResponse>;
+                    return _observableThrow(e) as any as Observable<MeasureResponse>;
                 }
             } else
-                return _observableThrow(response_) as any as Observable<HumidityResponse>;
+                return _observableThrow(response_) as any as Observable<MeasureResponse>;
         }));
     }
 
-    protected processGetCurrentOutside(response: HttpResponseBase): Observable<HumidityResponse> {
+    protected processGetCurrentOutside(response: HttpResponseBase): Observable<MeasureResponse> {
         const status = response.status;
         const responseBlob =
             response instanceof HttpResponse ? response.body :
@@ -544,7 +550,7 @@ export class HumidityClient {
             return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
             let result200: any = null;
             let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            result200 = HumidityResponse.fromJS(resultData200);
+            result200 = MeasureResponse.fromJS(resultData200);
             return _observableOf(result200);
             }));
         } else if (status !== 200 && status !== 204) {
@@ -555,8 +561,11 @@ export class HumidityClient {
         return _observableOf(null as any);
     }
 
-    getCurrentOutsideAll(startDate: Date, endDate: Date): Observable<HumidityResponse[]> {
-        let url_ = this.baseUrl + "/api/humidities/inside/{startDate}/{endDate}";
+    getCurrentOutside2(measureType: string, startDate: Date, endDate: Date): Observable<MeasureRangeResponse> {
+        let url_ = this.baseUrl + "/api/measure/{measureType}/inside/{startDate}/{endDate}";
+        if (measureType === undefined || measureType === null)
+            throw new Error("The parameter 'measureType' must be defined.");
+        url_ = url_.replace("{measureType}", encodeURIComponent("" + measureType));
         if (startDate === undefined || startDate === null)
             throw new Error("The parameter 'startDate' must be defined.");
         url_ = url_.replace("{startDate}", encodeURIComponent(startDate ? "" + startDate.toISOString() : "null"));
@@ -574,20 +583,20 @@ export class HumidityClient {
         };
 
         return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_ : any) => {
-            return this.processGetCurrentOutsideAll(response_);
+            return this.processGetCurrentOutside2(response_);
         })).pipe(_observableCatch((response_: any) => {
             if (response_ instanceof HttpResponseBase) {
                 try {
-                    return this.processGetCurrentOutsideAll(response_ as any);
+                    return this.processGetCurrentOutside2(response_ as any);
                 } catch (e) {
-                    return _observableThrow(e) as any as Observable<HumidityResponse[]>;
+                    return _observableThrow(e) as any as Observable<MeasureRangeResponse>;
                 }
             } else
-                return _observableThrow(response_) as any as Observable<HumidityResponse[]>;
+                return _observableThrow(response_) as any as Observable<MeasureRangeResponse>;
         }));
     }
 
-    protected processGetCurrentOutsideAll(response: HttpResponseBase): Observable<HumidityResponse[]> {
+    protected processGetCurrentOutside2(response: HttpResponseBase): Observable<MeasureRangeResponse> {
         const status = response.status;
         const responseBlob =
             response instanceof HttpResponse ? response.body :
@@ -616,14 +625,7 @@ export class HumidityClient {
             return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
             let result200: any = null;
             let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            if (Array.isArray(resultData200)) {
-                result200 = [] as any;
-                for (let item of resultData200)
-                    result200!.push(HumidityResponse.fromJS(item));
-            }
-            else {
-                result200 = <any>null;
-            }
+            result200 = MeasureRangeResponse.fromJS(resultData200);
             return _observableOf(result200);
             }));
         } else if (status !== 200 && status !== 204) {
@@ -634,297 +636,8 @@ export class HumidityClient {
         return _observableOf(null as any);
     }
 
-    create(request: HumidityRequest): Observable<void> {
-        let url_ = this.baseUrl + "/api/humidities/inside";
-        url_ = url_.replace(/[?&]$/, "");
-
-        const content_ = JSON.stringify(request);
-
-        let options_ : any = {
-            body: content_,
-            observe: "response",
-            responseType: "blob",
-            headers: new HttpHeaders({
-                "Content-Type": "application/json",
-            })
-        };
-
-        return this.http.request("post", url_, options_).pipe(_observableMergeMap((response_ : any) => {
-            return this.processCreate(response_);
-        })).pipe(_observableCatch((response_: any) => {
-            if (response_ instanceof HttpResponseBase) {
-                try {
-                    return this.processCreate(response_ as any);
-                } catch (e) {
-                    return _observableThrow(e) as any as Observable<void>;
-                }
-            } else
-                return _observableThrow(response_) as any as Observable<void>;
-        }));
-    }
-
-    protected processCreate(response: HttpResponseBase): Observable<void> {
-        const status = response.status;
-        const responseBlob =
-            response instanceof HttpResponse ? response.body :
-            (response as any).error instanceof Blob ? (response as any).error : undefined;
-
-        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
-        if (status === 401) {
-            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
-            let result401: any = null;
-            let resultData401 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            result401 = ProblemDetails.fromJS(resultData401);
-            return throwException("A server side error occurred.", status, _responseText, _headers, result401);
-            }));
-        } else if (status === 403) {
-            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
-            let result403: any = null;
-            let resultData403 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            result403 = ProblemDetails.fromJS(resultData403);
-            return throwException("A server side error occurred.", status, _responseText, _headers, result403);
-            }));
-        } else if (status === 500) {
-            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
-            return throwException("A server side error occurred.", status, _responseText, _headers);
-            }));
-        } else if (status === 200) {
-            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
-            return _observableOf(null as any);
-            }));
-        } else if (status !== 200 && status !== 204) {
-            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
-            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
-            }));
-        }
-        return _observableOf(null as any);
-    }
-}
-
-@Injectable()
-export class TemperatureClient {
-    private http: HttpClient;
-    private baseUrl: string;
-    protected jsonParseReviver: ((key: string, value: any) => any) | undefined = undefined;
-
-    constructor(@Inject(HttpClient) http: HttpClient, @Optional() @Inject(API_BASE_URL) baseUrl?: string) {
-        this.http = http;
-        this.baseUrl = baseUrl ?? "";
-    }
-
-    getCurrentInside(): Observable<TemperatureResponse> {
-        let url_ = this.baseUrl + "/api/temperatures/inside/current";
-        url_ = url_.replace(/[?&]$/, "");
-
-        let options_ : any = {
-            observe: "response",
-            responseType: "blob",
-            headers: new HttpHeaders({
-                "Accept": "application/json"
-            })
-        };
-
-        return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_ : any) => {
-            return this.processGetCurrentInside(response_);
-        })).pipe(_observableCatch((response_: any) => {
-            if (response_ instanceof HttpResponseBase) {
-                try {
-                    return this.processGetCurrentInside(response_ as any);
-                } catch (e) {
-                    return _observableThrow(e) as any as Observable<TemperatureResponse>;
-                }
-            } else
-                return _observableThrow(response_) as any as Observable<TemperatureResponse>;
-        }));
-    }
-
-    protected processGetCurrentInside(response: HttpResponseBase): Observable<TemperatureResponse> {
-        const status = response.status;
-        const responseBlob =
-            response instanceof HttpResponse ? response.body :
-            (response as any).error instanceof Blob ? (response as any).error : undefined;
-
-        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
-        if (status === 401) {
-            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
-            let result401: any = null;
-            let resultData401 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            result401 = ProblemDetails.fromJS(resultData401);
-            return throwException("A server side error occurred.", status, _responseText, _headers, result401);
-            }));
-        } else if (status === 403) {
-            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
-            let result403: any = null;
-            let resultData403 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            result403 = ProblemDetails.fromJS(resultData403);
-            return throwException("A server side error occurred.", status, _responseText, _headers, result403);
-            }));
-        } else if (status === 500) {
-            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
-            return throwException("A server side error occurred.", status, _responseText, _headers);
-            }));
-        } else if (status === 200) {
-            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
-            let result200: any = null;
-            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            result200 = TemperatureResponse.fromJS(resultData200);
-            return _observableOf(result200);
-            }));
-        } else if (status !== 200 && status !== 204) {
-            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
-            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
-            }));
-        }
-        return _observableOf(null as any);
-    }
-
-    getCurrentOutside(): Observable<TemperatureResponse> {
-        let url_ = this.baseUrl + "/api/temperatures/outside/current";
-        url_ = url_.replace(/[?&]$/, "");
-
-        let options_ : any = {
-            observe: "response",
-            responseType: "blob",
-            headers: new HttpHeaders({
-                "Accept": "application/json"
-            })
-        };
-
-        return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_ : any) => {
-            return this.processGetCurrentOutside(response_);
-        })).pipe(_observableCatch((response_: any) => {
-            if (response_ instanceof HttpResponseBase) {
-                try {
-                    return this.processGetCurrentOutside(response_ as any);
-                } catch (e) {
-                    return _observableThrow(e) as any as Observable<TemperatureResponse>;
-                }
-            } else
-                return _observableThrow(response_) as any as Observable<TemperatureResponse>;
-        }));
-    }
-
-    protected processGetCurrentOutside(response: HttpResponseBase): Observable<TemperatureResponse> {
-        const status = response.status;
-        const responseBlob =
-            response instanceof HttpResponse ? response.body :
-            (response as any).error instanceof Blob ? (response as any).error : undefined;
-
-        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
-        if (status === 401) {
-            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
-            let result401: any = null;
-            let resultData401 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            result401 = ProblemDetails.fromJS(resultData401);
-            return throwException("A server side error occurred.", status, _responseText, _headers, result401);
-            }));
-        } else if (status === 403) {
-            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
-            let result403: any = null;
-            let resultData403 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            result403 = ProblemDetails.fromJS(resultData403);
-            return throwException("A server side error occurred.", status, _responseText, _headers, result403);
-            }));
-        } else if (status === 500) {
-            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
-            return throwException("A server side error occurred.", status, _responseText, _headers);
-            }));
-        } else if (status === 200) {
-            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
-            let result200: any = null;
-            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            result200 = TemperatureResponse.fromJS(resultData200);
-            return _observableOf(result200);
-            }));
-        } else if (status !== 200 && status !== 204) {
-            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
-            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
-            }));
-        }
-        return _observableOf(null as any);
-    }
-
-    getCurrentOutsideAll(startDate: Date, endDate: Date): Observable<TemperatureResponse[]> {
-        let url_ = this.baseUrl + "/api/temperatures/inside/{startDate}/{endDate}";
-        if (startDate === undefined || startDate === null)
-            throw new Error("The parameter 'startDate' must be defined.");
-        url_ = url_.replace("{startDate}", encodeURIComponent(startDate ? "" + startDate.toISOString() : "null"));
-        if (endDate === undefined || endDate === null)
-            throw new Error("The parameter 'endDate' must be defined.");
-        url_ = url_.replace("{endDate}", encodeURIComponent(endDate ? "" + endDate.toISOString() : "null"));
-        url_ = url_.replace(/[?&]$/, "");
-
-        let options_ : any = {
-            observe: "response",
-            responseType: "blob",
-            headers: new HttpHeaders({
-                "Accept": "application/json"
-            })
-        };
-
-        return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_ : any) => {
-            return this.processGetCurrentOutsideAll(response_);
-        })).pipe(_observableCatch((response_: any) => {
-            if (response_ instanceof HttpResponseBase) {
-                try {
-                    return this.processGetCurrentOutsideAll(response_ as any);
-                } catch (e) {
-                    return _observableThrow(e) as any as Observable<TemperatureResponse[]>;
-                }
-            } else
-                return _observableThrow(response_) as any as Observable<TemperatureResponse[]>;
-        }));
-    }
-
-    protected processGetCurrentOutsideAll(response: HttpResponseBase): Observable<TemperatureResponse[]> {
-        const status = response.status;
-        const responseBlob =
-            response instanceof HttpResponse ? response.body :
-            (response as any).error instanceof Blob ? (response as any).error : undefined;
-
-        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
-        if (status === 401) {
-            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
-            let result401: any = null;
-            let resultData401 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            result401 = ProblemDetails.fromJS(resultData401);
-            return throwException("A server side error occurred.", status, _responseText, _headers, result401);
-            }));
-        } else if (status === 403) {
-            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
-            let result403: any = null;
-            let resultData403 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            result403 = ProblemDetails.fromJS(resultData403);
-            return throwException("A server side error occurred.", status, _responseText, _headers, result403);
-            }));
-        } else if (status === 500) {
-            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
-            return throwException("A server side error occurred.", status, _responseText, _headers);
-            }));
-        } else if (status === 200) {
-            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
-            let result200: any = null;
-            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            if (Array.isArray(resultData200)) {
-                result200 = [] as any;
-                for (let item of resultData200)
-                    result200!.push(TemperatureResponse.fromJS(item));
-            }
-            else {
-                result200 = <any>null;
-            }
-            return _observableOf(result200);
-            }));
-        } else if (status !== 200 && status !== 204) {
-            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
-            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
-            }));
-        }
-        return _observableOf(null as any);
-    }
-
-    create(request: TemperatureRequest): Observable<void> {
-        let url_ = this.baseUrl + "/api/temperatures/inside";
+    create(request: MeasureRequest): Observable<void> {
+        let url_ = this.baseUrl + "/api/measure/inside";
         url_ = url_.replace(/[?&]$/, "");
 
         const content_ = JSON.stringify(request);
@@ -1142,13 +855,14 @@ export interface IDeviceRequest {
     macAddress?: string | undefined;
 }
 
-export class HumidityResponse implements IHumidityResponse {
-    humidity?: number;
-    sensorId?: string;
-    macAddress?: string;
+export class MeasureResponse implements IMeasureResponse {
+    dataValue?: number;
+    type?: string | undefined;
+    macAddress?: string | undefined;
     created?: Date;
+    deviceId?: string;
 
-    constructor(data?: IHumidityResponse) {
+    constructor(data?: IMeasureResponse) {
         if (data) {
             for (var property in data) {
                 if (data.hasOwnProperty(property))
@@ -1159,42 +873,44 @@ export class HumidityResponse implements IHumidityResponse {
 
     init(_data?: any) {
         if (_data) {
-            this.humidity = _data["humidity"];
-            this.sensorId = _data["sensorId"];
+            this.dataValue = _data["dataValue"];
+            this.type = _data["type"];
             this.macAddress = _data["macAddress"];
             this.created = _data["created"] ? new Date(_data["created"].toString()) : <any>undefined;
+            this.deviceId = _data["deviceId"];
         }
     }
 
-    static fromJS(data: any): HumidityResponse {
+    static fromJS(data: any): MeasureResponse {
         data = typeof data === 'object' ? data : {};
-        let result = new HumidityResponse();
+        let result = new MeasureResponse();
         result.init(data);
         return result;
     }
 
     toJSON(data?: any) {
         data = typeof data === 'object' ? data : {};
-        data["humidity"] = this.humidity;
-        data["sensorId"] = this.sensorId;
+        data["dataValue"] = this.dataValue;
+        data["type"] = this.type;
         data["macAddress"] = this.macAddress;
         data["created"] = this.created ? this.created.toISOString() : <any>undefined;
+        data["deviceId"] = this.deviceId;
         return data;
     }
 }
 
-export interface IHumidityResponse {
-    humidity?: number;
-    sensorId?: string;
-    macAddress?: string;
+export interface IMeasureResponse {
+    dataValue?: number;
+    type?: string | undefined;
+    macAddress?: string | undefined;
     created?: Date;
+    deviceId?: string;
 }
 
-export class HumidityRequest implements IHumidityRequest {
-    humidity?: number;
-    macAddress?: string | undefined;
+export class MeasureRangeResponse implements IMeasureRangeResponse {
+    dataValues?: MeasureResponse[];
 
-    constructor(data?: IHumidityRequest) {
+    constructor(data?: IMeasureRangeResponse) {
         if (data) {
             for (var property in data) {
                 if (data.hasOwnProperty(property))
@@ -1205,37 +921,42 @@ export class HumidityRequest implements IHumidityRequest {
 
     init(_data?: any) {
         if (_data) {
-            this.humidity = _data["humidity"];
-            this.macAddress = _data["macAddress"];
+            if (Array.isArray(_data["dataValues"])) {
+                this.dataValues = [] as any;
+                for (let item of _data["dataValues"])
+                    this.dataValues!.push(MeasureResponse.fromJS(item));
+            }
         }
     }
 
-    static fromJS(data: any): HumidityRequest {
+    static fromJS(data: any): MeasureRangeResponse {
         data = typeof data === 'object' ? data : {};
-        let result = new HumidityRequest();
+        let result = new MeasureRangeResponse();
         result.init(data);
         return result;
     }
 
     toJSON(data?: any) {
         data = typeof data === 'object' ? data : {};
-        data["humidity"] = this.humidity;
-        data["macAddress"] = this.macAddress;
+        if (Array.isArray(this.dataValues)) {
+            data["dataValues"] = [];
+            for (let item of this.dataValues)
+                data["dataValues"].push(item.toJSON());
+        }
         return data;
     }
 }
 
-export interface IHumidityRequest {
-    humidity?: number;
-    macAddress?: string | undefined;
+export interface IMeasureRangeResponse {
+    dataValues?: MeasureResponse[];
 }
 
-export class TemperatureResponse implements ITemperatureResponse {
-    temperature?: number;
-    created?: Date;
-    macAddress?: string;
+export class MeasureRequest implements IMeasureRequest {
+    dataValue?: number;
+    type?: string | undefined;
+    macAddress?: string | undefined;
 
-    constructor(data?: ITemperatureResponse) {
+    constructor(data?: IMeasureRequest) {
         if (data) {
             for (var property in data) {
                 if (data.hasOwnProperty(property))
@@ -1246,71 +967,31 @@ export class TemperatureResponse implements ITemperatureResponse {
 
     init(_data?: any) {
         if (_data) {
-            this.temperature = _data["temperature"];
-            this.created = _data["created"] ? new Date(_data["created"].toString()) : <any>undefined;
+            this.dataValue = _data["dataValue"];
+            this.type = _data["type"];
             this.macAddress = _data["macAddress"];
         }
     }
 
-    static fromJS(data: any): TemperatureResponse {
+    static fromJS(data: any): MeasureRequest {
         data = typeof data === 'object' ? data : {};
-        let result = new TemperatureResponse();
+        let result = new MeasureRequest();
         result.init(data);
         return result;
     }
 
     toJSON(data?: any) {
         data = typeof data === 'object' ? data : {};
-        data["temperature"] = this.temperature;
-        data["created"] = this.created ? this.created.toISOString() : <any>undefined;
+        data["dataValue"] = this.dataValue;
+        data["type"] = this.type;
         data["macAddress"] = this.macAddress;
         return data;
     }
 }
 
-export interface ITemperatureResponse {
-    temperature?: number;
-    created?: Date;
-    macAddress?: string;
-}
-
-export class TemperatureRequest implements ITemperatureRequest {
-    temperature?: number;
-    macAddress?: string | undefined;
-
-    constructor(data?: ITemperatureRequest) {
-        if (data) {
-            for (var property in data) {
-                if (data.hasOwnProperty(property))
-                    (<any>this)[property] = (<any>data)[property];
-            }
-        }
-    }
-
-    init(_data?: any) {
-        if (_data) {
-            this.temperature = _data["temperature"];
-            this.macAddress = _data["macAddress"];
-        }
-    }
-
-    static fromJS(data: any): TemperatureRequest {
-        data = typeof data === 'object' ? data : {};
-        let result = new TemperatureRequest();
-        result.init(data);
-        return result;
-    }
-
-    toJSON(data?: any) {
-        data = typeof data === 'object' ? data : {};
-        data["temperature"] = this.temperature;
-        data["macAddress"] = this.macAddress;
-        return data;
-    }
-}
-
-export interface ITemperatureRequest {
-    temperature?: number;
+export interface IMeasureRequest {
+    dataValue?: number;
+    type?: string | undefined;
     macAddress?: string | undefined;
 }
 

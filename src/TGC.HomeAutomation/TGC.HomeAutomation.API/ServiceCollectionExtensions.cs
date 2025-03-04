@@ -3,8 +3,7 @@ using Microsoft.OpenApi.Models;
 using TGC.AzureTableStorage.IoC;
 using TGC.HomeAutomation.API.Authentication;
 using TGC.HomeAutomation.API.Device;
-using TGC.HomeAutomation.API.Humidity;
-using TGC.HomeAutomation.API.Temperature;
+using TGC.HomeAutomation.API.Measure;
 
 namespace TGC.HomeAutomation.API;
 
@@ -44,8 +43,9 @@ public static class ServiceCollectionExtensions
 		services.AddScoped<IDeviceAPIKeyGenerator, DeviceAPIKeyGenerator>();
 		services.AddScoped<IDeviceService, DeviceService>();
 		services.AddScoped<IAPIKeyRepository, MockAPIKeyRepository>();
-		services.AddScoped<ITemperatureService, TemperatureService>();
-		services.AddScoped<IHumidityService, HumidityService>();
+
+		services.AddScoped<ICompositeMeasureService, CompositeMeasureService>();
+		services.AddScoped<IMeasureTypeConverter, MeasureTypeConverter>();
 
 		//Should be changed to default to Entra once that's implemented
 		services.AddAuthentication(ApiKeyAuthSchemeOptions.DefaultScheme)

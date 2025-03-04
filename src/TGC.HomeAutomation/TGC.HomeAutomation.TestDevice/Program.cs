@@ -1,4 +1,5 @@
 ﻿using System.Net.Http.Json;
+using TGC.HomeAutomation.API.Measure;
 using TGC.HomeAutomation.API.Temperature;
 
 Console.WriteLine("Hello, World!");
@@ -22,9 +23,11 @@ while (counter < readsToSend)
 	double randomNumber = random.NextDouble() * (maxRead - minRead) + minRead;
 	var randomRoundedNumber = Math.Round(randomNumber, 1);
 
-	await httpClient.PostAsJsonAsync("/api/temperatures/inside", new TemperatureRequest
+	await httpClient.PostAsJsonAsync("/api/measure/inside", new MeasureRequest
 	{
-		Temperature = randomRoundedNumber
+		DataValue = randomRoundedNumber,
+		Type = "humidity",
+		MacAddress = "sadasds"
 	});
 
 	counter++;
