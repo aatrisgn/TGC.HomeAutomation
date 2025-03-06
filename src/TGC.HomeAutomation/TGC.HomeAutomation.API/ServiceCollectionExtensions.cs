@@ -47,6 +47,8 @@ public static class ServiceCollectionExtensions
 		services.AddScoped<ICompositeMeasureService, CompositeMeasureService>();
 		services.AddScoped<IMeasureTypeConverter, MeasureTypeConverter>();
 
+		services.AddHostedService<ConsolidationBackgroundWorker>();
+
 		//Should be changed to default to Entra once that's implemented
 		services.AddAuthentication(ApiKeyAuthSchemeOptions.DefaultScheme)
 			.AddScheme<ApiKeyAuthSchemeOptions, ApiKeyAuthSchemeHandler>(
