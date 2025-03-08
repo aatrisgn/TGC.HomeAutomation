@@ -35,11 +35,11 @@ resource "azuread_application_registration" "rasperry_spn_app_registration" {
 }
 
 resource "azuread_service_principal" "rasperry_spn_enterprise_application" {
-  client_id = azuread_application.rasperry_spn_app_registration.client_id
+  client_id = azuread_application_registration.rasperry_spn_app_registration.client_id
 }
 
 resource "azuread_application_password" "rasperry_spn_secret" {
-  application_id = azuread_application.rasperry_spn_app_registration.id
+  application_id = azuread_application_registration.rasperry_spn_app_registration.id
 }
 
 resource "azurerm_role_assignment" "table_storage_contributor" {
