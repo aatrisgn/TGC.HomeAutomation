@@ -30,7 +30,7 @@ resource "azurerm_storage_account" "ha_storage_account" {
   }
 }
 
-resource "azuread_application" "rasperry_spn_app_registration" {
+resource "azuread_application_registration" "rasperry_spn_app_registration" {
   display_name = "tgc-homeautomation-raspberry-spn"
 }
 
