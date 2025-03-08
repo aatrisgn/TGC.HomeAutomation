@@ -54,7 +54,7 @@ jobs:
     - name: Terraform Init
       run: |
         terraform init \
-        -backend-config=resource_group_name="rg-landingzone-shared-dev-westeurope" \
+        -backend-config=resource_group_name="${{secrets.HOMEAUTOMATION_DEV_TFSTATE_RESOURCE_GROUP_NAME}}" \
         -backend-config=storage_account_name="${{ secrets.HOMEAUTOMATION_DEV_TFSTATE_STORAGE_ACCOUNT_NAME }}" \
         -backend-config=container_name="${{ secrets.HOMEAUTOMATION_DEV_TFSTATE_STORAGE_CONTAINER_NAME }}" \
         -backend-config=key="KEY_NAME"
