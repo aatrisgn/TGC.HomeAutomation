@@ -109,32 +109,6 @@ export const NavigationItems: NavigationItem[] = [
     ]
   },
   {
-    id: 'Authentication',
-    title: 'Authentication',
-    type: 'group',
-    icon: 'icon-group',
-    children: [
-      {
-        id: 'signup',
-        title: 'Sign up',
-        type: 'item',
-        url: '/auth/signup',
-        icon: 'feather icon-at-sign',
-        target: true,
-        breadcrumbs: false
-      },
-      {
-        id: 'signin',
-        title: 'Sign in',
-        type: 'item',
-        url: '/auth/signin',
-        icon: 'feather icon-log-in',
-        target: true,
-        breadcrumbs: false
-      }
-    ]
-  },
-  {
     id: 'chart',
     title: 'Chart',
     type: 'group',
@@ -180,14 +154,6 @@ export const NavigationItems: NavigationItem[] = [
     type: 'group',
     icon: 'icon-group',
     children: [
-      {
-        id: 'sample-page',
-        title: 'Sample Page',
-        type: 'item',
-        url: '/sample-page',
-        classes: 'nav-item',
-        icon: 'feather icon-sidebar'
-      },
       {
         id: 'menu-level',
         title: 'Menu Levels',

@@ -43,24 +43,6 @@ const routes: Routes = [
       {
         path: 'tables',
         loadComponent: () => import('./demo/tables/tbl-bootstrap/tbl-bootstrap.component')
-      },
-      {
-        path: 'sample-page',
-        loadComponent: () => import('./demo/other/sample-page/sample-page.component')
-      }
-    ]
-  },
-  {
-    path: '',
-    component: GuestComponent,
-    children: [
-      {
-        path: 'auth/signup',
-        loadComponent: () => import('./demo/pages/authentication/sign-up/sign-up.component')
-      },
-      {
-        path: 'auth/signin',
-        loadComponent: () => import('./demo/pages/authentication/sign-in/sign-in.component')
       }
     ]
   }
