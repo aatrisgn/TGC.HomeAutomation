@@ -17,6 +17,7 @@ on:
     branches: ["main"]
     paths:
     - 'terraform/**'
+    - '.github/workflows/deploy_infrastructure.yml'
   pull_request:
     branches: ["main"]
     paths:
