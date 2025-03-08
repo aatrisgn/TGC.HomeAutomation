@@ -1,6 +1,6 @@
 namespace TGC.HomeAutomation.API.Measure;
 
-public class MeasureRequest
+public record MeasureRequest
 {
 	public double DataValue { get; init; }
 	public string? Type { get; init; }

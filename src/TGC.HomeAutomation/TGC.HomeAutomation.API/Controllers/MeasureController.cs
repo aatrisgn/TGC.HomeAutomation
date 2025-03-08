@@ -36,6 +36,14 @@ public class MeasureController : HAControllerBase
 		return await _measureService.GetAverageBy10Minutes(measureType, startDate, endDate);
 	}
 
+	[HttpGet]
+	[Route("measure/{deviceId}/{startDate}/{endDate}")]
+	[ProducesResponseType(typeof(MeasureRangeResponse), StatusCodes.Status200OK)]
+	public async Task<DeviceOrderedMeasureRangeResponse> GetCurrentOutside(Guid deviceId, DateTime startDate, DateTime endDate)
+	{
+		return await _measureService.GetByDeviceId(deviceId, startDate, endDate);
+	}
+
 	[HttpPost]
 	[Route("measure/inside")]
 	[ProducesResponseType(StatusCodes.Status200OK)]

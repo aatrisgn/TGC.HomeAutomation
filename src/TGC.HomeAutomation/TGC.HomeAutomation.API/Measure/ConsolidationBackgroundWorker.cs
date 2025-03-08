@@ -57,7 +57,7 @@ public class ConsolidationBackgroundWorker : BackgroundService
 				var roundedDownDateTime = RoundDown(rawMeasure.Created, TimeSpan.FromMinutes(30));
 				var roundedUpDateTime = roundedDownDateTime.AddMinutes(30);
 				var measuresWithinTimeframe = orderedRawMeasures.Where(m => m.Created >= roundedDownDateTime && m.Created < roundedUpDateTime).GroupBy(m => m.DeviceId).ToList();
-				
+
 				_logger.LogInformation("Timed Hosted Service is working.");
 			}
 		}

@@ -7,6 +7,7 @@ internal class CompositeMeasureService : ICompositeMeasureService
 {
 	private readonly TimeProvider _timeProvider;
 	private readonly IMeasureTypeConverter _measureTypeConverter;
+	private readonly IOrderedMeasureService _orderedMeasureService;
 
 	private readonly IAzureTableStorageRepository<MeasureEntity> _measureRepository;
 	private readonly IDeviceService _deviceService;
@@ -15,13 +16,15 @@ internal class CompositeMeasureService : ICompositeMeasureService
 		TimeProvider timeProvider,
 		IMeasureTypeConverter measureTypeConverter,
 		IAzureTableStorageRepository<MeasureEntity> measureRepository,
-		IDeviceService deviceService
+		IDeviceService deviceService,
+		IOrderedMeasureService orderedMeasureService
 		)
 	{
 		_timeProvider = timeProvider;
 		_measureRepository = measureRepository;
 		_measureTypeConverter = measureTypeConverter;
 		_deviceService = deviceService;
+		_orderedMeasureService = orderedMeasureService;
 	}
 	public async Task<MeasureResponse> GetCurrentMeasureInside(string measureType)
 	{
@@ -95,5 +98,11 @@ internal class CompositeMeasureService : ICompositeMeasureService
 	{
 		var entityMeasure = await _measureTypeConverter.RequestToEntity(request, Guid.NewGuid());
 		await _measureRepository.CreateAsync(entityMeasure);
+	}
+
+	public async Task<DeviceOrderedMeasureRangeResponse> GetByDeviceId(Guid deviceId, DateTime startDate, DateTime endDate)
+	{
+		var deviceMeasures = await _orderedMeasureService.GetByDeviceId(deviceId, startDate, endDate);
+		return deviceMeasures;
 	}
 }
