@@ -57,6 +57,6 @@ resource "azurerm_role_assignment" "storage_account_reader" {
 resource "azurerm_application_insights" "application_insights" {
   location            = data.azurerm_resource_group.default_resource_group.location
   resource_group_name = data.azurerm_resource_group.default_resource_group.name
-  name = "ai-homeautomation-${var.environment}-weu" #Should change WEU to use location and translate
-  application_type = "web"
+  name                = "ai-homeautomation-${var.environment}-weu" #Should change WEU to use location and translate
+  application_type    = "web"
 }
