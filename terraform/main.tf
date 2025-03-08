@@ -17,10 +17,10 @@ terraform {
 }
 
 resource "azurerm_storage_account" "ha_storage_account" {
-  name = "tgcststate${each.key}"
+  name = "tgcstha${var.environment}"
 
-  location            = azurerm_resource_group.state_file_resource_group[each.key].location
-  resource_group_name = azurerm_resource_group.state_file_resource_group[each.key].name
+  location            = data.azurerm_resource_group.default_resource_group.location
+  resource_group_name = data.azurerm_resource_group.default_resource_group.name
 
   account_tier             = "Standard"
   account_replication_type = "LRS"
@@ -35,11 +35,11 @@ resource "azuread_application" "rasperry_spn_app_registration" {
 }
 
 resource "azuread_service_principal" "rasperry_spn_enterprise_application" {
-  client_id = azuread_application.rasperry_service_principal.client_id
+  client_id = azuread_application.rasperry_spn_app_registration.client_id
 }
 
 resource "azuread_application_password" "rasperry_spn_secret" {
-  application_id = azuread_application.rasperry_service_principal.id
+  application_id = azuread_application.rasperry_spn_app_registration.id
 }
 
 resource "azurerm_role_assignment" "table_storage_contributor" {
@@ -52,4 +52,11 @@ resource "azurerm_role_assignment" "storage_account_reader" {
   scope                = azurerm_storage_account.ha_storage_account.id
   role_definition_name = "Reader"
   principal_id         = azuread_service_principal.rasperry_spn_enterprise_application.object_id
+}
+
+resource "azurerm_application_insights" "application_insights" {
+  location            = data.azurerm_resource_group.default_resource_group.location
+  resource_group_name = data.azurerm_resource_group.default_resource_group.name
+  name = "ai-homeautomation-${var.environment}-weu" #Should change WEU to use location and translate
+  application_type = "web"
 }
