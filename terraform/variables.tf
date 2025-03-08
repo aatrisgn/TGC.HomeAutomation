@@ -3,6 +3,11 @@ variable "resource_group_name" {
   type        = string
 }
 
+variable "tenant_id" {
+  description = "Azure resource group to deploy resources into"
+  type        = string
+}
+
 variable "environment" {
   description = "environment type"
   type        = string
