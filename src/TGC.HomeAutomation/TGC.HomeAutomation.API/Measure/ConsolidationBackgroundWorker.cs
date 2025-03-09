@@ -49,16 +49,58 @@ public class ConsolidationBackgroundWorker : BackgroundService
 
 			var timestampAnHourAgo = _timeProvider.GetUtcNow().AddHours(-1);
 
+			// Locate all measures which are older than 1 hour to give a buffer
 			var allMeasures = await rawMeasureRepository.GetAllAsync(m => m.Created < timestampAnHourAgo.DateTime);
 			var orderedRawMeasures = allMeasures.OrderBy(m => m.Created).ToList();
+			var lookUpMeasures = allMeasures.ToList();
 
+			// Start by iterating over each and locate related measure within the same 30-minute period.
+			// Then group by device ID to accumulate on individual device level.
 			foreach (var rawMeasure in orderedRawMeasures)
 			{
 				var roundedDownDateTime = RoundDown(rawMeasure.Created, TimeSpan.FromMinutes(30));
 				var roundedUpDateTime = roundedDownDateTime.AddMinutes(30);
-				var measuresWithinTimeframe = orderedRawMeasures.Where(m => m.Created >= roundedDownDateTime && m.Created < roundedUpDateTime).GroupBy(m => m.DeviceId).ToList();
+
+				var measuresWithinTimeframe = lookUpMeasures
+					.Where(m => m.Created >= roundedDownDateTime && m.Created < roundedUpDateTime)
+					.GroupBy(m => m.DeviceId)
+					.ToList();
+
+				// Should be re-written
+				foreach (var measure in measuresWithinTimeframe)
+				{
+					var measureSplittedByType = measure.GroupBy(m => m.Type).ToList();
+
+					// Accumulate on each measure type since a single device can report on multiple measures (e.g. temperature and humidity)
+					foreach (var measureType in measureSplittedByType)
+					{
+						var averageDataValue = measureType.Average(m => m.DataValue);
+
+						var orderedMeasure = new OrderedMeasureEntity
+						{
+							DataValue = averageDataValue,
+							Created = roundedDownDateTime.ToUniversalTime(),
+							DeviceId = measure.Key,
+							Type = measureType.Key,
+							Sample = measureType.Count()
+						};
+
+						//Create a single instance
+						await orderedMeasureRepository.CreateAsync(orderedMeasure);
+					}
+
+					foreach (var measureToRemove in measure)
+					{
+						lookUpMeasures.Remove(measureToRemove);
+					}
+				}
 
 				_logger.LogInformation("Timed Hosted Service is working.");
+			}
+
+			foreach (var measure in allMeasures)
+			{
+				await rawMeasureRepository.DeleteAsync(measure);
 			}
 		}
 		_logger.LogInformation("Timed Hosted Service is working.");

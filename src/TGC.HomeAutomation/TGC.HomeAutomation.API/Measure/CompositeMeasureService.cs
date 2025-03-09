@@ -1,5 +1,6 @@
 using TGC.AzureTableStorage;
 using TGC.HomeAutomation.API.Device;
+using TGC.HomeAutomation.API.Sensor;
 
 namespace TGC.HomeAutomation.API.Measure;
 
@@ -40,16 +41,14 @@ internal class CompositeMeasureService : ICompositeMeasureService
 			return new MeasureResponse
 			{
 				DataValue = Math.Round(averageTemperature, 1),
-				Created = last30Minutes.DateTime,
-				MacAddress = "N/A"
+				Created = last30Minutes.DateTime
 			};
 		}
 
 		return new MeasureResponse
 		{
 			Created = last30Minutes.DateTime,
-			DataValue = 0,
-			MacAddress = "N/A"
+			DataValue = 0
 		};
 	}
 
@@ -84,8 +83,7 @@ internal class CompositeMeasureService : ICompositeMeasureService
 			var measureDataValues = averages.Select(a => new MeasureResponse
 			{
 				DataValue = a.AverageMeasure,
-				Created = a.IntervalStart,
-				MacAddress = "N/A"
+				Created = a.IntervalStart
 			});
 
 			return new MeasureRangeResponse { DataValues = measureDataValues, };
@@ -96,7 +94,13 @@ internal class CompositeMeasureService : ICompositeMeasureService
 
 	public async Task AddRead(MeasureRequest request)
 	{
-		var entityMeasure = await _measureTypeConverter.RequestToEntity(request, Guid.NewGuid());
+		ArgumentNullException.ThrowIfNull(request.MacAddress);
+
+		DeviceEntity originDevice = await _deviceService.GetByMacAddress(request.MacAddress);
+
+		ArgumentNullException.ThrowIfNull(originDevice.RowKey);
+
+		var entityMeasure = await _measureTypeConverter.RequestToEntity(request, Guid.Parse(originDevice.RowKey));
 		await _measureRepository.CreateAsync(entityMeasure);
 	}
 
@@ -104,5 +108,31 @@ internal class CompositeMeasureService : ICompositeMeasureService
 	{
 		var deviceMeasures = await _orderedMeasureService.GetByDeviceId(deviceId, startDate, endDate);
 		return deviceMeasures;
+	}
+
+	public async Task<MeasureRangeResponse> GetLatestActivityByDeviceId(Guid deviceId)
+	{
+		var last30Minutes = _timeProvider.GetUtcNow().AddMinutes(-30);
+		var utcNow = _timeProvider.GetUtcNow().UtcDateTime;
+
+		var deviceMeasures = await _measureRepository
+			.GetAllAsync(m =>
+				m.DeviceId == deviceId
+				&& m.Created > last30Minutes
+				&& m.Created < utcNow);
+
+		return new MeasureRangeResponse
+		{
+			DataValues = deviceMeasures.Select(d =>
+				{
+					return new MeasureResponse
+					{
+						DataValue = d.DataValue,
+						DeviceId = d.DeviceId,
+						Created = d.Created,
+						Type = d.Type
+					};
+				})
+		};
 	}
 }

@@ -43,6 +43,7 @@ public static class ServiceCollectionExtensions
 		services.AddScoped<IDeviceAPIKeyGenerator, DeviceAPIKeyGenerator>();
 		services.AddScoped<IDeviceService, DeviceService>();
 		services.AddScoped<IAPIKeyRepository, MockAPIKeyRepository>();
+		services.AddScoped<IOrderedMeasureService, OrderedMeasureService>();
 
 		services.AddScoped<ICompositeMeasureService, CompositeMeasureService>();
 		services.AddScoped<IMeasureTypeConverter, MeasureTypeConverter>();

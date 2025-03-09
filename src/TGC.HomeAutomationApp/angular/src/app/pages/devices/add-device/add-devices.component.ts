@@ -17,6 +17,7 @@ import { FormBuilder, FormGroup } from '@angular/forms';
 export default class AddDevicesComponent {
 
   deviceForm: FormGroup;
+  successMessage: boolean = false;
 
   constructor(private formBuilder:FormBuilder, private deviceClient:DeviceClient) {
     this.deviceForm = this.formBuilder.group({
@@ -30,8 +31,11 @@ export default class AddDevicesComponent {
     deviceRequest.name = this.deviceForm.value.name;
     deviceRequest.macAddress = this.deviceForm.value.macAddress;
 
-    console.log(deviceRequest);
+    this.deviceForm.reset();
 
-    this.deviceClient.createNewDevice(deviceRequest).subscribe();
+    this.deviceClient.createNewDevice(deviceRequest).subscribe(response => {
+      this.successMessage = true;
+      setTimeout(() => this.successMessage = false, 3000);
+    });
   }
 }

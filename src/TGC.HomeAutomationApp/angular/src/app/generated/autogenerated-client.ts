@@ -561,7 +561,7 @@ export class MeasureClient {
         return _observableOf(null as any);
     }
 
-    getCurrentOutside2(measureType: string, startDate: Date, endDate: Date): Observable<MeasureRangeResponse> {
+    getMeasuresByDate(measureType: string, startDate: Date, endDate: Date): Observable<MeasureRangeResponse> {
         let url_ = this.baseUrl + "/api/measure/{measureType}/inside/{startDate}/{endDate}";
         if (measureType === undefined || measureType === null)
             throw new Error("The parameter 'measureType' must be defined.");
@@ -583,11 +583,11 @@ export class MeasureClient {
         };
 
         return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_ : any) => {
-            return this.processGetCurrentOutside2(response_);
+            return this.processGetMeasuresByDate(response_);
         })).pipe(_observableCatch((response_: any) => {
             if (response_ instanceof HttpResponseBase) {
                 try {
-                    return this.processGetCurrentOutside2(response_ as any);
+                    return this.processGetMeasuresByDate(response_ as any);
                 } catch (e) {
                     return _observableThrow(e) as any as Observable<MeasureRangeResponse>;
                 }
@@ -596,7 +596,7 @@ export class MeasureClient {
         }));
     }
 
-    protected processGetCurrentOutside2(response: HttpResponseBase): Observable<MeasureRangeResponse> {
+    protected processGetMeasuresByDate(response: HttpResponseBase): Observable<MeasureRangeResponse> {
         const status = response.status;
         const responseBlob =
             response instanceof HttpResponse ? response.body :
@@ -626,6 +626,150 @@ export class MeasureClient {
             let result200: any = null;
             let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
             result200 = MeasureRangeResponse.fromJS(resultData200);
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf(null as any);
+    }
+
+    getLatestActivityByDeviceId(deviceId: string): Observable<MeasureRangeResponse> {
+        let url_ = this.baseUrl + "/api/measure/{deviceId}/latestactivity";
+        if (deviceId === undefined || deviceId === null)
+            throw new Error("The parameter 'deviceId' must be defined.");
+        url_ = url_.replace("{deviceId}", encodeURIComponent("" + deviceId));
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Accept": "application/json"
+            })
+        };
+
+        return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processGetLatestActivityByDeviceId(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processGetLatestActivityByDeviceId(response_ as any);
+                } catch (e) {
+                    return _observableThrow(e) as any as Observable<MeasureRangeResponse>;
+                }
+            } else
+                return _observableThrow(response_) as any as Observable<MeasureRangeResponse>;
+        }));
+    }
+
+    protected processGetLatestActivityByDeviceId(response: HttpResponseBase): Observable<MeasureRangeResponse> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (response as any).error instanceof Blob ? (response as any).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 401) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            let result401: any = null;
+            let resultData401 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result401 = ProblemDetails.fromJS(resultData401);
+            return throwException("A server side error occurred.", status, _responseText, _headers, result401);
+            }));
+        } else if (status === 403) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            let result403: any = null;
+            let resultData403 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result403 = ProblemDetails.fromJS(resultData403);
+            return throwException("A server side error occurred.", status, _responseText, _headers, result403);
+            }));
+        } else if (status === 500) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return throwException("A server side error occurred.", status, _responseText, _headers);
+            }));
+        } else if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = MeasureRangeResponse.fromJS(resultData200);
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf(null as any);
+    }
+
+    getMeasuresByDeviceIdAndDate(deviceId: string, startDate: Date, endDate: Date): Observable<DeviceOrderedMeasureRangeResponse> {
+        let url_ = this.baseUrl + "/api/measure/{deviceId}/{startDate}/{endDate}";
+        if (deviceId === undefined || deviceId === null)
+            throw new Error("The parameter 'deviceId' must be defined.");
+        url_ = url_.replace("{deviceId}", encodeURIComponent("" + deviceId));
+        if (startDate === undefined || startDate === null)
+            throw new Error("The parameter 'startDate' must be defined.");
+        url_ = url_.replace("{startDate}", encodeURIComponent(startDate ? "" + startDate.toISOString() : "null"));
+        if (endDate === undefined || endDate === null)
+            throw new Error("The parameter 'endDate' must be defined.");
+        url_ = url_.replace("{endDate}", encodeURIComponent(endDate ? "" + endDate.toISOString() : "null"));
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Accept": "application/json"
+            })
+        };
+
+        return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processGetMeasuresByDeviceIdAndDate(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processGetMeasuresByDeviceIdAndDate(response_ as any);
+                } catch (e) {
+                    return _observableThrow(e) as any as Observable<DeviceOrderedMeasureRangeResponse>;
+                }
+            } else
+                return _observableThrow(response_) as any as Observable<DeviceOrderedMeasureRangeResponse>;
+        }));
+    }
+
+    protected processGetMeasuresByDeviceIdAndDate(response: HttpResponseBase): Observable<DeviceOrderedMeasureRangeResponse> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (response as any).error instanceof Blob ? (response as any).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 401) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            let result401: any = null;
+            let resultData401 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result401 = ProblemDetails.fromJS(resultData401);
+            return throwException("A server side error occurred.", status, _responseText, _headers, result401);
+            }));
+        } else if (status === 403) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            let result403: any = null;
+            let resultData403 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result403 = ProblemDetails.fromJS(resultData403);
+            return throwException("A server side error occurred.", status, _responseText, _headers, result403);
+            }));
+        } else if (status === 500) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return throwException("A server side error occurred.", status, _responseText, _headers);
+            }));
+        } else if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = DeviceOrderedMeasureRangeResponse.fromJS(resultData200);
             return _observableOf(result200);
             }));
         } else if (status !== 200 && status !== 204) {
@@ -858,7 +1002,6 @@ export interface IDeviceRequest {
 export class MeasureResponse implements IMeasureResponse {
     dataValue?: number;
     type?: string | undefined;
-    macAddress?: string | undefined;
     created?: Date;
     deviceId?: string;
 
@@ -875,7 +1018,6 @@ export class MeasureResponse implements IMeasureResponse {
         if (_data) {
             this.dataValue = _data["dataValue"];
             this.type = _data["type"];
-            this.macAddress = _data["macAddress"];
             this.created = _data["created"] ? new Date(_data["created"].toString()) : <any>undefined;
             this.deviceId = _data["deviceId"];
         }
@@ -892,7 +1034,6 @@ export class MeasureResponse implements IMeasureResponse {
         data = typeof data === 'object' ? data : {};
         data["dataValue"] = this.dataValue;
         data["type"] = this.type;
-        data["macAddress"] = this.macAddress;
         data["created"] = this.created ? this.created.toISOString() : <any>undefined;
         data["deviceId"] = this.deviceId;
         return data;
@@ -902,7 +1043,6 @@ export class MeasureResponse implements IMeasureResponse {
 export interface IMeasureResponse {
     dataValue?: number;
     type?: string | undefined;
-    macAddress?: string | undefined;
     created?: Date;
     deviceId?: string;
 }
@@ -949,6 +1089,114 @@ export class MeasureRangeResponse implements IMeasureRangeResponse {
 
 export interface IMeasureRangeResponse {
     dataValues?: MeasureResponse[];
+}
+
+export class DeviceOrderedMeasureRangeResponse implements IDeviceOrderedMeasureRangeResponse {
+    deviceId?: string;
+    startDate?: Date;
+    endDate?: Date;
+    measures?: OrderedMeasureResponse[];
+
+    constructor(data?: IDeviceOrderedMeasureRangeResponse) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.deviceId = _data["deviceId"];
+            this.startDate = _data["startDate"] ? new Date(_data["startDate"].toString()) : <any>undefined;
+            this.endDate = _data["endDate"] ? new Date(_data["endDate"].toString()) : <any>undefined;
+            if (Array.isArray(_data["measures"])) {
+                this.measures = [] as any;
+                for (let item of _data["measures"])
+                    this.measures!.push(OrderedMeasureResponse.fromJS(item));
+            }
+        }
+    }
+
+    static fromJS(data: any): DeviceOrderedMeasureRangeResponse {
+        data = typeof data === 'object' ? data : {};
+        let result = new DeviceOrderedMeasureRangeResponse();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["deviceId"] = this.deviceId;
+        data["startDate"] = this.startDate ? this.startDate.toISOString() : <any>undefined;
+        data["endDate"] = this.endDate ? this.endDate.toISOString() : <any>undefined;
+        if (Array.isArray(this.measures)) {
+            data["measures"] = [];
+            for (let item of this.measures)
+                data["measures"].push(item.toJSON());
+        }
+        return data;
+    }
+}
+
+export interface IDeviceOrderedMeasureRangeResponse {
+    deviceId?: string;
+    startDate?: Date;
+    endDate?: Date;
+    measures?: OrderedMeasureResponse[];
+}
+
+export class OrderedMeasureResponse implements IOrderedMeasureResponse {
+    type?: string | undefined;
+    dataValue?: number;
+    created?: Date;
+    deviceId?: string;
+    sample?: number;
+
+    constructor(data?: IOrderedMeasureResponse) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.type = _data["type"];
+            this.dataValue = _data["dataValue"];
+            this.created = _data["created"] ? new Date(_data["created"].toString()) : <any>undefined;
+            this.deviceId = _data["deviceId"];
+            this.sample = _data["sample"];
+        }
+    }
+
+    static fromJS(data: any): OrderedMeasureResponse {
+        data = typeof data === 'object' ? data : {};
+        let result = new OrderedMeasureResponse();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["type"] = this.type;
+        data["dataValue"] = this.dataValue;
+        data["created"] = this.created ? this.created.toISOString() : <any>undefined;
+        data["deviceId"] = this.deviceId;
+        data["sample"] = this.sample;
+        return data;
+    }
+}
+
+export interface IOrderedMeasureResponse {
+    type?: string | undefined;
+    dataValue?: number;
+    created?: Date;
+    deviceId?: string;
+    sample?: number;
 }
 
 export class MeasureRequest implements IMeasureRequest {

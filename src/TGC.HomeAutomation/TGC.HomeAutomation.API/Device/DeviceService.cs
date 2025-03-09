@@ -44,4 +44,10 @@ public class DeviceService : IDeviceService
 		var specificEntity = allEntities.Single(e => e.RowKey == id.ToString());
 		return await _deviceRepository.DeleteAsync(specificEntity);
 	}
+
+	public async Task<DeviceEntity> GetByMacAddress(string requestMacAddress)
+	{
+		var entitiyMatch = await _deviceRepository.GetSingleAsync(d => d.MacAddress == requestMacAddress);
+		return entitiyMatch;
+	}
 }

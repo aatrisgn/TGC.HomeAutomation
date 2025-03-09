@@ -10,4 +10,5 @@ public interface IDeviceService
 	Task<DeviceResponse> CreateAsync(DeviceRequest deviceRequest);
 	Task<DeviceResponse> UpdateAsync(Guid id, DeviceRequest deviceRequest);
 	Task<Guid> DeleteByIdAsync(Guid id);
+	Task<DeviceEntity> GetByMacAddress(string requestMacAddress);
 }

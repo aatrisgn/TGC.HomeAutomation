@@ -17,6 +17,9 @@
                 <input formControlName="macAddress" type="text" class="form-control" id="macAddressInput" aria-describedby="macAddressHelp" placeholder="Enter mac address of device" />
                 <small id="macAddressHelp" class="form-text text-muted">Device mac address used for associating data with correct device. Can be updated afterwards.</small>
               </div>
+              <div *ngIf="successMessage" class="success-message">
+                Device created!
+              </div>
               <div>
                 <button type="submit" class="btn btn-primary">Create</button>
               </div>

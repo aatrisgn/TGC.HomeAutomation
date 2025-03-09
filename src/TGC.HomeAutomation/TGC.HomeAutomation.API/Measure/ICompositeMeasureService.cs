@@ -7,4 +7,5 @@ public interface ICompositeMeasureService
 	Task<MeasureRangeResponse> GetAverageBy10Minutes(string measureType, DateTime startDate, DateTime endDate);
 	Task AddRead(MeasureRequest request);
 	Task<DeviceOrderedMeasureRangeResponse> GetByDeviceId(Guid deviceId, DateTime startDate, DateTime endDate);
+	Task<MeasureRangeResponse> GetLatestActivityByDeviceId(Guid deviceId);
 }

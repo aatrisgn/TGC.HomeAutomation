@@ -15,7 +15,7 @@ Random random = new Random();
 var httpClient = new HttpClient();
 httpClient.BaseAddress = new Uri("http://localhost:5298");
 
-var readsToSend = 30;
+var readsToSend = 15;
 var counter = 0;
 
 while (counter < readsToSend)
@@ -26,8 +26,8 @@ while (counter < readsToSend)
 	await httpClient.PostAsJsonAsync("/api/measure/inside", new MeasureRequest
 	{
 		DataValue = randomRoundedNumber,
-		Type = "humidity",
-		MacAddress = "sadasds"
+		Type = "temperature",
+		MacAddress = "00-B0-D0-63-C2-26"
 	});
 
 	counter++;
