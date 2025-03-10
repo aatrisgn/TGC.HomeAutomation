@@ -2,5 +2,6 @@
 
 public interface IDeviceAPIKeyGenerator
 {
-	Task<DeviceAPIKey> GenerateDeviceAPIKey();
+	Task<string> GenerateDeviceAPIKey();
+	Task<string> MaskApiKey(string apiKey);
 }

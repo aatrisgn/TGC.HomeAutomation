@@ -42,6 +42,16 @@ public class DeviceController : HAControllerBase
 	}
 
 	[HttpPut]
+	[Route("devices/{id:guid}/apikey")]
+	[ProducesResponseType(typeof(ApiKeyResponse), StatusCodes.Status200OK)]
+	[ProducesResponseType(StatusCodes.Status400BadRequest)]
+	public async Task<ApiKeyResponse> UpdateApiKey(Guid id, [FromBody] ApiKeyRequest apiKeyRequest)
+	{
+		var apiKeyResponse = await _deviceService.UpsertApiKeyAsync(apiKeyRequest, id);
+		return apiKeyResponse;
+	}
+
+	[HttpPut]
 	[Route("devices/{id:guid}")]
 	[ProducesResponseType(typeof(DeviceResponse), StatusCodes.Status200OK)]
 	[ProducesResponseType(StatusCodes.Status400BadRequest)]

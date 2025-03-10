@@ -8,6 +8,7 @@
           <th>Created</th>
           <th></th>
           <th></th>
+          <th></th>
         </tr>
       </thead>
       <tbody>
@@ -15,6 +16,7 @@
           <td>{{ device.name }}</td>
           <td>{{ device.macAddress }}</td>
           <td>{{ device.created }}</td>
+          <td><i (click)="generateNewApiKey(device.id!)" ngbTooltip="Generate new API Key" class="delete-device-btn feather icon-lock"></i></td>
           <td><i (click)="getLatestOrderedMeasuresForDevice(device.id!)" ngbTooltip="Latest measures" class="delete-device-btn feather icon-activity"></i></td>
           <td><i (click)="deleteDevice(device.id!)" ngbTooltip="Delete" class="delete-device-btn feather icon-trash-2"></i></td>
         </tr>

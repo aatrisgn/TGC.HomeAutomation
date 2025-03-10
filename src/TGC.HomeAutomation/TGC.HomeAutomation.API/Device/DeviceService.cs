@@ -7,10 +7,17 @@ namespace TGC.HomeAutomation.API.Device;
 public class DeviceService : IDeviceService
 {
 	private readonly IAzureTableStorageRepository<DeviceEntity> _deviceRepository;
+	private readonly IAzureTableStorageRepository<ApiKeyEntity> _apiKeyRepository;
+	private readonly IDeviceAPIKeyGenerator _deviceKeyGenerator;
 
-	public DeviceService(IAzureTableStorageRepository<DeviceEntity> deviceRepository)
+	public DeviceService(
+		IAzureTableStorageRepository<DeviceEntity> deviceRepository,
+		IDeviceAPIKeyGenerator deviceKeyGenerator,
+		IAzureTableStorageRepository<ApiKeyEntity> apiKeyRepository)
 	{
 		_deviceRepository = deviceRepository;
+		_deviceKeyGenerator = deviceKeyGenerator;
+		_apiKeyRepository = apiKeyRepository;
 	}
 
 	public async Task<IEnumerable<DeviceResponse>> GetAllAsync()
@@ -49,5 +56,36 @@ public class DeviceService : IDeviceService
 	{
 		var entitiyMatch = await _deviceRepository.GetSingleAsync(d => d.MacAddress == requestMacAddress);
 		return entitiyMatch;
+	}
+
+	public async Task<ApiKeyResponse> UpsertApiKeyAsync(ApiKeyRequest apiKeyRequest, Guid id)
+	{
+		var newApiKey = await _deviceKeyGenerator.GenerateDeviceAPIKey();
+		var maskedApiKey = await _deviceKeyGenerator.MaskApiKey(newApiKey);
+
+		var anyExistingApiKeys = await _apiKeyRepository.ExistsAsync(a => a.Name == apiKeyRequest.Name && a.DeviceId == id);
+
+		if (anyExistingApiKeys)
+		{
+			var existinKey = await _apiKeyRepository.GetSingleAsync(d => d.Name == apiKeyRequest.Name && d.DeviceId == id);
+			await _apiKeyRepository.DeleteByIdAsync(Guid.Parse(existinKey.RowKey!));
+		}
+
+		var newApiKeyEntity = new ApiKeyEntity
+		{
+			Secret = maskedApiKey,
+			ExpirationDate = apiKeyRequest.ExpirationDate.ToDateTime(TimeOnly.MinValue).ToUniversalTime(),
+			Name = apiKeyRequest.Name,
+			DeviceId = id
+		};
+
+		await _apiKeyRepository.CreateAsync(newApiKeyEntity);
+
+		return new ApiKeyResponse
+		{
+			Name = apiKeyRequest.Name,
+			Secret = newApiKey,
+			ExpirationDate = apiKeyRequest.ExpirationDate
+		};
 	}
 }
