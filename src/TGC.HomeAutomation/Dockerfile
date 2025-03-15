@@ -10,7 +10,7 @@ WORKDIR /src
 COPY ["TGC.HomeAutomation.API/TGC.HomeAutomation.API.csproj", "TGC.HomeAutomation.API/"]
 RUN dotnet restore "TGC.HomeAutomation.API/TGC.HomeAutomation.API.csproj"
 COPY . .
-WORKDIR "/src/TGC.HomeAutomation.API"
+#WORKDIR "/src/TGC.HomeAutomation.API"
 RUN dotnet build "TGC.HomeAutomation.API.csproj" -c $BUILD_CONFIGURATION -o /app/build
 
 FROM build AS publish
