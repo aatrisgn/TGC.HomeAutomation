@@ -6,6 +6,7 @@
         <ImplicitUsings>enable</ImplicitUsings>
         <!--<DockerDefaultTargetOS>linux-arm64</DockerDefaultTargetOS>-->
 		<NSwagConfigurationFile>NSwagConfiguration.json</NSwagConfigurationFile>
+		<buildAngularClient>true</buildAngularClient>
     </PropertyGroup>
 
     <ItemGroup>
@@ -27,7 +28,7 @@
       </Content>
     </ItemGroup>
 
-	<Target Name="NSwag" AfterTargets="Build">
+	<Target Name="NSwag" Condition="'$(buildAngularClient)' == 'true'" AfterTargets="Build">
 		<Exec EnvironmentVariables="ASPNETCORE_ENVIRONMENT=Development" Command="$(NSwagExe_Net80) run $(NSwagConfigurationFile) /variables:OutputPath=$(OutputPath)" />
 	</Target>
 
