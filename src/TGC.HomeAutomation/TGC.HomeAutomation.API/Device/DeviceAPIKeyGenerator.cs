@@ -38,6 +38,6 @@ public class DeviceAPIKeyGenerator : IDeviceAPIKeyGenerator
 	private static byte[] HashStringWithSalt(string input, byte[] salt, int iterations = 10000)
 	{
 		using var pbkdf2 = new Rfc2898DeriveBytes(input, salt, iterations);
-		return pbkdf2.GetBytes(32); // Output length of the hash
+		return pbkdf2.GetBytes(32);
 	}
 }

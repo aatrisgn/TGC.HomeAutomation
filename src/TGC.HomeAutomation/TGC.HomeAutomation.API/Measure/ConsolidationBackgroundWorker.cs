@@ -8,8 +8,6 @@ public class ConsolidationBackgroundWorker : BackgroundService
 	private readonly IServiceProvider _serviceProvider;
 	private readonly TimeProvider _timeProvider;
 
-	private Timer? _timer = null;
-
 	public ConsolidationBackgroundWorker(IServiceProvider services, ILogger<ConsolidationBackgroundWorker> logger, TimeProvider timeProvider)
 	{
 		_serviceProvider = services;
