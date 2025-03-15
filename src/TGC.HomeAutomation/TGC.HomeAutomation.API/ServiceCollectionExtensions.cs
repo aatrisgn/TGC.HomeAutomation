@@ -9,7 +9,7 @@ namespace TGC.HomeAutomation.API;
 
 public static class ServiceCollectionExtensions
 {
-	public static IServiceCollection AddHomeAutomationApiInjections(this IServiceCollection services)
+	public static IServiceCollection AddHomeAutomationApiInjections(this IServiceCollection services, IConfiguration configuration)
 	{
 		services.AddOpenApiDocument(document =>
 		{
@@ -58,12 +58,15 @@ public static class ServiceCollectionExtensions
 				ApiKeyAuthSchemeOptions.DefaultScheme,
 				options => { });
 
+		//TODO: Fix this way of passing configurations. Kinda bad.
+		var some = configuration.GetSection("TGC.AzureTableStorage");
+
+		var some2 = bool.TryParse(some["UseManagedIdentity"], out bool useManagedIdentity);
+
 		services.AddAzureTableStorage(configuration =>
 		{
-			configuration.AccountConnectionString =
-				"DefaultEndpointsProtocol=http;AccountName=devstoreaccount1;AccountKey=Eby8vdM02xNOcqFlqUwJPLlmEtlCDXJ1OUzFT50uSRZ6IFsuFq2UVErCz4I6tq/K1SZFPTOtr/KBHBeksoGMGw==;BlobEndpoint=http://127.0.0.1:10000/devstoreaccount1;QueueEndpoint=http://127.0.0.1:10001/devstoreaccount1;TableEndpoint=http://127.0.0.1:10002/devstoreaccount1;";
-			configuration.StorageAccountUrl = Environment.GetEnvironmentVariable("STORAGEACCOUNTURL");
-			configuration.
+			configuration.StorageAccountUrl = some["StorageAccountUrl"];
+			configuration.UseManagedIdentity = useManagedIdentity;
 			configuration.StubServices = false;
 		});
 

@@ -2,8 +2,10 @@ using TGC.HomeAutomation.API;
 
 var builder = WebApplication.CreateBuilder(args);
 
+builder.Configuration.AddEnvironmentVariables();
+
 // All injections are/should be handled inside extension
-builder.Services.AddHomeAutomationApiInjections();
+builder.Services.AddHomeAutomationApiInjections(builder.Configuration);
 
 var app = builder.Build();
 
