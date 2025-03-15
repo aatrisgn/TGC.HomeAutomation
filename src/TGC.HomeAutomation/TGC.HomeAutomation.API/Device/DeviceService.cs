@@ -9,15 +9,18 @@ public class DeviceService : IDeviceService
 	private readonly IAzureTableStorageRepository<DeviceEntity> _deviceRepository;
 	private readonly IAzureTableStorageRepository<ApiKeyEntity> _apiKeyRepository;
 	private readonly IDeviceAPIKeyGenerator _deviceKeyGenerator;
+	private readonly IDeviceCache _deviceCache;
 
 	public DeviceService(
 		IAzureTableStorageRepository<DeviceEntity> deviceRepository,
 		IDeviceAPIKeyGenerator deviceKeyGenerator,
-		IAzureTableStorageRepository<ApiKeyEntity> apiKeyRepository)
+		IAzureTableStorageRepository<ApiKeyEntity> apiKeyRepository,
+		IDeviceCache deviceCache)
 	{
 		_deviceRepository = deviceRepository;
 		_deviceKeyGenerator = deviceKeyGenerator;
 		_apiKeyRepository = apiKeyRepository;
+		_deviceCache = deviceCache;
 	}
 
 	public async Task<IEnumerable<DeviceResponse>> GetAllAsync()
@@ -54,7 +57,7 @@ public class DeviceService : IDeviceService
 
 	public async Task<DeviceEntity> GetByMacAddress(string requestMacAddress)
 	{
-		var entitiyMatch = await _deviceRepository.GetSingleAsync(d => d.MacAddress == requestMacAddress);
+		var entitiyMatch = await _deviceCache.GetEntity(requestMacAddress);
 		return entitiyMatch;
 	}
 

@@ -48,6 +48,8 @@ public static class ServiceCollectionExtensions
 		services.AddScoped<ICompositeMeasureService, CompositeMeasureService>();
 		services.AddScoped<IMeasureTypeConverter, MeasureTypeConverter>();
 
+		services.AddScoped<IDeviceCache, DeviceMacAddressCache>();
+
 		services.AddHostedService<ConsolidationBackgroundWorker>();
 
 		//Should be changed to default to Entra once that's implemented
