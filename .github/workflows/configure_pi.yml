@@ -40,7 +40,7 @@ jobs:
         echo "We here"
         sudo apt-get update -y
         echo "We here"
-        sudo apt-get install ca-certificates curl
+        sudo apt-get -y install ca-certificates curl
         echo "We here"
         sudo install -m 0755 -d /etc/apt/keyrings
         echo "We here"
