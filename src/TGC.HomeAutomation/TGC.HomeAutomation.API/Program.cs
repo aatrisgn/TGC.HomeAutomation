@@ -16,6 +16,11 @@ if (app.Environment.IsDevelopment())
 	app.UseSwaggerUI();
 	app.UseCors("ALLOW_DEVELOPMENT_CORS_ORIGINS_POLICY");
 }
+else
+{
+	//TODO: Make this in a better way
+	app.UseCors("ALLOW_PROD_CORS_ORIGINS_POLICY");
+}
 
 app.UseHttpsRedirection();
 

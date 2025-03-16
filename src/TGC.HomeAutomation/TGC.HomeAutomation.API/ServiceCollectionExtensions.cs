@@ -83,6 +83,17 @@ public static class ServiceCollectionExtensions
 				});
 		});
 
+		services.AddCors(options =>
+		{
+			options.AddPolicy(name: "ALLOW_PROD_CORS_ORIGINS_POLICY",
+				builder =>
+				{
+					builder.WithOrigins(allowedHosts!)
+						.AllowAnyMethod()
+						.AllowAnyHeader();
+				});
+		});
+
 		services.AddControllers();
 
 		return services;
