@@ -70,12 +70,14 @@ public static class ServiceCollectionExtensions
 			configuration.StubServices = false;
 		});
 
+		var allowedHosts = configuration.GetValue<string>("AllowedHosts");
+
 		services.AddCors(options =>
 		{
 			options.AddPolicy(name: "ALLOW_DEVELOPMENT_CORS_ORIGINS_POLICY",
 				builder =>
 				{
-					builder.WithOrigins("http://localhost:4200")
+					builder.WithOrigins(allowedHosts!)
 						.AllowAnyMethod()
 						.AllowAnyHeader();
 				});

@@ -23,6 +23,7 @@ jobs:
     environment: dev
     env:
       image_name: tgc-ha-api
+      app_image_name: tgc-ha-app
       project_name: TGC.HomeAutomation
       api_path: src/TGC.HomeAutomation/TGC.HomeAutomation.API/TGC.HomeAutomation.API.csproj
       acr_registry: tgclzdevacr.azurecr.io
@@ -63,7 +64,18 @@ jobs:
 
         docker push $acr_registry/$image_name:${{ github.sha }}
         docker push $acr_registry/$image_name:latest
-      name: "Build and publish to ACR"
+      name: "Build and publish API to ACR"
+
+    - run: |
+        az acr login --name tgclzdevacr.azurecr.io
+        cd src/TGC.HomeAutomationApp
+
+        docker build . -t $acr_registry/$app_image_name:${{ github.sha }}
+        docker build . -t $acr_registry/$app_image_name:latest
+
+        docker push $acr_registry/$app_image_name:${{ github.sha }}
+        docker push $acr_registry/$app_image_name:latest
+      name: "Build and publish NG App to ACR"
 
   deploy_raspberry:
     name: "Deploy to Raspberries"

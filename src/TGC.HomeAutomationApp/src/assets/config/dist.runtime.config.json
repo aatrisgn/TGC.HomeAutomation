@@ -1,0 +1,4 @@
+{
+  "ApiBaseURL":"${API_URL}",
+  "EnvironmentType":"${ENVIRONMENT_TYPE}"
+}
