@@ -1,0 +1,18 @@
+name: Health-check self-hosted runners
+
+on:
+    schedule:
+        # Runs every day at 2:00 AM UTC
+        - cron: '0 2 * * *'
+
+jobs:
+    build:
+        strategy:
+            matrix:
+                runner: [rasp01]
+        runs-on: self-hosted
+
+        steps:
+        - run: |
+            echo "I am alive"
+            name: "Check alive"
