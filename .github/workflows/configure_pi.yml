@@ -37,11 +37,17 @@ jobs:
         # Add Docker's official GPG key:
         sudo add-apt-repository -r https://ppa.launchpadcontent.net/ansible/ansible/ubuntu/
 
+        echo "We here"
         sudo apt-get update -y
+        echo "We here"
         sudo apt-get install ca-certificates curl
+        echo "We here"
         sudo install -m 0755 -d /etc/apt/keyrings
+        echo "We here"
         sudo curl -fsSL https://download.docker.com/linux/debian/gpg -o /etc/apt/keyrings/docker.asc
+        echo "We here"
         sudo chmod a+r /etc/apt/keyrings/docker.asc
+        echo "We here"
 
         # Add the repository to Apt sources:
         echo \

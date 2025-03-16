@@ -20,4 +20,4 @@ jobs:
         steps:
         - run: |
             echo "I am alive"
-            name: "Check alive"
+        name: "Check alive"
