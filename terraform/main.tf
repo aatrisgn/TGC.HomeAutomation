@@ -74,7 +74,7 @@ resource "azuread_application_registration" "web_auth_app_registration" {
 }
 
 resource "azuread_service_principal" "web_auth_enterprise_application" {
-  client_id = azuread_application_registration.rasperry_spn_app_registration.client_id
+  client_id = azuread_application_registration.web_auth_app_registration.client_id
 }
 
 resource "azuread_application_redirect_uris" "example_spa" {
