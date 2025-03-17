@@ -30,6 +30,10 @@ resource "azurerm_storage_account" "ha_storage_account" {
   }
 }
 
+
+#########################################
+# Pseudo managed identity for Raspberry #
+#########################################
 resource "azuread_application_registration" "rasperry_spn_app_registration" {
   display_name = "tgc-homeautomation-raspberry-spn"
 }
@@ -59,4 +63,27 @@ resource "azurerm_application_insights" "application_insights" {
   resource_group_name = data.azurerm_resource_group.default_resource_group.name
   name                = "ai-homeautomation-${var.environment}-weu" #Should change WEU to use location and translate
   application_type    = "web"
+}
+
+######################################
+# Web App authentication application #
+######################################
+resource "azuread_application_registration" "web_auth_app_registration" {
+  display_name = "tgc-homeautomation-web-auth-${lower(var.environment)}"
+  sign_in_audience = "AzureADMyOrg"
+}
+
+resource "azuread_service_principal" "web_auth_enterprise_application" {
+  client_id = azuread_application_registration.rasperry_spn_app_registration.client_id
+}
+
+resource "azuread_application_redirect_uris" "example_spa" {
+  application_id = azuread_application_registration.web_auth_app_registration.id
+  type           = "SPA"
+
+  redirect_uris = [
+    "http://localhost:4400",
+    "http://localhost:4300",
+    "http://localhost:4200"
+  ]
 }

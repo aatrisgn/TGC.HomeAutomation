@@ -4,7 +4,6 @@
         <TargetFramework>net8.0</TargetFramework>
         <Nullable>enable</Nullable>
         <ImplicitUsings>enable</ImplicitUsings>
-        <!--<DockerDefaultTargetOS>linux-arm64</DockerDefaultTargetOS>-->
 		<NSwagConfigurationFile>NSwagConfiguration.json</NSwagConfigurationFile>
 		<buildAngularClient>true</buildAngularClient>
     </PropertyGroup>
