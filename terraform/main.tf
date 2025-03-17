@@ -69,7 +69,7 @@ resource "azurerm_application_insights" "application_insights" {
 # Web App authentication application #
 ######################################
 resource "azuread_application_registration" "web_auth_app_registration" {
-  display_name = "tgc-homeautomation-web-auth-${lower(var.environment)}"
+  display_name     = "tgc-homeautomation-web-auth-${lower(var.environment)}"
   sign_in_audience = "AzureADMyOrg"
 }
 
