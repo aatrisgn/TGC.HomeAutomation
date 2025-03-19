@@ -4,12 +4,15 @@ import { Routes, RouterModule } from '@angular/router';
 
 // project import
 import { AdminComponent } from './theme/layout/admin/admin.component';
-import { GuestComponent } from './theme/layout/guest/guest.component';
+import { MsalGuard } from '@azure/msal-angular';
+import { LoginFailedComponent } from './pages/login-failed/login-failed.component';
+import { BrowserUtils } from '@azure/msal-browser';
 
 const routes: Routes = [
   {
     path: '',
     component: AdminComponent,
+    canActivate: [MsalGuard],
     children: [
       {
         path: '',
@@ -45,11 +48,19 @@ const routes: Routes = [
         loadComponent: () => import('./demo/tables/tbl-bootstrap/tbl-bootstrap.component')
       }
     ]
+  },
+  {
+    path: 'login-failed',
+    component: LoginFailedComponent
   }
 ];
 
 @NgModule({
-  imports: [RouterModule.forRoot(routes)],
+  imports: [RouterModule.forRoot(routes, {
+    initialNavigation: !BrowserUtils.isInIframe() && !BrowserUtils.isInPopup()
+      ? 'enabledNonBlocking'
+      : 'disabled',
+  })],
   exports: [RouterModule]
 })
 export class AppRoutingModule {}

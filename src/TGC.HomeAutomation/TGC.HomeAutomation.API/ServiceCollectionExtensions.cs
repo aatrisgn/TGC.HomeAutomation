@@ -1,4 +1,6 @@
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.FeatureManagement;
+using Microsoft.Identity.Web;
 using Microsoft.OpenApi.Models;
 using TGC.AzureTableStorage.IoC;
 using TGC.HomeAutomation.API.Authentication;
@@ -51,6 +53,9 @@ public static class ServiceCollectionExtensions
 		services.AddScoped<IDeviceCache, DeviceMacAddressCache>();
 
 		services.AddHostedService<ConsolidationBackgroundWorker>();
+
+		services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+			.AddMicrosoftIdentityWebApi(configuration.GetSection("AzureAd"));
 
 		//Should be changed to default to Entra once that's implemented
 		services.AddAuthentication(ApiKeyAuthSchemeOptions.DefaultScheme)

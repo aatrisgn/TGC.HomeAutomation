@@ -1,4 +1,5 @@
 using Microsoft.AspNetCore.Mvc;
+using TGC.HomeAutomation.API.Authentication;
 using TGC.HomeAutomation.API.Device;
 using TGC.HomeAutomation.API.Sensor;
 using TGC.HomeAutomation.API.Temperature;
@@ -14,6 +15,7 @@ public class DeviceController : HAControllerBase
 	}
 
 	[HttpGet]
+	[JWTAuthorize]
 	[Route("devices")]
 	[ProducesResponseType(typeof(IEnumerable<DeviceResponse>), StatusCodes.Status200OK)]
 	public async Task<IEnumerable<DeviceResponse>> GetAllDevices()
