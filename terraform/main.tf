@@ -16,6 +16,10 @@ terraform {
   }
 }
 
+########################
+# Azure infrastructure #
+########################
+
 resource "azurerm_storage_account" "ha_storage_account" {
   name = "tgcstha${var.environment}"
 
@@ -25,25 +29,14 @@ resource "azurerm_storage_account" "ha_storage_account" {
   account_tier             = "Standard"
   account_replication_type = "LRS"
 
+  network_rules {
+    default_action = "Deny"
+    virtual_network_subnet_ids = [ azurerm_subnet.applictions.id, azurerm_subnet.storage.id ]
+  }
+
   tags = {
     "provision" = "homeautomation"
   }
-}
-
-
-#########################################
-# Pseudo managed identity for Raspberry #
-#########################################
-resource "azuread_application_registration" "rasperry_spn_app_registration" {
-  display_name = "tgc-homeautomation-raspberry-spn"
-}
-
-resource "azuread_service_principal" "rasperry_spn_enterprise_application" {
-  client_id = azuread_application_registration.rasperry_spn_app_registration.client_id
-}
-
-resource "azuread_application_password" "rasperry_spn_secret" {
-  application_id = azuread_application_registration.rasperry_spn_app_registration.id
 }
 
 resource "azurerm_role_assignment" "table_storage_contributor" {
@@ -63,6 +56,48 @@ resource "azurerm_application_insights" "application_insights" {
   resource_group_name = data.azurerm_resource_group.default_resource_group.name
   name                = "ai-homeautomation-${var.environment}-weu" #Should change WEU to use location and translate
   application_type    = "web"
+}
+
+resource "azurerm_static_web_app" "frontend_app" {
+  name                = "swa-homeautomation-${var.environment}-weu"
+  location            = data.azurerm_resource_group.default_resource_group.location
+  resource_group_name = data.azurerm_resource_group.default_resource_group.name
+}
+
+resource "azurerm_virtual_network" "primary_virtual_network" {
+  name = "vnet-homeautomation-${var.environment}-weu"
+  location            = data.azurerm_resource_group.default_resource_group.location
+  resource_group_name = data.azurerm_resource_group.default_resource_group.name
+  address_space = ["10.0.0.0/16"]
+}
+
+resource "azurerm_subnet" "applictions" {
+  name = "applications"
+  address_prefixes = ["10.0.1.0/28"]
+  virtual_network_name = azurerm_virtual_network.primary_virtual_network.name
+  resource_group_name = data.azurerm_resource_group.default_resource_group.name
+}
+
+resource "azurerm_subnet" "storage" {
+  name = "storage"
+  address_prefixes = ["10.0.1.16/28"]
+  virtual_network_name = azurerm_virtual_network.primary_virtual_network.name
+  resource_group_name = data.azurerm_resource_group.default_resource_group.name
+}
+
+#########################################
+# Pseudo managed identity for Raspberry #
+#########################################
+resource "azuread_application_registration" "rasperry_spn_app_registration" {
+  display_name = "tgc-homeautomation-raspberry-spn"
+}
+
+resource "azuread_service_principal" "rasperry_spn_enterprise_application" {
+  client_id = azuread_application_registration.rasperry_spn_app_registration.client_id
+}
+
+resource "azuread_application_password" "rasperry_spn_secret" {
+  application_id = azuread_application_registration.rasperry_spn_app_registration.id
 }
 
 ######################################

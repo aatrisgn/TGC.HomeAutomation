@@ -17,7 +17,7 @@ public class ConsolidationBackgroundWorker : BackgroundService
 
 	protected override async Task ExecuteAsync(CancellationToken stoppingToken)
 	{
-		_logger.LogInformation("Timed Hosted Service running.");
+		_logger.LogInformation("Consolidating measures...");
 
 		// When the timer should have no due-time, then do the work once now.
 		await ConsolidateMeasures();
@@ -52,6 +52,8 @@ public class ConsolidationBackgroundWorker : BackgroundService
 			var orderedRawMeasures = allMeasures.OrderBy(m => m.Created).ToList();
 			var lookUpMeasures = allMeasures.ToList();
 
+			_logger.LogInformation("Located {rawMeasures} raw measures", orderedRawMeasures.Count);
+
 			// Start by iterating over each and locate related measure within the same 30-minute period.
 			// Then group by device ID to accumulate on individual device level.
 			foreach (var rawMeasure in orderedRawMeasures)
@@ -64,6 +66,7 @@ public class ConsolidationBackgroundWorker : BackgroundService
 					.GroupBy(m => m.DeviceId)
 					.ToList();
 
+				_logger.LogInformation("Found {measuresWithinTimeframe} measures within {timespanStart} to {timespanEnd} timespan", measuresWithinTimeframe.Count, roundedDownDateTime, roundedUpDateTime);
 				// Should be re-written
 				foreach (var measure in measuresWithinTimeframe)
 				{
@@ -92,8 +95,6 @@ public class ConsolidationBackgroundWorker : BackgroundService
 						lookUpMeasures.Remove(measureToRemove);
 					}
 				}
-
-				_logger.LogInformation("Timed Hosted Service is working.");
 			}
 
 			foreach (var measure in allMeasures)
@@ -101,7 +102,7 @@ public class ConsolidationBackgroundWorker : BackgroundService
 				await rawMeasureRepository.DeleteAsync(measure);
 			}
 		}
-		_logger.LogInformation("Timed Hosted Service is working.");
+		_logger.LogInformation("Finished processing measures.");
 	}
 
 	private DateTime RoundDown(DateTime dt, TimeSpan d)
