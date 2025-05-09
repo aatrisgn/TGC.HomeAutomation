@@ -87,11 +87,11 @@ resource "azurerm_virtual_network" "primary_virtual_network" {
 }
 
 resource "azurerm_subnet" "applictions" {
-  name                 = "applications"
-  address_prefixes     = ["10.0.1.0/28"]
-  virtual_network_name = azurerm_virtual_network.primary_virtual_network.name
-  resource_group_name  = data.azurerm_resource_group.default_resource_group.name
-  service_endpoint_policy_ids = [ azurerm_subnet_service_endpoint_storage_policy.storage_service_end.id ]
+  name                        = "applications"
+  address_prefixes            = ["10.0.1.0/28"]
+  virtual_network_name        = azurerm_virtual_network.primary_virtual_network.name
+  resource_group_name         = data.azurerm_resource_group.default_resource_group.name
+  service_endpoint_policy_ids = [azurerm_subnet_service_endpoint_storage_policy.storage_service_end.id]
 }
 
 resource "azurerm_subnet" "storage" {
