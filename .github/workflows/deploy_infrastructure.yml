@@ -1,16 +1,6 @@
- # # # # # # # # # # # # # # # # # # # # # # # #
-# REPLACE THE FOLLOWING VARIABLES AND ADJUST 
-# - ENVIRONMENT_REFERENCE
-# - CLIENT_ID_SECRET_REFERENCE
-# - SUBSCRIPTION_ID_SECRET_REFERENCE
-# - TENANT_ID_SECRET_REFERENCE
-# - RESOURCE_GROUP_REFERENCE
-# - STORAGE_ACCOUNT_REFERENCE
-# - CONTAINER_NAME_REFERENCE
-#
-# # # # # # # # # # # # # # # # # # # # # # # # #
-
 name: Deploy Infrastructure
+concurrency:
+  group: ${{ github.workflow }}
 
 on:
   push:

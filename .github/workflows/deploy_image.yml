@@ -1,4 +1,6 @@
 name: Build & deploy TGC.DHT
+concurrency:
+  group: ${{ github.workflow }}
 
 on:
   push:

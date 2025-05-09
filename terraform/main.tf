@@ -39,6 +39,21 @@ resource "azurerm_storage_account" "ha_storage_account" {
   }
 }
 
+resource "azurerm_subnet_service_endpoint_storage_policy" "storage_service_end" {
+  name                = "storage-account-service-endpoint-policy"
+  resource_group_name = data.azurerm_resource_group.default_resource_group.name
+  location            = data.azurerm_resource_group.default_resource_group.location
+  definition {
+    name        = "name1"
+    description = "definition1"
+    service     = "Microsoft.Storage"
+    service_resources = [
+      ata.azurerm_resource_group.default_resource_group.id,
+      azurerm_storage_account.ha_storage_account.id
+    ]
+  }
+}
+
 resource "azurerm_role_assignment" "table_storage_contributor" {
   scope                = azurerm_storage_account.ha_storage_account.id
   role_definition_name = "Storage Table Data Contributor"
@@ -69,6 +84,7 @@ resource "azurerm_virtual_network" "primary_virtual_network" {
   location            = data.azurerm_resource_group.default_resource_group.location
   resource_group_name = data.azurerm_resource_group.default_resource_group.name
   address_space       = ["10.0.0.0/16"]
+  depends_on          = [azurerm_subnet_service_endpoint_storage_policy.storage_service_end]
 }
 
 resource "azurerm_subnet" "applictions" {
