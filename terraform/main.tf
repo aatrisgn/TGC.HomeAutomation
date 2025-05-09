@@ -48,7 +48,7 @@ resource "azurerm_subnet_service_endpoint_storage_policy" "storage_service_end" 
     description = "definition1"
     service     = "Microsoft.Storage"
     service_resources = [
-      ata.azurerm_resource_group.default_resource_group.id,
+      data.azurerm_resource_group.default_resource_group.id,
       azurerm_storage_account.ha_storage_account.id
     ]
   }
