@@ -30,8 +30,8 @@ resource "azurerm_storage_account" "ha_storage_account" {
   account_replication_type = "LRS"
 
   network_rules {
-    default_action             = "Deny"
-    virtual_network_subnet_ids = [azurerm_subnet.applictions.id, azurerm_subnet.storage.id]
+    default_action = "Deny"
+    //virtual_network_subnet_ids = [azurerm_subnet.applictions.id, azurerm_subnet.storage.id]
   }
 
   tags = {
@@ -39,20 +39,20 @@ resource "azurerm_storage_account" "ha_storage_account" {
   }
 }
 
-resource "azurerm_subnet_service_endpoint_storage_policy" "storage_service_end" {
-  name                = "storage-account-service-endpoint-policy"
-  resource_group_name = data.azurerm_resource_group.default_resource_group.name
-  location            = data.azurerm_resource_group.default_resource_group.location
-  definition {
-    name        = "name1"
-    description = "definition1"
-    service     = "Microsoft.Storage"
-    service_resources = [
-      data.azurerm_resource_group.default_resource_group.id,
-      azurerm_storage_account.ha_storage_account.id
-    ]
-  }
-}
+# resource "azurerm_subnet_service_endpoint_storage_policy" "storage_service_end" {
+#   name                = "storage-account-service-endpoint-policy"
+#   resource_group_name = data.azurerm_resource_group.default_resource_group.name
+#   location            = data.azurerm_resource_group.default_resource_group.location
+#   definition {
+#     name        = "name1"
+#     description = "definition1"
+#     service     = "Microsoft.Storage"
+#     service_resources = [
+#       data.azurerm_resource_group.default_resource_group.id,
+#       azurerm_storage_account.ha_storage_account.id
+#     ]
+#   }
+# }
 
 resource "azurerm_role_assignment" "table_storage_contributor" {
   scope                = azurerm_storage_account.ha_storage_account.id
@@ -87,18 +87,18 @@ resource "azurerm_virtual_network" "primary_virtual_network" {
 }
 
 resource "azurerm_subnet" "applictions" {
-  name                        = "applications"
-  address_prefixes            = ["10.0.1.0/28"]
-  virtual_network_name        = azurerm_virtual_network.primary_virtual_network.name
-  resource_group_name         = data.azurerm_resource_group.default_resource_group.name
-  service_endpoint_policy_ids = [azurerm_subnet_service_endpoint_storage_policy.storage_service_end.id]
+  name                 = "applications"
+  address_prefixes     = ["10.0.1.0/28"]
+  virtual_network_name = azurerm_virtual_network.primary_virtual_network.name
+  resource_group_name  = data.azurerm_resource_group.default_resource_group.name
 }
 
 resource "azurerm_subnet" "storage" {
-  name                 = "storage"
-  address_prefixes     = ["10.0.1.16/28"]
-  virtual_network_name = azurerm_virtual_network.primary_virtual_network.name
-  resource_group_name  = data.azurerm_resource_group.default_resource_group.name
+  name                        = "storage"
+  address_prefixes            = ["10.0.1.16/28"]
+  virtual_network_name        = azurerm_virtual_network.primary_virtual_network.name
+  resource_group_name         = data.azurerm_resource_group.default_resource_group.name
+  service_endpoint_policy_ids = [azurerm_subnet_service_endpoint_storage_policy.storage_service_end.id]
 }
 
 #########################################
