@@ -30,8 +30,8 @@ resource "azurerm_storage_account" "ha_storage_account" {
   account_replication_type = "LRS"
 
   network_rules {
-    default_action = "Deny"
-    virtual_network_subnet_ids = [ azurerm_subnet.applictions.id, azurerm_subnet.storage.id ]
+    default_action             = "Deny"
+    virtual_network_subnet_ids = [azurerm_subnet.applictions.id, azurerm_subnet.storage.id]
   }
 
   tags = {
@@ -65,24 +65,24 @@ resource "azurerm_static_web_app" "frontend_app" {
 }
 
 resource "azurerm_virtual_network" "primary_virtual_network" {
-  name = "vnet-homeautomation-${var.environment}-weu"
+  name                = "vnet-homeautomation-${var.environment}-weu"
   location            = data.azurerm_resource_group.default_resource_group.location
   resource_group_name = data.azurerm_resource_group.default_resource_group.name
-  address_space = ["10.0.0.0/16"]
+  address_space       = ["10.0.0.0/16"]
 }
 
 resource "azurerm_subnet" "applictions" {
-  name = "applications"
-  address_prefixes = ["10.0.1.0/28"]
+  name                 = "applications"
+  address_prefixes     = ["10.0.1.0/28"]
   virtual_network_name = azurerm_virtual_network.primary_virtual_network.name
-  resource_group_name = data.azurerm_resource_group.default_resource_group.name
+  resource_group_name  = data.azurerm_resource_group.default_resource_group.name
 }
 
 resource "azurerm_subnet" "storage" {
-  name = "storage"
-  address_prefixes = ["10.0.1.16/28"]
+  name                 = "storage"
+  address_prefixes     = ["10.0.1.16/28"]
   virtual_network_name = azurerm_virtual_network.primary_virtual_network.name
-  resource_group_name = data.azurerm_resource_group.default_resource_group.name
+  resource_group_name  = data.azurerm_resource_group.default_resource_group.name
 }
 
 #########################################
