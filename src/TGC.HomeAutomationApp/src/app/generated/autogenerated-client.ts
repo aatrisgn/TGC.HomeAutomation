@@ -503,37 +503,33 @@ export class EventClient {
         this.baseUrl = baseUrl ?? "";
     }
 
-    createNewDevice(eventRequest: EventRequest): Observable<EventResponse> {
+    getAllEvents(): Observable<EventResponse[]> {
         let url_ = this.baseUrl + "/api/events";
         url_ = url_.replace(/[?&]$/, "");
 
-        const content_ = JSON.stringify(eventRequest);
-
         let options_ : any = {
-            body: content_,
             observe: "response",
             responseType: "blob",
             headers: new HttpHeaders({
-                "Content-Type": "application/json",
                 "Accept": "application/json"
             })
         };
 
-        return this.http.request("post", url_, options_).pipe(_observableMergeMap((response_ : any) => {
-            return this.processCreateNewDevice(response_);
+        return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processGetAllEvents(response_);
         })).pipe(_observableCatch((response_: any) => {
             if (response_ instanceof HttpResponseBase) {
                 try {
-                    return this.processCreateNewDevice(response_ as any);
+                    return this.processGetAllEvents(response_ as any);
                 } catch (e) {
-                    return _observableThrow(e) as any as Observable<EventResponse>;
+                    return _observableThrow(e) as any as Observable<EventResponse[]>;
                 }
             } else
-                return _observableThrow(response_) as any as Observable<EventResponse>;
+                return _observableThrow(response_) as any as Observable<EventResponse[]>;
         }));
     }
 
-    protected processCreateNewDevice(response: HttpResponseBase): Observable<EventResponse> {
+    protected processGetAllEvents(response: HttpResponseBase): Observable<EventResponse[]> {
         const status = response.status;
         const responseBlob =
             response instanceof HttpResponse ? response.body :
@@ -562,7 +558,14 @@ export class EventClient {
             return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
             let result200: any = null;
             let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            result200 = EventResponse.fromJS(resultData200);
+            if (Array.isArray(resultData200)) {
+                result200 = [] as any;
+                for (let item of resultData200)
+                    result200!.push(EventResponse.fromJS(item));
+            }
+            else {
+                result200 = <any>null;
+            }
             return _observableOf(result200);
             }));
         } else if (status === 400) {
@@ -1286,36 +1289,6 @@ export class EventResponse implements IEventResponse {
 
 export interface IEventResponse {
     id?: string;
-}
-
-export class EventRequest implements IEventRequest {
-
-    constructor(data?: IEventRequest) {
-        if (data) {
-            for (var property in data) {
-                if (data.hasOwnProperty(property))
-                    (<any>this)[property] = (<any>data)[property];
-            }
-        }
-    }
-
-    init(_data?: any) {
-    }
-
-    static fromJS(data: any): EventRequest {
-        data = typeof data === 'object' ? data : {};
-        let result = new EventRequest();
-        result.init(data);
-        return result;
-    }
-
-    toJSON(data?: any) {
-        data = typeof data === 'object' ? data : {};
-        return data;
-    }
-}
-
-export interface IEventRequest {
 }
 
 export class MeasureResponse implements IMeasureResponse {

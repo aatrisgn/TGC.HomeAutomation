@@ -26,8 +26,8 @@ while (counter < readsToSend)
 	await httpClient.PostAsJsonAsync("/api/measure/inside", new MeasureRequest
 	{
 		DataValue = randomRoundedNumber,
-		Type = "temperature",
-		MacAddress = "00-B0-D0-63-C2-26"
+		Type = "co2",
+		MacAddress = "00-B0-D0-63-C2-25"
 	});
 
 	counter++;

@@ -9,6 +9,7 @@ internal class CompositeMeasureService : ICompositeMeasureService
 	private readonly TimeProvider _timeProvider;
 	private readonly IMeasureTypeConverter _measureTypeConverter;
 	private readonly IOrderedMeasureService _orderedMeasureService;
+	private readonly IAzureTableStorageRepository<OrderedMeasureEntity> _orderedMeasureRepository;
 
 	private readonly IAzureTableStorageRepository<MeasureEntity> _measureRepository;
 	private readonly IDeviceService _deviceService;
@@ -17,12 +18,14 @@ internal class CompositeMeasureService : ICompositeMeasureService
 		TimeProvider timeProvider,
 		IMeasureTypeConverter measureTypeConverter,
 		IAzureTableStorageRepository<MeasureEntity> measureRepository,
+		IAzureTableStorageRepository<OrderedMeasureEntity> orderedMeasureRepository,
 		IDeviceService deviceService,
 		IOrderedMeasureService orderedMeasureService
 		)
 	{
 		_timeProvider = timeProvider;
 		_measureRepository = measureRepository;
+		_orderedMeasureRepository = orderedMeasureRepository;
 		_measureTypeConverter = measureTypeConverter;
 		_deviceService = deviceService;
 		_orderedMeasureService = orderedMeasureService;
@@ -66,11 +69,11 @@ internal class CompositeMeasureService : ICompositeMeasureService
 
 	public async Task<MeasureRangeResponse> GetAverageBy10Minutes(string measureType, DateTime startDate, DateTime endDate)
 	{
-		var temperatures = await _measureRepository.GetAllAsync(t => t.Created >= startDate && t.Created <= endDate);
+		var measures = await _orderedMeasureRepository.GetAllAsync(t => t.Created >= startDate && t.Created <= endDate && t.Type == measureType);
 
-		if (temperatures.Any())
+		if (measures.Any())
 		{
-			var averages = temperatures
+			var averages = measures
 				.GroupBy(m => new { m.Created.Date, Hour = m.Created.Hour, TenMinuteInterval = m.Created.Minute / 10 })
 				.Select(g => new
 				{
@@ -83,7 +86,8 @@ internal class CompositeMeasureService : ICompositeMeasureService
 			var measureDataValues = averages.Select(a => new MeasureResponse
 			{
 				DataValue = a.AverageMeasure,
-				Created = a.IntervalStart
+				Created = a.IntervalStart,
+				Type = measureType
 			});
 
 			return new MeasureRangeResponse { DataValues = measureDataValues, };

@@ -53,6 +53,9 @@ public static class ServiceCollectionExtensions
 		services.AddScoped<IDeviceCache, DeviceMacAddressCache>();
 
 		services.AddHostedService<ConsolidationBackgroundWorker>();
+		services.AddHostedService<FakeDeviceBackgroundWorker>();
+
+		services.AddSingleton(new FakeDeviceManager(3));
 
 		services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
 			.AddMicrosoftIdentityWebApi(configuration.GetSection("AzureAd"));
@@ -68,12 +71,25 @@ public static class ServiceCollectionExtensions
 
 		var some2 = bool.TryParse(some["UseManagedIdentity"], out bool useManagedIdentity);
 
-		services.AddAzureTableStorage(configuration =>
+		if (!useManagedIdentity)
 		{
-			configuration.StorageAccountUrl = some["StorageAccountUrl"];
-			configuration.UseManagedIdentity = useManagedIdentity;
-			configuration.StubServices = false;
-		});
+			services.AddAzureTableStorage(configuration =>
+			{
+				configuration.AccountConnectionString = "DefaultEndpointsProtocol=http;AccountName=devstoreaccount1;AccountKey=Eby8vdM02xNOcqFlqUwJPLlmEtlCDXJ1OUzFT50uSRZ6IFsuFq2UVErCz4I6tq/K1SZFPTOtr/KBHBeksoGMGw==;BlobEndpoint=http://127.0.0.1:10000/devstoreaccount1;QueueEndpoint=http://127.0.0.1:10001/devstoreaccount1;TableEndpoint=http://127.0.0.1:10002/devstoreaccount1;";
+				//configuration.AccountConnectionString = some["ConnectionString"];
+				//configuration.UseManagedIdentity = useManagedIdentity;
+				configuration.StubServices = false;
+			});
+		}
+		else
+		{
+			services.AddAzureTableStorage(configuration =>
+			{
+				configuration.StorageAccountUrl = some["StorageAccountUrl"];
+				configuration.UseManagedIdentity = useManagedIdentity;
+				configuration.StubServices = false;
+			});
+		}
 
 		var allowedHosts = configuration.GetValue<string>("AllowedHosts");
 

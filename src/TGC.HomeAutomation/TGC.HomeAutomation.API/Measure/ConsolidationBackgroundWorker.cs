@@ -22,7 +22,7 @@ public class ConsolidationBackgroundWorker : BackgroundService
 		// When the timer should have no due-time, then do the work once now.
 		await ConsolidateMeasures();
 
-		using PeriodicTimer timer = new(TimeSpan.FromSeconds(60));
+		using PeriodicTimer timer = new(TimeSpan.FromSeconds(600));
 
 		try
 		{
@@ -45,10 +45,11 @@ public class ConsolidationBackgroundWorker : BackgroundService
 			var rawMeasureRepository = scope.ServiceProvider.GetRequiredService<IAzureTableStorageRepository<MeasureEntity>>();
 			var orderedMeasureRepository = scope.ServiceProvider.GetRequiredService<IAzureTableStorageRepository<OrderedMeasureEntity>>();
 
-			var timestampAnHourAgo = _timeProvider.GetUtcNow().AddHours(-1);
+			var timestampAnHourAgo = _timeProvider.GetUtcNow().AddMinutes(-30);
+			var roundedTimeAgo = RoundDown(timestampAnHourAgo.DateTime, TimeSpan.FromMinutes(30));
 
 			// Locate all measures which are older than 1 hour to give a buffer
-			var allMeasures = await rawMeasureRepository.GetAllAsync(m => m.Created < timestampAnHourAgo.DateTime);
+			var allMeasures = await rawMeasureRepository.GetAllAsync(m => m.Created < roundedTimeAgo);
 			var orderedRawMeasures = allMeasures.OrderBy(m => m.Created).ToList();
 			var lookUpMeasures = allMeasures.ToList();
 
