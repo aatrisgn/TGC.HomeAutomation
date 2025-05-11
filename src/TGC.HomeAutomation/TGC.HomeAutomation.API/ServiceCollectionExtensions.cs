@@ -52,9 +52,6 @@ public static class ServiceCollectionExtensions
 
 		services.AddScoped<IDeviceCache, DeviceMacAddressCache>();
 
-		services.AddHostedService<ConsolidationBackgroundWorker>();
-		services.AddHostedService<FakeDeviceBackgroundWorker>();
-
 		services.AddSingleton(new FakeDeviceManager(3));
 
 		services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
@@ -116,6 +113,9 @@ public static class ServiceCollectionExtensions
 		});
 
 		services.AddControllers();
+
+		services.AddHostedService<ConsolidationBackgroundWorker>();
+		services.AddHostedService<FakeDeviceBackgroundWorker>();
 
 		return services;
 	}

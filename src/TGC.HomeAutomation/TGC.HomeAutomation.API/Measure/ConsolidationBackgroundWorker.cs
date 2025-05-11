@@ -81,7 +81,7 @@ public class ConsolidationBackgroundWorker : BackgroundService
 						var orderedMeasure = new OrderedMeasureEntity
 						{
 							DataValue = averageDataValue,
-							Created = roundedDownDateTime.ToUniversalTime(),
+							Created = roundedDownDateTime,
 							DeviceId = measure.Key,
 							Type = measureType.Key,
 							Sample = measureType.Count()
@@ -108,6 +108,6 @@ public class ConsolidationBackgroundWorker : BackgroundService
 
 	private DateTime RoundDown(DateTime dt, TimeSpan d)
 	{
-		return new DateTime((dt.Ticks / d.Ticks) * d.Ticks);
+		return new DateTime((dt.Ticks / d.Ticks) * d.Ticks, DateTimeKind.Utc);
 	}
 }
