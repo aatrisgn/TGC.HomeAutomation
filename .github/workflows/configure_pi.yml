@@ -74,9 +74,13 @@ jobs:
         secret=$(az keyvault secret show --vault-name "tgckvhadev" --name "${{ runner.name }}ClientId" --query "value" -o tsv)
         echo "::add-mask::$secret"
         echo "RunnerClientId=$secret" >> $GITHUB_ENV
+
+        secret=$(az keyvault secret show --vault-name "tgckvhadev" --name "${{ runner.name }}Password" --query "value" -o tsv)
+        echo "::add-mask::$secret"
+        echo "RunnerPassword=$secret" >> $GITHUB_ENV
     
     - run: |
-        ansible-playbook ./ansible/roles/pi/playbooks/setup_identity.yml --extra-vars "tenantid=${{ secrets.HOMEAUTOMATION_DEV_TENANT_ID }} clientid=$RunnerClientId objectid=wadasdasd name=awdawd secret=awdasd"
+        ansible-playbook ./ansible/roles/pi/playbooks/setup_identity.yml --extra-vars "tenantid=${{ secrets.HOMEAUTOMATION_DEV_TENANT_ID }} clientid=$RunnerClientId secret=$RunnerPassword"
       name: "Run Ansible Playbook"
 
   # build:

@@ -2,9 +2,8 @@
   hosts: localhost
   become: true
   vars:
-    client_id_secret_name: "{{ clientid }}"
-    object_id_secret_name: "{{ objectid }}"
-    password_secret_name: "{{ secret }}"
+    client_id_secret: "{{ clientid }}"
+    password_secret: "{{ secret }}"
     tenant_id: "{{ tenantid }}"
   
   tasks:
