@@ -29,6 +29,12 @@ resource "azurerm_key_vault" "shared_keyvault" {
   enable_rbac_authorization = true
 }
 
+resource "azurerm_role_assignment" "spn_kv_access" {
+  scope                = azurerm_key_vault.shared_keyvault.id
+  role_definition_name = "Key Vault Secrets Officer" # or "Key Vault Administrator"
+  principal_id         = data.azurerm_client_config.current.object_id
+}
+
 resource "azurerm_storage_account" "ha_storage_account" {
   name = "tgcstha${var.environment}"
 

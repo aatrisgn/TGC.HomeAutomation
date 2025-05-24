@@ -61,7 +61,7 @@ jobs:
         uses: actions/checkout@v2
       
       - run: |
-          ansible-playbook ./ansible/roles/pi/playbooks/setup_identity.yml --extra-vars "clientid=asdasd objectid=wadasdasd name=awdawd secret=awdasd" -vvv
+          ansible-playbook ./ansible/roles/pi/playbooks/setup_identity.yml --extra-vars "clientid=asdasd objectid=wadasdasd name=awdawd secret=awdasd"
         name: "Run Ansible Playbook"
 
   # build:
