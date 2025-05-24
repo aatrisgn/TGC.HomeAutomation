@@ -68,7 +68,7 @@ resource "azurerm_role_assignment" "table_storage_contributor" {
 
 resource "azurerm_role_assignment" "storage_account_reader" {
   for_each = var.raspberries
-  
+
   scope                = data.azurerm_storage_account.homeautomation_storage_account.id
   role_definition_name = "Reader"
   principal_id         = azuread_service_principal.runner_enterprise_application[each.key].object_id
