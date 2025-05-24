@@ -21,10 +21,11 @@ terraform {
 ########################
 
 resource "azurerm_key_vault" "shared_keyvault" {
-  name = "kv"
-  location = data.azurerm_resource_group.default_resource_group.location
+  name                = "kv"
+  location            = data.azurerm_resource_group.default_resource_group.location
   resource_group_name = data.azurerm_resource_group.default_resource_group.name
-  sku_name = "standard"
+  sku_name            = "standard"
+  tenant_id           = var.tenant_id
 }
 
 resource "azurerm_storage_account" "ha_storage_account" {
@@ -33,8 +34,8 @@ resource "azurerm_storage_account" "ha_storage_account" {
   location            = data.azurerm_resource_group.default_resource_group.location
   resource_group_name = data.azurerm_resource_group.default_resource_group.name
 
-  account_tier                  = "Standard"
-  account_replication_type      = "LRS"
+  account_tier             = "Standard"
+  account_replication_type = "LRS"
 
   tags = {
     "provision" = "homeautomation"
@@ -64,21 +65,6 @@ resource "azurerm_static_web_app" "frontend_app" {
   name                = "swa-homeautomation-${var.environment}-weu"
   location            = data.azurerm_resource_group.default_resource_group.location
   resource_group_name = data.azurerm_resource_group.default_resource_group.name
-}
-
-#########################################
-# Pseudo managed identity for Raspberry #
-#########################################
-resource "azuread_application_registration" "rasperry_spn_app_registration" {
-  display_name = "tgc-homeautomation-raspberry-spn"
-}
-
-resource "azuread_service_principal" "rasperry_spn_enterprise_application" {
-  client_id = azuread_application_registration.rasperry_spn_app_registration.client_id
-}
-
-resource "azuread_application_password" "rasperry_spn_secret" {
-  application_id = azuread_application_registration.rasperry_spn_app_registration.id
 }
 
 ######################################
