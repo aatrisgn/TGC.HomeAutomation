@@ -53,6 +53,16 @@ jobs:
     - name: Terraform Apply
       run: terraform apply -auto-approve tfplan
 
+  configure_identity:
+      runs-on: [self-hosted]
+
+      steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+      
+      - run: |
+          ansible-playbook ./ansible/roles/pi/playbooks/setup_identity.yml --extra-vars "clientid=asdasd objectid=wadasdasd name=awdawd secret=awdasd" -vvv
+        name: "Run Ansible Playbook"
 
   # build:
   #   runs-on: [self-hosted]

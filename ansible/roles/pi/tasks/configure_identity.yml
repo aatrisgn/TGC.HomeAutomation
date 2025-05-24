@@ -1,0 +1,10 @@
+- name: Ensure the directory exists
+  ansible.builtin.file:
+    path: /home/HomeAutomation/identity
+    state: directory
+    mode: '0755'
+
+- name: Copy docker-compose to destination
+  ansible.builtin.template:
+    src: ../templates/identity_file.txt.j2
+    dest: /home/HomeAutomation/identity/identity_file.txt
