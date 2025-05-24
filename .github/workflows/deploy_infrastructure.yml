@@ -6,12 +6,12 @@ on:
   push:
     branches: ["main"]
     paths:
-    - 'terraform/**'
+    - 'terraform/infrastructure/**'
     - '.github/workflows/deploy_infrastructure.yml'
   pull_request:
     branches: ["main"]
     paths:
-    - 'terraform/**'
+    - 'terraform/infrastructure/**'
   workflow_dispatch:
 
 permissions:
@@ -24,7 +24,7 @@ jobs:
     environment: dev #Should be changed, lol
     defaults:
       run:
-        working-directory: ./terraform
+        working-directory: ./terraform/infrastructure
     
     env:
       ARM_CLIENT_ID: "${{ secrets.HOMEAUTOMATION_DEV_CLIENT_ID }}"

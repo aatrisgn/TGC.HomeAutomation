@@ -52,13 +52,12 @@ jobs:
 
     - name: Terraform Apply
       run: terraform apply -auto-approve tfplan
-    
 
     - name: Get Terraform Output
       id: tf_output
       run: |
-        output=$(terraform output -json tf_output | jq -r '.')
-        echo "tf_output=$output" >> $GITHUB_ENV
+        output=$(terraform output -json tfplan | jq -r '.')
+        echo "tfplan=$output" >> $GITHUB_ENV
 
 
   configure_identity:
