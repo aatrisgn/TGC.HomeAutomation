@@ -40,7 +40,7 @@ jobs:
         -backend-config=resource_group_name="${{secrets.HOMEAUTOMATION_DEV_TFSTATE_RESOURCE_GROUP_NAME}}" \
         -backend-config=storage_account_name="${{ secrets.HOMEAUTOMATION_DEV_TFSTATE_STORAGE_ACCOUNT_NAME }}" \
         -backend-config=container_name="${{ secrets.HOMEAUTOMATION_DEV_TFSTATE_STORAGE_CONTAINER_NAME }}" \
-        -backend-config=key="KEY_NAME"
+        -backend-config=key="runner_identity.dev.tfstate"
         
     - name: Terraform Validate
       run: terraform validate
@@ -49,65 +49,65 @@ jobs:
       id: plan
       run: terraform plan -input=false -var="tenant_id=${{ secrets.HOMEAUTOMATION_DEV_TENANT_ID }}" -var-file="envs/dev.tfvars" -out=tfplan #UPDATE VARS file
 
-    - name: Terraform Apply
-      run: terraform apply -auto-approve tfplan
+    # - name: Terraform Apply
+    #   run: terraform apply -auto-approve tfplan
 
 
-  build:
-    runs-on: [self-hosted]
+  # build:
+  #   runs-on: [self-hosted]
 
-    steps:
-    - name: Checkout code
-      uses: actions/checkout@v2
+  #   steps:
+  #   - name: Checkout code
+  #     uses: actions/checkout@v2
       
-    - run: |
-        echo "Installing Ansible..."
+  #   - run: |
+  #       echo "Installing Ansible..."
 
-        echo "Running: sudo apt update && sudo apt-get upgrade -y"
-        sudo apt -y install software-properties-common
+  #       echo "Running: sudo apt update && sudo apt-get upgrade -y"
+  #       sudo apt -y install software-properties-common
 
-        echo "Running: sudo apt-get -y install python3-launchpadlib"
-        sudo apt-get -y install python3-launchpadlib
+  #       echo "Running: sudo apt-get -y install python3-launchpadlib"
+  #       sudo apt-get -y install python3-launchpadlib
 
-        echo "Running: sudo apt-add-repository --yes --update ppa:ansible/ansible"
-        sudo apt-add-repository --yes --update ppa:ansible/ansible
+  #       echo "Running: sudo apt-add-repository --yes --update ppa:ansible/ansible"
+  #       sudo apt-add-repository --yes --update ppa:ansible/ansible
 
-        echo "Running: sudo apt -y install ansible"
-        sudo apt -y install ansible
+  #       echo "Running: sudo apt -y install ansible"
+  #       sudo apt -y install ansible
 
-        echo "Finished installing!"
-      name: "Install Ansible"
+  #       echo "Finished installing!"
+  #     name: "Install Ansible"
     
-    - run: |
-        # Add Docker's official GPG key:
-        sudo add-apt-repository -r https://ppa.launchpadcontent.net/ansible/ansible/ubuntu/
+  #   - run: |
+  #       # Add Docker's official GPG key:
+  #       sudo add-apt-repository -r https://ppa.launchpadcontent.net/ansible/ansible/ubuntu/
 
-        echo "We here"
-        sudo apt-get update -y
-        echo "We here"
-        sudo apt-get -y install ca-certificates curl
-        echo "We here"
-        sudo install -m 0755 -d /etc/apt/keyrings
-        echo "We here"
-        sudo curl -fsSL https://download.docker.com/linux/debian/gpg -o /etc/apt/keyrings/docker.asc
-        echo "We here"
-        sudo chmod a+r /etc/apt/keyrings/docker.asc
-        echo "We here"
+  #       echo "We here"
+  #       sudo apt-get update -y
+  #       echo "We here"
+  #       sudo apt-get -y install ca-certificates curl
+  #       echo "We here"
+  #       sudo install -m 0755 -d /etc/apt/keyrings
+  #       echo "We here"
+  #       sudo curl -fsSL https://download.docker.com/linux/debian/gpg -o /etc/apt/keyrings/docker.asc
+  #       echo "We here"
+  #       sudo chmod a+r /etc/apt/keyrings/docker.asc
+  #       echo "We here"
 
-        # Add the repository to Apt sources:
-        echo \
-          "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.asc] https://download.docker.com/linux/debian \
-          $(. /etc/os-release && echo "$VERSION_CODENAME") stable" | \
-          sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
+  #       # Add the repository to Apt sources:
+  #       echo \
+  #         "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.asc] https://download.docker.com/linux/debian \
+  #         $(. /etc/os-release && echo "$VERSION_CODENAME") stable" | \
+  #         sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
         
-        echo "We here"
-        sudo apt-get update -y
+  #       echo "We here"
+  #       sudo apt-get update -y
 
-        sudo apt-get -y install docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin docker-compose
-      name: "Install Docker tools"
+  #       sudo apt-get -y install docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin docker-compose
+  #     name: "Install Docker tools"
 
-    - run: |
-        curl -sL https://aka.ms/InstallAzureCLIDeb | sudo bash
-      name: "Insall AZ CLI"
+  #   - run: |
+  #       curl -sL https://aka.ms/InstallAzureCLIDeb | sudo bash
+  #     name: "Insall AZ CLI"
 
         

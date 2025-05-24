@@ -8,6 +8,16 @@ variable "tenant_id" {
   type        = string
 }
 
+variable "keyvault_name" {
+  description = "Shared Homeautomation keyvault for credential storage"
+  type        = string
+}
+
+variable "storage_account_name" {
+  description = "Storage account for storing data"
+  type        = string
+}
+
 variable "environment" {
   description = "environment type"
   type        = string
