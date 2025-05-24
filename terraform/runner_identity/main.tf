@@ -33,3 +33,15 @@ resource "azuread_application_password" "runner_secret" {
 
     application_id = azuread_application_registration.web_auth_app_registration[each.key].id
 }
+
+resource "azurerm_role_assignment" "table_storage_contributor" {
+  scope                = azurerm_storage_account.ha_storage_account.id
+  role_definition_name = "Storage Table Data Contributor"
+  principal_id         = azuread_service_principal.rasperry_spn_enterprise_application.object_id
+}
+
+resource "azurerm_role_assignment" "storage_account_reader" {
+  scope                = azurerm_storage_account.ha_storage_account.id
+  role_definition_name = "Reader"
+  principal_id         = azuread_service_principal.rasperry_spn_enterprise_application.object_id
+}

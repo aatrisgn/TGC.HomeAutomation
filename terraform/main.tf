@@ -21,7 +21,7 @@ terraform {
 ########################
 
 resource "azurerm_key_vault" "shared_keyvault" {
-  name                = "kv"
+  name                = "tgckvha${var.environment}"
   location            = data.azurerm_resource_group.default_resource_group.location
   resource_group_name = data.azurerm_resource_group.default_resource_group.name
   sku_name            = "standard"
@@ -40,18 +40,6 @@ resource "azurerm_storage_account" "ha_storage_account" {
   tags = {
     "provision" = "homeautomation"
   }
-}
-
-resource "azurerm_role_assignment" "table_storage_contributor" {
-  scope                = azurerm_storage_account.ha_storage_account.id
-  role_definition_name = "Storage Table Data Contributor"
-  principal_id         = azuread_service_principal.rasperry_spn_enterprise_application.object_id
-}
-
-resource "azurerm_role_assignment" "storage_account_reader" {
-  scope                = azurerm_storage_account.ha_storage_account.id
-  role_definition_name = "Reader"
-  principal_id         = azuread_service_principal.rasperry_spn_enterprise_application.object_id
 }
 
 resource "azurerm_application_insights" "application_insights" {
