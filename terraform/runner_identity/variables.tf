@@ -29,5 +29,5 @@ variable "environment" {
 }
 
 variable "raspberries" {
-  type = [string]
+  type = list(string)
 }
