@@ -15,7 +15,7 @@ permissions:
 jobs:
   create_identity:
     runs-on: ubuntu-latest
-    environment: dev #Should be changed, lol
+    environment: dev
     defaults:
       run:
         working-directory: ./terraform/runner_identity
@@ -61,15 +61,24 @@ jobs:
 
 
   configure_identity:
-      runs-on: [self-hosted]
+    environment: dev
+    runs-on: [self-hosted]
 
-      steps:
-      - name: Checkout code
-        uses: actions/checkout@v2
-      
-      - run: |
-          ansible-playbook ./ansible/roles/pi/playbooks/setup_identity.yml --extra-vars "tenantid=${{ secrets.HOMEAUTOMATION_DEV_TENANT_ID }} clientid=asdasd objectid=wadasdasd name=awdawd secret=awdasd"
-        name: "Run Ansible Playbook"
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v2
+
+    - name: Login to Azure using OIDC
+      uses: azure/login@v1
+      with:
+        client-id: ${{ secrets.HOMEAUTOMATION_DEV_CLIENT_ID }}
+        tenant-id: ${{ secrets.HOMEAUTOMATION_DEV_TENANT_ID }}
+        subscription-id: ${{ secrets.HOMEAUTOMATION_DEV_SUBSCRIPTION_ID }}
+
+    
+    - run: |
+        ansible-playbook ./ansible/roles/pi/playbooks/setup_identity.yml --extra-vars "tenantid=${{ secrets.HOMEAUTOMATION_DEV_TENANT_ID }} clientid=asdasd objectid=wadasdasd name=awdawd secret=awdasd"
+      name: "Run Ansible Playbook"
 
   # build:
   #   runs-on: [self-hosted]
