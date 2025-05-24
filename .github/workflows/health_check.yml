@@ -3,14 +3,13 @@ name: Health-check self-hosted runners
 on:
   schedule:
     # Runs every day at 2:00 AM UTC
-    - cron: '0 2 * * *'
+    - cron: '0 0,6,12,18 * * *'
   push:
     branches:
     - main
     paths:
     - '.github/workflows/health_check.yml'
   workflow_dispatch:
-  
 
 jobs:
     build:
