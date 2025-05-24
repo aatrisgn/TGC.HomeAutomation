@@ -4,7 +4,7 @@
     state: directory
     mode: '0755'
 
-- name: Copy docker-compose to destination
+- name: Template identity file
   ansible.builtin.template:
     src: ../templates/identity_file.txt.j2
     dest: /home/HomeAutomation/identity/identity_file.txt
