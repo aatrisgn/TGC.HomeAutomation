@@ -4,8 +4,8 @@
   vars:
     client_id_secret_name: "{{ clientid }}"
     object_id_secret_name: "{{ objectid }}"
-    password_secret_name: "{{ name }}"
-    tenant_id: "{{ tenant_id }}"
+    password_secret_name: "{{ secret }}"
+    tenant_id: "{{ tenantid }}"
   
   tasks:
     - name: Configure Runner identity
