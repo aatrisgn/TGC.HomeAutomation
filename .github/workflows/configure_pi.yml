@@ -53,13 +53,6 @@ jobs:
     - name: Terraform Apply
       run: terraform apply -auto-approve tfplan
 
-    - name: Get Terraform Output
-      id: tf_output
-      run: |
-        output=$(terraform output -json tfplan | jq -r '.')
-        echo "tfplan=$output" >> $GITHUB_ENV
-
-
   configure_identity:
     environment: dev
     runs-on: [self-hosted]
@@ -74,10 +67,16 @@ jobs:
         client-id: ${{ secrets.HOMEAUTOMATION_DEV_CLIENT_ID }}
         tenant-id: ${{ secrets.HOMEAUTOMATION_DEV_TENANT_ID }}
         subscription-id: ${{ secrets.HOMEAUTOMATION_DEV_SUBSCRIPTION_ID }}
-
+        
+    - name: Fetch secret from Key Vault
+      id: get_secret
+      run: |
+        secret=$(az keyvault secret show --vault-name "tgckvhadev" --name "${{ runner.name }}ClientId" --query "value" -o tsv)
+        echo "::add-mask::$secret"
+        echo "RunnerClientId=$secret" >> $GITHUB_ENV
     
     - run: |
-        ansible-playbook ./ansible/roles/pi/playbooks/setup_identity.yml --extra-vars "tenantid=${{ secrets.HOMEAUTOMATION_DEV_TENANT_ID }} clientid=asdasd objectid=wadasdasd name=awdawd secret=awdasd"
+        ansible-playbook ./ansible/roles/pi/playbooks/setup_identity.yml --extra-vars "tenantid=${{ secrets.HOMEAUTOMATION_DEV_TENANT_ID }} clientid=$RunnerClientId objectid=wadasdasd name=awdawd secret=awdasd"
       name: "Run Ansible Playbook"
 
   # build:
