@@ -1,0 +1,12 @@
+- name: Pull images
+  hosts: localhost
+  become: true
+  vars:
+    client_id_secret_name: "{{ clientid }}"
+    object_id_secret_name: "{{ objectid }}"
+    password_secret_name: "{{ name }}"
+    tenant_id: "{{ tenant_id }}"
+  
+  tasks:
+    - name: Configure Runner identity
+      ansible.builtin.include_tasks: ../tasks/configure_identity.yml

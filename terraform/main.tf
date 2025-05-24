@@ -21,11 +21,12 @@ terraform {
 ########################
 
 resource "azurerm_key_vault" "shared_keyvault" {
-  name                = "tgckvha${var.environment}"
-  location            = data.azurerm_resource_group.default_resource_group.location
-  resource_group_name = data.azurerm_resource_group.default_resource_group.name
-  sku_name            = "standard"
-  tenant_id           = var.tenant_id
+  name                      = "tgckvha${var.environment}"
+  location                  = data.azurerm_resource_group.default_resource_group.location
+  resource_group_name       = data.azurerm_resource_group.default_resource_group.name
+  sku_name                  = "standard"
+  tenant_id                 = var.tenant_id
+  enable_rbac_authorization = true
 }
 
 resource "azurerm_storage_account" "ha_storage_account" {
