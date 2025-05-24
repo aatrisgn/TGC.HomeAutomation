@@ -47,7 +47,7 @@ jobs:
         -backend-config=resource_group_name="${{secrets.HOMEAUTOMATION_DEV_TFSTATE_RESOURCE_GROUP_NAME}}" \
         -backend-config=storage_account_name="${{ secrets.HOMEAUTOMATION_DEV_TFSTATE_STORAGE_ACCOUNT_NAME }}" \
         -backend-config=container_name="${{ secrets.HOMEAUTOMATION_DEV_TFSTATE_STORAGE_CONTAINER_NAME }}" \
-        -backend-config=key="KEY_NAME"
+        -backend-config=key="infrastructure.dev.tfstate"
         
     - name: Terraform Validate
       run: terraform validate
@@ -56,5 +56,5 @@ jobs:
       id: plan
       run: terraform plan -input=false -var="tenant_id=${{ secrets.HOMEAUTOMATION_DEV_TENANT_ID }}" -var-file="envs/dev.tfvars" -out=tfplan #UPDATE VARS file
 
-    - name: Terraform Apply
-      run: terraform apply -auto-approve tfplan
+    # - name: Terraform Apply
+    #   run: terraform apply -auto-approve tfplan
