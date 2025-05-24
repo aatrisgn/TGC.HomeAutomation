@@ -42,7 +42,7 @@ resource "azurerm_key_vault_secret" "runner_client_id" {
   value        = azuread_application_registration.runner_app_registration[each.key].client_id
 }
 
-resource "azurerm_key_vault_secret" "runner_client_id" {
+resource "azurerm_key_vault_secret" "runner_object_id" {
   for_each = var.raspberries
 
   name         = "${each.key}ObjectId"
@@ -50,7 +50,7 @@ resource "azurerm_key_vault_secret" "runner_client_id" {
   value        = azuread_service_principal.runner_enterprise_application[each.key].object_id
 }
 
-resource "azurerm_key_vault_secret" "runner_client_id" {
+resource "azurerm_key_vault_secret" "runner_secret" {
   for_each = var.raspberries
 
   name         = "${each.key}Password"
