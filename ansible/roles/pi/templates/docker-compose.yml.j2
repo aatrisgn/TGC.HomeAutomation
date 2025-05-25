@@ -3,14 +3,12 @@ services:
     image: tgclzdevacr.azurecr.io/tgc-ha-api:latest
     ports:
       - "9000:8080"
+    env_file: /home/identity/identity.env
     environment:
       - TGC.AzureTableStorage__StorageAccountUrl=https://tgcsthadev.table.core.windows.net/
       - TGC.AzureTableStorage__UseManagedIdentity=true
       - AllowedHosts=*
-    secrets:
-      - AZURE_TENANT_ID
-      - AZURE_CLIENT_ID
-      - AZURE_CLIENT_SECRET
+      - HomeAutomation__Testing__Enabled=false
 
   app:
     image: tgclzdevacr.azurecr.io/tgc-ha-app:latest
@@ -19,11 +17,3 @@ services:
     environment:
      - ENVIRONMENT_TYPE=prd
      - API_URL=http://localhost:9000
-
-secrets:
-  AZURE_TENANT_ID:
-    file: /home/identity/tenant_id.txt
-  AZURE_CLIENT_ID:
-    file: /home/identity/client_id.txt
-  AZURE_CLIENT_SECRET:
-    file: /home/identity/client_secret.txt
