@@ -19,6 +19,9 @@ jobs:
             runner: [ rasp01, rasp02 ]
 
         steps:
+        - name: Checkout code
+          uses: actions/checkout@v2
+
         - run: |
             echo "I am alive"
           name: "Check alive"

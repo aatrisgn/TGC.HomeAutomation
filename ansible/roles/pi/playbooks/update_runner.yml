@@ -1,4 +1,4 @@
-- name: Pull images
+- name: Update runners
   hosts: localhost
   become: true
   
