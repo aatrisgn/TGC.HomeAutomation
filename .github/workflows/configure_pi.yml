@@ -56,7 +56,10 @@ jobs:
       run: terraform apply -auto-approve tfplan
 
   configure_tools:
-    runs-on: [self-hosted, rasp01, rasp02]
+    runs-on: ${{ matrix.runner }}
+    strategy:
+      matrix:
+        runner: [ rasp01, rasp02 ]
 
     steps:
     - name: Checkout code
@@ -89,7 +92,10 @@ jobs:
 
   configure_identity:
     environment: dev
-    runs-on: [self-hosted, rasp01, rasp02]
+    runs-on: ${{ matrix.runner }}
+    strategy:
+      matrix:
+        runner: [ rasp01, rasp02 ]
     needs: [configure_tools, create_identity]
 
     steps:
