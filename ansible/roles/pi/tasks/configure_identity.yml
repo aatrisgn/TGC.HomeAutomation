@@ -1,6 +1,6 @@
 - name: Ensure the directory exists
   ansible.builtin.file:
-    path: /home/homeautomation/identity
+    path: /home/identity
     state: directory
     mode: '0755'
 
