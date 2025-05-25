@@ -12,6 +12,9 @@ jobs:
     name: Deploy newest images to Raspberries
     environment: dev
     runs-on: [self-hosted]
+    strategy:
+      matrix:
+        runner: [ rasp01, rasp02 ]
 
     steps:
     - name: Checkout code
