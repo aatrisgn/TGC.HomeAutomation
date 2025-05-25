@@ -56,7 +56,7 @@ jobs:
       run: terraform apply -auto-approve tfplan
 
   configure_tools:
-    runs-on: [self-hosted]
+    runs-on: [self-hosted, rasp01, rasp02]
 
     steps:
     - name: Checkout code
@@ -89,7 +89,7 @@ jobs:
 
   configure_identity:
     environment: dev
-    runs-on: [self-hosted]
+    runs-on: [self-hosted, rasp01, rasp02]
     needs: [configure_tools, create_identity]
 
     steps:
@@ -117,51 +117,4 @@ jobs:
     - run: |
         ansible-playbook ./ansible/roles/pi/playbooks/setup_identity.yml --extra-vars "tenantid=${{ secrets.HOMEAUTOMATION_DEV_TENANT_ID }} clientid=$RunnerClientId secret=$RunnerPassword"
       name: "Run Ansible Playbook"
-    
-  deploy_application:
-    environment: dev
-    runs-on: [self-hosted]
-    needs: configure_identity
-
-    steps:
-    - name: Checkout code
-      uses: actions/checkout@v2
-
-    - name: Login to Azure using OIDC
-      uses: azure/login@v1
-      with:
-        client-id: ${{ secrets.HOMEAUTOMATION_DEV_CLIENT_ID }}
-        tenant-id: ${{ secrets.HOMEAUTOMATION_DEV_TENANT_ID }}
-        subscription-id: ${{ secrets.HOMEAUTOMATION_DEV_SUBSCRIPTION_ID }}
-    
-    - run: |
-        ansible-playbook ./ansible/roles/pi/playbooks/refresh_images.yml --extra-vars "acrUrl=tgclzdevacr appImageTag=latest apiImageTag=latest"
-      name: "Run Ansible Playbook"
-    
-  #   - run: |
-  #       # Add Docker's official GPG key:
-  #       sudo add-apt-repository -r https://ppa.launchpadcontent.net/ansible/ansible/ubuntu/
-
-  #       echo "We here"
-  #       sudo apt-get update -y
-  #       echo "We here"
-  #       sudo apt-get -y install ca-certificates curl
-  #       echo "We here"
-  #       sudo install -m 0755 -d /etc/apt/keyrings
-  #       echo "We here"
-  #       sudo curl -fsSL https://download.docker.com/linux/debian/gpg -o /etc/apt/keyrings/docker.asc
-  #       echo "We here"
-  #       sudo chmod a+r /etc/apt/keyrings/docker.asc
-  #       echo "We here"
-
-  #       # Add the repository to Apt sources:
-  #       echo \
-  #         "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.asc] https://download.docker.com/linux/debian \
-  #         $(. /etc/os-release && echo "$VERSION_CODENAME") stable" | \
-  #         sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
-        
-  #       echo "We here"
-  #       sudo apt-get update -y
-
-  #       sudo apt-get -y install docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin docker-compose
-  #     name: "Install Docker tools"
+  
