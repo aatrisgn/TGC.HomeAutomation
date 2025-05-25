@@ -10,6 +10,11 @@
     az_version_prefixed: "azure-cli-{{ az_installed_version.stdout }}"
   when: not az_installed_version.failed
 
+- name: Set prefixed version to 'not-installed' if CLI is missing
+  set_fact:
+    az_version_prefixed: "not-installed"
+  when: az_installed_version.failed
+
 - name: Get latest Azure CLI version from GitHub
   uri:
     url: "https://api.github.com/repos/Azure/azure-cli/releases/latest"
