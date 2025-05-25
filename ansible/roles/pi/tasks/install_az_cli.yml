@@ -31,7 +31,7 @@
   when: update_needed
 
 - name: Execute a shell script
-  shell: |
+  command: |
     curl -sL https://aka.ms/InstallAzureCLIDeb | sudo bash
   when: update_needed
 
