@@ -11,7 +11,7 @@ RUN npm install -g "@angular/cli@latest"
 RUN npm run build --prod
 
 ### STAGE 2:RUN ###
-FROM nginx:latest AS ngi
+FROM --platform=linux/arm64 arm64v8/nginx:latest AS ngi
 COPY --from=build /dist/src/app/wwwroot/assets/config /usr/share/nginx/html/assets/config
 
 COPY --from=build /dist/src/app/wwwroot /usr/share/nginx/html
