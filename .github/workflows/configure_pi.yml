@@ -86,7 +86,7 @@ jobs:
   configure_identity:
     environment: dev
     runs-on: [self-hosted]
-    needs: configure_tools
+    needs: [configure_tools, create_identity]
 
     steps:
     - name: Checkout code

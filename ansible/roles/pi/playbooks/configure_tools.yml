@@ -5,6 +5,7 @@
   tasks:
     - name: Install AZ CLI
       ansible.builtin.include_tasks: ../tasks/install_az_cli.yml
+      become: true
     
     - name: Install Docker
       ansible.builtin.include_tasks: ../tasks/install_docker.yml
