@@ -21,8 +21,8 @@
 - name: Debug version info
   debug:
     msg: |
-      Installed: {{ az_installed_version.stdout }}
-      Latest:    {{ az_latest_version }}
+      Installed:     {{ az_installed_version.stdout }}
+      Latest:        {{ az_latest_version }}
       Update needed: {{ update_needed }}
 
 - name: Run this task only if Azure CLI is outdated
@@ -30,8 +30,8 @@
     msg: "Azure CLI is outdated. Proceeding with update or next steps..."
   when: update_needed
 
-- name: Execute a shell script
-  command: |
+- name: Install AZ CLI
+  shell: |
     curl -sL https://aka.ms/InstallAzureCLIDeb | sudo bash
   when: update_needed
 
