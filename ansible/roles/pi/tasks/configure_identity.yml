@@ -4,7 +4,17 @@
     state: directory
     mode: '0755'
 
-- name: Template identity file
+- name: Template client ID file
   ansible.builtin.template:
-    src: ../templates/identity_file.txt.j2
-    dest: /home/homeautomation/identity/identity_file.txt
+    src: ../templates/client_id.txt.j2
+    dest: /home/identity/client_id.txt
+
+- name: Template tenant id file
+  ansible.builtin.template:
+    src: ../templates/tenant_id.txt.j2
+    dest: /home/identity/tenant_id.txt
+
+- name: Template client secret file
+  ansible.builtin.template:
+    src: ../templates/client_secret.txt.j2
+    dest: /home/identity/client_secret.txt

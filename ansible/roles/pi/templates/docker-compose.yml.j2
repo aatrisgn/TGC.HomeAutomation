@@ -8,7 +8,9 @@ services:
       - TGC.AzureTableStorage__UseManagedIdentity=true
       - AllowedHosts=*
     secrets:
-      - environment_secrets
+      - AZURE_TENANT_ID
+      - AZURE_CLIENT_ID
+      - AZURE_CLIENT_SECRET
   
   app:
     image: tgclzdevacr.azurecr.io/tgc-ha-app:latest
@@ -19,5 +21,9 @@ services:
      - API_URL=http://localhost:9000
   
 secrets:
-  environment_secrets:
-    file: ./identity/identity_file.txt
+  AZURE_TENANT_ID:
+    file: ./identity/tenant_id.txt
+  AZURE_CLIENT_ID:
+    file: ./identity/client_id.txt
+  AZURE_CLIENT_SECRET:
+    file: ./identity/client_secret.txt
