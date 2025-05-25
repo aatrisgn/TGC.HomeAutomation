@@ -24,17 +24,25 @@
   ansible.builtin.systemd_service:
     daemon_reload: true
 
-- name: Stop service homerace_compose
-  ansible.builtin.service:
-    name: homerace_compose
-    state: stopped
 
-- name: Enable service homerace_compose
+- name: Check if the systemd service exists
+  shell: systemctl status homeautomation_compose.service
+  register: service_check
+  ignore_errors: true
+  changed_when: false
+
+- name: Stop service homeautomation_compose
   ansible.builtin.service:
-    name: homerace_compose
+    name: homeautomation_compose
+    state: stopped
+  when: service_check.rc == 0
+
+- name: Enable service homeautomation_compose
+  ansible.builtin.service:
+    name: homeautomation_compose
     enabled: yes
 
-- name: Start homerace_compose
+- name: Start homeautomation_compose
   ansible.builtin.service:
-    name: homerace_compose
+    name: homeautomation_compose
     state: started
