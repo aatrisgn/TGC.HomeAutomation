@@ -3,10 +3,12 @@
   shell: az version --query '"azure-cli"' -o tsv
   register: az_installed_version
   changed_when: false
+  ignore_errors: true
 
 - name: Prefix Azure CLI version with a component name
   set_fact:
     az_version_prefixed: "azure-cli-{{ az_installed_version.stdout }}"
+  when: not az_installed_version.failed
 
 - name: Get latest Azure CLI version from GitHub
   uri:
