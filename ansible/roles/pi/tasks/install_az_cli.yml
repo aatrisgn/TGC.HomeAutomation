@@ -1,0 +1,37 @@
+
+- name: Get installed Azure CLI version
+  shell: az version --query '"azure-cli"' -o tsv
+  register: az_installed_version
+  changed_when: false
+
+- name: Get latest Azure CLI version from GitHub
+  uri:
+    url: "https://api.github.com/repos/Azure/azure-cli/releases/latest"
+    return_content: yes
+  register: github_release
+
+- name: Parse latest version from GitHub response
+  set_fact:
+    az_latest_version: "{{ github_release.json.tag_name }}"
+
+- name: Compare versions and set update_needed
+  set_fact:
+    update_needed: "{{ az_installed_version.stdout != az_latest_version }}"
+
+- name: Debug version info
+  debug:
+    msg: |
+      Installed: {{ az_installed_version.stdout }}
+      Latest:    {{ az_latest_version }}
+      Update needed: {{ update_needed }}
+
+- name: Run this task only if Azure CLI is outdated
+  debug:
+    msg: "Azure CLI is outdated. Proceeding with update or next steps..."
+  when: update_needed
+
+- name: Execute a shell script
+  shell: |
+    curl -sL https://aka.ms/InstallAzureCLIDeb | sudo bash
+  when: update_needed
+

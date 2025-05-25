@@ -1,0 +1,17 @@
+- name: Update service
+  hosts: localhost
+  become: true
+  
+  tasks:
+    - name: Install AZ CLI
+      ansible.builtin.include_tasks: ../tasks/install_az_cli.yml
+    
+    - name: Install Docker
+      ansible.builtin.include_tasks: ../tasks/install_docker.yml
+
+    - name: Install Helm
+      ansible.builtin.include_tasks: ../tasks/install_helm.yml
+
+    - name: Install Notary
+      ansible.builtin.include_tasks: ../tasks/install_notary.yml
+

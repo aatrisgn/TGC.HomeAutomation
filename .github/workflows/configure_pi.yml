@@ -54,9 +54,39 @@ jobs:
     - name: Terraform Apply
       run: terraform apply -auto-approve tfplan
 
+  configure_tools:
+    runs-on: [self-hosted]
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v2
+      
+    - run: |
+        echo "Installing Ansible..."
+
+        echo "Running: sudo apt update && sudo apt-get upgrade -y"
+        sudo apt -y install software-properties-common
+
+        echo "Running: sudo apt-get -y install python3-launchpadlib"
+        sudo apt-get -y install python3-launchpadlib
+
+        echo "Running: sudo apt-add-repository --yes --update ppa:ansible/ansible"
+        sudo apt-add-repository --yes --update ppa:ansible/ansible
+
+        echo "Running: sudo apt -y install ansible"
+        sudo apt -y install ansible
+
+        echo "Finished installing!"
+      name: "Install Ansible"
+    
+    - run: |
+        ansible-playbook ./ansible/roles/pi/playbooks/configure_tools.yml
+      name: "Run Ansible Playbook"
+
   configure_identity:
     environment: dev
     runs-on: [self-hosted]
+    needs: configure_tools
 
     steps:
     - name: Checkout code
@@ -103,31 +133,6 @@ jobs:
     - run: |
         ansible-playbook ./ansible/roles/pi/playbooks/refresh_images.yml --extra-vars "acrUrl=tgclzdevacr appImageTag=latest apiImageTag=latest"
       name: "Run Ansible Playbook"
-
-  # build:
-  #   runs-on: [self-hosted]
-
-  #   steps:
-  #   - name: Checkout code
-  #     uses: actions/checkout@v2
-      
-  #   - run: |
-  #       echo "Installing Ansible..."
-
-  #       echo "Running: sudo apt update && sudo apt-get upgrade -y"
-  #       sudo apt -y install software-properties-common
-
-  #       echo "Running: sudo apt-get -y install python3-launchpadlib"
-  #       sudo apt-get -y install python3-launchpadlib
-
-  #       echo "Running: sudo apt-add-repository --yes --update ppa:ansible/ansible"
-  #       sudo apt-add-repository --yes --update ppa:ansible/ansible
-
-  #       echo "Running: sudo apt -y install ansible"
-  #       sudo apt -y install ansible
-
-  #       echo "Finished installing!"
-  #     name: "Install Ansible"
     
   #   - run: |
   #       # Add Docker's official GPG key:
@@ -156,9 +161,3 @@ jobs:
 
   #       sudo apt-get -y install docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin docker-compose
   #     name: "Install Docker tools"
-
-  #   - run: |
-  #       curl -sL https://aka.ms/InstallAzureCLIDeb | sudo bash
-  #     name: "Insall AZ CLI"
-
-        

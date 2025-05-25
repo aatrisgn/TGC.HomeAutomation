@@ -1,0 +1,51 @@
+    - name: Update apt cache
+      apt:
+        update_cache: yes
+
+    - name: Install Go
+      apt:
+        name: golang
+        state: present
+
+    - name: Verify Go installation
+      command: go version
+      register: go_version
+      changed_when: false
+
+    - name: Set Go environment variables
+      shell: |
+        echo 'export GO111MODULE=on' >> ~/.bashrc
+        echo 'export GOPATH=$HOME/go' >> ~/.bashrc
+        echo 'export PATH=$GOPATH/bin:$PATH' >> ~/.bashrc
+        mkdir -p $HOME/go/bin
+      environment:
+        GO111MODULE: "on"
+      args:
+        creates: "{{ ansible_env.HOME }}/go/bin"
+
+    - name: Clone Notary repository
+      git:
+        repo: 'https://github.com/theupdateframework/notary.git'
+        dest: '/tmp/notary'
+        version: 'master'
+
+    - name: Build Notary for ARM64
+      shell: |
+        cd /tmp/notary
+        GOARCH=arm64 GOOS=linux go build -tags pkcs11 -o notary ./cmd/notary
+      args:
+        chdir: /tmp/notary
+
+    - name: Move Notary binary to /usr/local/bin
+      command: mv /tmp/notary/notary /usr/local/bin/notary
+      args:
+        creates: /usr/local/bin/notary
+
+    - name: Verify Notary installation
+      command: /usr/local/bin/notary version
+      register: notary_version
+      changed_when: false
+
+    - name: Show Notary version
+      debug:
+        msg: "{{ notary_version.stdout }}"

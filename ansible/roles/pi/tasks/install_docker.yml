@@ -1,0 +1,68 @@
+---
+- name: Install Python
+  apt:
+    name: python3
+    state: present
+    update_cache: yes
+
+- name: Install development packages
+  apt:
+    name:
+      - python3-setuptools
+      - python3-dev
+      - build-essential
+      - tk-dev
+      - libncurses5-dev
+      - libncursesw5-dev
+      - libreadline6-dev
+      - libdb5.3-dev
+      - libgdbm-dev
+      - libsqlite3-dev
+      - libssl-dev
+      - libbz2-dev
+      - libexpat1-dev
+      - liblzma-dev
+      - zlib1g-dev
+      - libffi-dev
+    state: present
+    update_cache: yes
+
+- name: Install aptitude
+  apt:
+    name: aptitude
+    state: latest
+    update_cache: true
+
+- name: Install required system packages
+  apt:
+    pkg:
+      - apt-transport-https
+      - ca-certificates
+      - curl
+      - software-properties-common
+      - python3-pip
+      - virtualenv
+      - python3-setuptools
+    state: latest
+    update_cache: true
+
+- name: Add Docker GPG apt Key
+  apt_key:
+    url: https://download.docker.com/linux/ubuntu/gpg
+    state: present
+
+- name: Add Docker Repository
+  apt_repository:
+    repo: deb https://download.docker.com/linux/ubuntu focal stable
+    state: present
+
+- name: Update apt and install docker-ce
+  apt:
+    name: docker-ce
+    state: latest
+    update_cache: true
+
+# This fails. Dunno why. Potentially because I installed manually first. Trying without.
+# # - name: Install Docker Module for Python
+# #   pip:
+# #     name: docker
