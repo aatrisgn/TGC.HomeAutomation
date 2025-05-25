@@ -1,0 +1,12 @@
+
+- name: Update apt cache
+  apt:
+    update_cache: yes
+
+- name: Upgrade all packages
+  apt:
+    upgrade: dist
+
+- name: Autoremove unnecessary packages
+  apt:
+    autoremove: yes

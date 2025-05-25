@@ -1,0 +1,7 @@
+- name: Pull images
+  hosts: localhost
+  become: true
+  
+  tasks:
+    - name: Update apt packages
+      ansible.builtin.include_tasks: ../tasks/update_packages.yml

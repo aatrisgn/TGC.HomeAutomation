@@ -24,15 +24,5 @@ jobs:
           name: "Check alive"
 
         - run: |
-            echo "Runnning apt update..."
-            # sudo apt update
-            echo "apt update completed."
-
-            echo "Running apt-get upgrade -y... This may take some time."
-            # sudo apt-get upgrade -y
-            echo "apt-get upgrade -y completed."
-
-            echo "Running sudo apt autoremove..."
-            # sudo apt autoremove -y
-            echo "apt autoremove completed."
-          name: "Check alive"
+            ansible-playbook ./ansible/roles/pi/playbooks/update_runner.yml
+          name: "Update apt-packages"
