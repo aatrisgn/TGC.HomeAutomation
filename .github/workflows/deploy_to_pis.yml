@@ -9,6 +9,7 @@ permissions:
 
 jobs:
   deploy_application:
+    name: Deploy newest images to Raspberries
     environment: dev
     runs-on: [self-hosted]
 
