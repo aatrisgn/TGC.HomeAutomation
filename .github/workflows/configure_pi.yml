@@ -76,6 +76,9 @@ jobs:
         echo "Running: sudo apt -y install ansible"
         sudo apt -y install ansible
 
+        echo "Removing ansible repository again"
+        sudo add-apt-repository -r https://ppa.launchpadcontent.net/ansible/ansible/ubuntu/
+
         echo "Finished installing!"
       name: "Install Ansible"
     
