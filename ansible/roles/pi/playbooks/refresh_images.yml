@@ -4,7 +4,7 @@
   vars:
     acr_url: "{{ acrUrl }}"
     app_image_tag: "{{ appImageTag }}"
-    api:_image_tag: "{{ apiImageTag }}"
+    api_image_tag: "{{ apiImageTag }}"
   
   tasks:
     - name: Refresh images
