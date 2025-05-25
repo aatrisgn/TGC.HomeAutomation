@@ -10,10 +10,11 @@ ARG BUILD_CONFIGURATION=Release
 
 WORKDIR /src
 
-COPY . .
-COPY ["TGC.HomeAutomation.API/TGC.HomeAutomation.API.csproj", "TGC.HomeAutomation.API/"]
 
+COPY ["TGC.HomeAutomation.API/TGC.HomeAutomation.API.csproj", "TGC.HomeAutomation.API/"]
 RUN dotnet restore "TGC.HomeAutomation.API/TGC.HomeAutomation.API.csproj"
+
+COPY . .
 
 #We are passing custom build parameter buildAngularClient in since it doesn't make sense to build in docker
 RUN dotnet build "TGC.HomeAutomation.API/TGC.HomeAutomation.API.csproj" -c $BUILD_CONFIGURATION -o /app/build -p:buildAngularClient=false
