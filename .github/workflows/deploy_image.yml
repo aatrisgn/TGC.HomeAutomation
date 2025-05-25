@@ -61,8 +61,8 @@ jobs:
         az acr login --name tgclzdevacr.azurecr.io
         cd src/TGC.HomeAutomation
 
-        docker build . -t $acr_registry/$image_name:${{ github.sha }}
-        docker build . -t $acr_registry/$image_name:latest
+        docker build . --no-cache-filter -t $acr_registry/$image_name:${{ github.sha }}
+        docker build . --no-cache-filter -t $acr_registry/$image_name:latest
 
         docker push $acr_registry/$image_name:${{ github.sha }}
         docker push $acr_registry/$image_name:latest
