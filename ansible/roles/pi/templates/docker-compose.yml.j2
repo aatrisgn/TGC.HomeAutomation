@@ -1,0 +1,20 @@
+services:
+  api:
+    image: tgclzdevacr.azurecr.io/tgc-ha-api:latest
+    ports:
+      - "9000:8080" # Map container port 80 to host port 5000
+    environment:
+      - AZURE_TENANT_ID=TENANT_ID
+      - AZURE_CLIENT_ID=CLIENT_ID
+      - AZURE_CLIENT_SECRET=SECRET
+      - TGC.AzureTableStorage:StorageAccountUrl=https://tgcsthadev.table.core.windows.net/
+      - TGC.AzureTableStorage:UseManagedIdentity=true
+      - AllowedHosts=*
+  
+  app:
+    image: tgclzdevacr.azurecr.io/tgc-ha-app:latest
+    ports:
+      - "4300:80" # Map container port 80 to host port 5000
+    environment:
+     - ENVIRONMENT_TYPE=prd
+     - API_URL=http://localhost:9000

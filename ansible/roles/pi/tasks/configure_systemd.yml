@@ -1,0 +1,46 @@
+- name: Ensure the directory exists
+  ansible.builtin.file:
+    path: /home/homeautomation
+    state: directory
+    mode: '0755'
+
+- name: Ensure the directory exists
+  ansible.builtin.file:
+    path: /home/homeautomation/logs
+    state: directory
+    mode: '0755'
+
+- name: Copy service file to destination
+  ansible.builtin.copy:
+    src: ../files/homeautomation.service
+    dest: /lib/systemd/system
+  
+  #TODO: Change to template
+- name: Copy docker-compose to destination
+  ansible.builtin.copy:
+    src: ../files/docker-compose.yml
+    dest: /home/coderace/coderace_docker
+
+- name: Template identity file
+  ansible.builtin.template:
+    src: ../templates/docker-compose.yml.j2
+    dest: /home/homeautomation/docker-compose.yml
+
+- name: Reread configurations
+  ansible.builtin.systemd_service:
+    daemon_reload: true
+
+- name: Stop service homerace_compose
+  ansible.builtin.service:
+    name: homerace_compose
+    state: stopped
+
+- name: Enable service homerace_compose
+  ansible.builtin.service:
+    name: homerace_compose
+    enabled: yes
+
+- name: Start homerace_compose
+  ansible.builtin.service:
+    name: homerace_compose
+    state: started

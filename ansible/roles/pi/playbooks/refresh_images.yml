@@ -1,0 +1,14 @@
+- name: Update service
+  hosts: localhost
+  become: true
+  vars:
+    acr_url: "{{ acrUrl }}"
+    app_image_tag: "{{ appImageTag }}"
+    api:_image_tag: "{{ apiImageTag }}"
+  
+  tasks:
+    - name: Refresh images
+      ansible.builtin.include_tasks: ../tasks/pull_images.yml
+
+    - name: Configure systemd
+      ansible.builtin.include_tasks: ../tasks/configure_systemd.yml

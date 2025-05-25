@@ -1,0 +1,15 @@
+- name: Check docker daemon, cli verison, and helm config
+  command: >
+    az acr check-health --name tgclzdevacr --yes
+
+- name: Log in to Azure Container reg
+  command: >
+    az acr login --name tgclzdevacr
+
+- name: Get latest fronted image
+  command: >
+    docker pull tgclzdevacr.azurecr.io/tgc-ha-app:latest
+
+- name: Get latest backend image
+  command: >
+    docker pull tgclzdevacr.azurecr.io/tgc-ha-api:latest

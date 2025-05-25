@@ -1,10 +1,10 @@
 - name: Ensure the directory exists
   ansible.builtin.file:
-    path: /home/HomeAutomation/identity
+    path: /home/homeautomation/identity
     state: directory
     mode: '0755'
 
 - name: Template identity file
   ansible.builtin.template:
     src: ../templates/identity_file.txt.j2
-    dest: /home/HomeAutomation/identity/identity_file.txt
+    dest: /home/homeautomation/identity/identity_file.txt
