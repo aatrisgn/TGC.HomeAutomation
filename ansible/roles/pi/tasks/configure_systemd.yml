@@ -24,25 +24,24 @@
   ansible.builtin.systemd_service:
     daemon_reload: true
 
-
-- name: Check if the systemd service exists
-  shell: systemctl status homeautomation_compose.service
+- name: Check if the service exists
+  shell: systemctl status homeautomation.service
   register: service_check
   ignore_errors: true
   changed_when: false
 
-- name: Stop service homeautomation_compose
+- name: Stop service homeautomation
   ansible.builtin.service:
-    name: homeautomation_compose
+    name: homeautomation
     state: stopped
   when: service_check.rc == 0
 
-- name: Enable service homeautomation_compose
+- name: Enable service homeautomation
   ansible.builtin.service:
-    name: homeautomation_compose
+    name: homeautomation
     enabled: yes
 
-- name: Start homeautomation_compose
+- name: Start homeautomation
   ansible.builtin.service:
-    name: homeautomation_compose
+    name: homeautomation
     state: started

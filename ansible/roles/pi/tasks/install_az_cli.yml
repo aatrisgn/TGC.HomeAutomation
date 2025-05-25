@@ -22,13 +22,6 @@
   set_fact:
     update_needed: "{{ az_version_prefixed != az_latest_version }}"
 
-- name: Debug version info
-  debug:
-    msg: |
-      Installed:     {{ az_version_prefixed }}
-      Latest:        {{ az_latest_version }}
-      Update needed: {{ update_needed }}
-
 - name: Run this task only if Azure CLI is outdated
   debug:
     msg: "Azure CLI is outdated. Proceeding with update or next steps..."
