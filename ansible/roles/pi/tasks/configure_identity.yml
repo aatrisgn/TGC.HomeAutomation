@@ -18,3 +18,8 @@
   ansible.builtin.template:
     src: ../templates/client_secret.txt.j2
     dest: /home/identity/client_secret.txt
+
+- name: Template client secret file
+  ansible.builtin.template:
+    src: ../templates/identity.env.j2
+    dest: /home/identity/identity.env
