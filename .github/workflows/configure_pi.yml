@@ -100,7 +100,7 @@ jobs:
         subscription-id: ${{ secrets.HOMEAUTOMATION_DEV_SUBSCRIPTION_ID }}
     
     - run: |
-        ansible-playbook ./ansible/roles/pi/playbooks/configure_systemd.yml --extra-vars "acrUrl=tgclzdevacr appImageTag=latest apiImageTag=latest"
+        ansible-playbook ./ansible/roles/pi/playbooks/refresh_images.yml --extra-vars "acrUrl=tgclzdevacr appImageTag=latest apiImageTag=latest"
       name: "Run Ansible Playbook"
 
   # build:
