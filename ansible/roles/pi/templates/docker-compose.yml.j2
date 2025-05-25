@@ -11,7 +11,7 @@ services:
       - AZURE_TENANT_ID
       - AZURE_CLIENT_ID
       - AZURE_CLIENT_SECRET
-  
+
   app:
     image: tgclzdevacr.azurecr.io/tgc-ha-app:latest
     ports:
@@ -19,7 +19,7 @@ services:
     environment:
      - ENVIRONMENT_TYPE=prd
      - API_URL=http://localhost:9000
-  
+
 secrets:
   AZURE_TENANT_ID:
     file: /home/identity/tenant_id.txt
