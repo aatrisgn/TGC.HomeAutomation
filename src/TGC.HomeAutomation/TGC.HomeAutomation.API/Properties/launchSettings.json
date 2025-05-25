@@ -17,11 +17,8 @@
       "applicationUrl": "http://localhost:5298",
       "environmentVariables": {
 		"ASPNETCORE_ENVIRONMENT": "Development",
-	  "AZURE_TENANT_ID": "0552bf76-d799-4ea1-8459-74106c5d04aa",
-	  "AZURE_CLIENT_ID": "d85c9f1a-fe61-4b79-a5bb-930a0e884c89",
-	  "AZURE_CLIENT_SECRET": "SECRET",
-	  "TGC.AzureTableStorage:StorageAccountUrl": "http://0.0.0.0:10002/devstoreaccount1",
-	  "TGC.AzureTableStorage:UseManagedIdentity": false,
+		  "TGC.AzureTableStorage:StorageAccountUrl": "http://0.0.0.0:10002/devstoreaccount1",
+		  "TGC.AzureTableStorage:UseManagedIdentity": false,
 		  "TGC.AzureTableStorage:ConnectionString": "DefaultEndpointsProtocol=http;AccountName=devstoreaccount1;AccountKey=Eby8vdM02xNOcqFlqUwJPLlmEtlCDXJ1OUzFT50uSRZ6IFsuFq2UVErCz4I6tq/K1SZFPTOtr/KBHBeksoGMGw==;BlobEndpoint=http://127.0.0.1:10000/devstoreaccount1;QueueEndpoint=http://127.0.0.1:10001/devstoreaccount1;TableEndpoint=http://127.0.0.1:10002/devstoreaccount1;"
 	  }
     },

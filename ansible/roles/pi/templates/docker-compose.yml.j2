@@ -4,8 +4,8 @@ services:
     ports:
       - "9000:8080"
     environment:
-      - TGC.AzureTableStorage:StorageAccountUrl=https://tgcsthadev.table.core.windows.net/
-      - TGC.AzureTableStorage:UseManagedIdentity=true
+      - TGC.AzureTableStorage__StorageAccountUrl=https://tgcsthadev.table.core.windows.net/
+      - TGC.AzureTableStorage__UseManagedIdentity=true
       - AllowedHosts=*
     secrets:
       - environment_secrets

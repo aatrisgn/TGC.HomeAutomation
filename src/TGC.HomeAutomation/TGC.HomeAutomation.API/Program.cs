@@ -9,11 +9,12 @@ builder.Services.AddHomeAutomationApiInjections(builder.Configuration);
 
 var app = builder.Build();
 
+app.UseSwagger();
+app.UseSwaggerUI();
+
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
-	app.UseSwagger();
-	app.UseSwaggerUI();
 	app.UseCors("ALLOW_DEVELOPMENT_CORS_ORIGINS_POLICY");
 }
 else

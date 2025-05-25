@@ -12,20 +12,20 @@ on:
   workflow_dispatch:
 
 jobs:
-    build:
-        runs-on: ${{ matrix.runner }}
-        strategy:
-          matrix:
-            runner: [ rasp01, rasp02 ]
+  build:
+    runs-on: ${{ matrix.runner }}
+    strategy:
+      matrix:
+        runner: [ rasp01, rasp02 ]
 
-        steps:
-        - name: Checkout code
-          uses: actions/checkout@v2
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v2
 
-        - run: |
-            echo "I am alive"
-          name: "Check alive"
+    - run: |
+        echo "I am alive"
+      name: "Check alive"
 
-        - run: |
-            ansible-playbook ./ansible/roles/pi/playbooks/update_runner.yml
-          name: "Update apt-packages"
+    - run: |
+        ansible-playbook ./ansible/roles/pi/playbooks/update_runner.yml
+      name: "Update apt-packages"
