@@ -11,8 +11,13 @@ namespace TGC.HomeAutomation.API;
 
 public static class ServiceCollectionExtensions
 {
-	public static IServiceCollection AddHomeAutomationApiInjections(this IServiceCollection services, IConfiguration configuration)
+	public static IServiceCollection AddHomeAutomationApiInjections(this IServiceCollection services, IConfigurationManager configuration)
 	{
+		services.AddApplicationInsightsTelemetry(options =>
+		{
+			options.InstrumentationKey = configuration["ApplicationInsights:InstrumentationKey"];
+		});
+
 		services.AddOpenApiDocument(document =>
 		{
 			document.Title = "TGC.HomeAutomation API Spec";
