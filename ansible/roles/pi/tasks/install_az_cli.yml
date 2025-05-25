@@ -4,6 +4,10 @@
   register: az_installed_version
   changed_when: false
 
+- name: Prefix Azure CLI version with a component name
+  set_fact:
+    az_version_prefixed: "azure-cli-{{ az_installed_version.stdout }}"
+
 - name: Get latest Azure CLI version from GitHub
   uri:
     url: "https://api.github.com/repos/Azure/azure-cli/releases/latest"
@@ -16,12 +20,12 @@
 
 - name: Compare versions and set update_needed
   set_fact:
-    update_needed: "{{ az_installed_version.stdout != az_latest_version }}"
+    update_needed: "{{ az_version_prefixed != az_latest_version }}"
 
 - name: Debug version info
   debug:
     msg: |
-      Installed:     {{ az_installed_version.stdout }}
+      Installed:     {{ az_version_prefixed }}
       Latest:        {{ az_latest_version }}
       Update needed: {{ update_needed }}
 

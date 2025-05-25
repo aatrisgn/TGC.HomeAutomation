@@ -61,8 +61,3 @@
     name: docker-ce
     state: latest
     update_cache: true
-
-# This fails. Dunno why. Potentially because I installed manually first. Trying without.
-# # - name: Install Docker Module for Python
-# #   pip:
-# #     name: docker

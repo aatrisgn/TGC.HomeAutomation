@@ -14,12 +14,6 @@
   ansible.builtin.copy:
     src: ../files/homeautomation.service
     dest: /lib/systemd/system
-  
-  #TODO: Change to template
-- name: Copy docker-compose to destination
-  ansible.builtin.copy:
-    src: ../files/docker-compose.yml
-    dest: /home/coderace/coderace_docker
 
 - name: Template identity file
   ansible.builtin.template:
