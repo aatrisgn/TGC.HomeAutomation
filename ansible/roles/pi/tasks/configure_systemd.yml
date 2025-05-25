@@ -29,6 +29,7 @@
   register: service_check
   ignore_errors: true
   changed_when: false
+  no_log: true
 
 - name: Stop service homeautomation
   ansible.builtin.service:
