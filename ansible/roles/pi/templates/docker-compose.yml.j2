@@ -13,7 +13,7 @@ services:
   app:
     image: tgclzdevacr.azurecr.io/tgc-ha-app:latest
     ports:
-      - "4300:80" # Map container port 80 to host port 5000
+      - "80:80" # Map container port 80 to host port 5000
     environment:
      - ENVIRONMENT_TYPE=prd
      - API_URL=http://localhost:9000

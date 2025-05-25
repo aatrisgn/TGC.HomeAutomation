@@ -26,4 +26,4 @@ jobs:
 
     - run: |
         ansible-playbook ./ansible/roles/pi/playbooks/refresh_images.yml --extra-vars "acrUrl=tgclzdevacr appImageTag=latest apiImageTag=latest"
-        name: "Run Ansible Playbook"
+      name: "Run Ansible Playbook"
