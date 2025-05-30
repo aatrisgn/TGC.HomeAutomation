@@ -1,3 +1,9 @@
+- name: Ensure the directory exists
+  ansible.builtin.file:
+    path: /tmp
+    state: directory
+    mode: '0755'
+
 - name: Copy service file to destination
   ansible.builtin.copy:
     src: ../files/homeautomation.dev.tgcportal.com
