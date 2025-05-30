@@ -4,12 +4,6 @@
     state: directory
     mode: '0755'
 
-- name: Ensure the directory exists
-  ansible.builtin.file:
-    path: /home/pihole/logs
-    state: directory
-    mode: '0755'
-
 - name: Copy service file to destination
   ansible.builtin.copy:
     src: ../files/pihole.service

@@ -13,7 +13,7 @@ services:
   app:
     image: tgclzdevacr.azurecr.io/tgc-ha-app:latest
     ports:
-      - "80:80"
+      - "9001:80"
     environment:
      - ENVIRONMENT_TYPE=prd
      - API_URL=http://localhost:9000
