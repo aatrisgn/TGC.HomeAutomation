@@ -1,0 +1,9 @@
+- name: Pull images
+  hosts: localhost
+  become: true
+  vars:
+    pihole_password: "{{ password }}"
+
+  tasks:
+    - name: Configure Runner identity
+      ansible.builtin.include_tasks: ../tasks/configure_identity.yml

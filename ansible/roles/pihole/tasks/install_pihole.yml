@@ -1,0 +1,48 @@
+- name: Ensure the directory exists
+  ansible.builtin.file:
+    path: /home/pihole
+    state: directory
+    mode: '0755'
+
+- name: Ensure the directory exists
+  ansible.builtin.file:
+    path: /home/pihole/logs
+    state: directory
+    mode: '0755'
+
+- name: Copy service file to destination
+  ansible.builtin.copy:
+    src: ../files/pihole.service
+    dest: /lib/systemd/system
+
+- name: Template identity file
+  ansible.builtin.template:
+    src: ../templates/pihole-docker-compose.yml.j2
+    dest: /home/pihole/docker-compose.yml
+
+- name: Reread configurations
+  ansible.builtin.systemd_service:
+    daemon_reload: true
+
+- name: Check if the service exists
+  shell: systemctl status pihole.service
+  register: service_check
+  ignore_errors: true
+  changed_when: false
+  no_log: true
+
+- name: Stop service pihole
+  ansible.builtin.service:
+    name: pihole
+    state: stopped
+  when: service_check.rc == 0
+
+- name: Enable service pihole
+  ansible.builtin.service:
+    name: pihole
+    enabled: yes
+
+- name: Start pihole
+  ansible.builtin.service:
+    name: pihole
+    state: started

@@ -18,3 +18,7 @@ variable "environment" {
   }
 }
 
+variable "keyvault_name" {
+  description = "Shared Homeautomation keyvault for credential storage"
+  type        = string
+}
