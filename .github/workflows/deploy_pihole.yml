@@ -11,6 +11,9 @@ jobs:
   create_secret:
     environment: dev
     runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ./terraform/pihole
 
     steps:
     - name: Checkout code
