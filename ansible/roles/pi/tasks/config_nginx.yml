@@ -9,15 +9,6 @@
     dest: /etc/nginx/sites-enabled/homeautomation.dev.tgcportal.com
     state: link
 
-- name: Test NGINX configuration
-  command: nginx -t
-  ignore_errors: yes
-
-- name: Restart NGINX service
-  systemd:
-    name: nginx
-    state: restarted
-
 - name: Download certificate from Azure Key Vault
   command: az keyvault certificate download --vault-name {{ keyvault_name }} --name {{ certificate_name }} --file /tmp/cert.pfx --encoding Pkcs12
   no_log: true
@@ -33,6 +24,10 @@
 - name: Convert cert.pem to fullchain.pem
   command: openssl x509 -in /etc/nginx/ssl/cert.pem -out /etc/nginx/ssl/fullchain.pem
   no_log: true
+
+- name: Test NGINX configuration
+  command: nginx -t
+  ignore_errors: yes
 
 - name: Restart NGINX service after certificate setup
   systemd:
