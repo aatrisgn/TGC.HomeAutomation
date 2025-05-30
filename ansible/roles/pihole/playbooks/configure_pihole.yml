@@ -6,4 +6,4 @@
 
   tasks:
     - name: Configure Runner identity
-      ansible.builtin.include_tasks: ../tasks/configure_identity.yml
+      ansible.builtin.include_tasks: ../tasks/install_pihole.yml
