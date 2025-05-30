@@ -22,7 +22,7 @@ resource "random_password" "admin_password" {
 
 # Store secrets
 resource "azurerm_key_vault_secret" "pihole_admin_username" {
-  name         = "PiholeAdminPassword"
+  name         = "PiholeAdminPassword${var.environment}"
   value        = random_password.admin_password
   key_vault_id = data.azurerm_key_vault.shared_keyvault.id
 }

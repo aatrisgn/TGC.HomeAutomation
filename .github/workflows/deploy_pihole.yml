@@ -15,17 +15,15 @@ jobs:
       run:
         working-directory: ./terraform/pihole
 
+    env:
+      ARM_CLIENT_ID: "${{ secrets.HOMEAUTOMATION_DEV_CLIENT_ID }}"
+      ARM_SUBSCRIPTION_ID: "${{ secrets.HOMEAUTOMATION_DEV_SUBSCRIPTION_ID }}"
+      ARM_TENANT_ID: "${{ secrets.HOMEAUTOMATION_DEV_TENANT_ID }}"
+      ARM_USE_AZUREAD: true
+
     steps:
     - name: Checkout code
       uses: actions/checkout@v2
-
-    - name: Login to Azure using OIDC
-      uses: azure/login@v1
-      with:
-        client-id: ${{ secrets.HOMEAUTOMATION_DEV_CLIENT_ID }}
-        tenant-id: ${{ secrets.HOMEAUTOMATION_DEV_TENANT_ID }}
-        subscription-id: ${{ secrets.HOMEAUTOMATION_DEV_SUBSCRIPTION_ID }}
-        ARM_USE_AZUREAD: true
 
     - name: Install Terraform
       run: bash "${{ github.workspace }}/.github/scripts/install_terraform.sh" 

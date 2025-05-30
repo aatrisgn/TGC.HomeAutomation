@@ -7,3 +7,13 @@ variable "keyvault_name" {
   description = "Shared Homeautomation keyvault for credential storage"
   type        = string
 }
+
+variable "environment" {
+  description = "environment type"
+  type        = string
+
+  validation {
+    condition     = contains(["dev", "prod"], var.environment)
+    error_message = "The environment variable must be either 'DEV' or 'PROD'."
+  }
+}
