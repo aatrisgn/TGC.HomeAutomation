@@ -18,3 +18,7 @@ If the agents become idle, you need to re-configure if they have been idle for t
 - sudo ./svc.sh stop
 - sudo ./svc.sh uninstall
 - sudo ./configure.sh remove (If this cannot run without asking for token, delete the .runner folder and content in root of github runner)
+
+
+## Certifcate and domain routing
+This stuff is a bit tricky to fully automate. This means, that right now, certificate creation is a manual process (sad). On the local network the local DNS server has taken control over the domain the certificates are used for. Therefore, domains also need to be manually managed.

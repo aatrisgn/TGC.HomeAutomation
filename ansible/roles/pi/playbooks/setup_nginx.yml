@@ -1,0 +1,16 @@
+
+---
+- name: Install & configure NGINX on Raspberry Pi
+  hosts: localhost
+  become: yes
+  vars:
+    certificate_name: "{{ certname }}"
+    keyvault_name: "{{ kvname }}"
+    certificate_password: "{{ pw }}"
+
+  tasks:
+    - name: Install Nginx
+      ansible.builtin.include_tasks: ../tasks/install_nginx.yml
+    
+    - name: Configure
+      ansible.builtin.include_tasks: ../tasks/config_nginx.yml
