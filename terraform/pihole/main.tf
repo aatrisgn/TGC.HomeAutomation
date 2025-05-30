@@ -13,11 +13,11 @@ terraform {
 }
 
 resource "random_password" "admin_password" {
-  length           = 20
-  special         = true
-  upper           = true
-  lower           = true
-  numeric         = true
+  length  = 20
+  special = true
+  upper   = true
+  lower   = true
+  numeric = true
 }
 
 # Store secrets
