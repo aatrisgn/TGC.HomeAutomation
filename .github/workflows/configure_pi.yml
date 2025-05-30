@@ -7,7 +7,7 @@ on:
     paths:
     - '.github/workflows/configure_pi.yml'
     - 'terraform/runner_identity/**'
-    - 'ansible/**'
+    - 'ansible/roles/pi/**'
   workflow_dispatch:
 
 permissions:

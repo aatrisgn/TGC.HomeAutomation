@@ -50,6 +50,7 @@ jobs:
   deploy_application:
     environment: dev
     runs-on: [self-hosted, pihole]
+    needs: [create_secret]
 
     steps:
     - name: Checkout code
