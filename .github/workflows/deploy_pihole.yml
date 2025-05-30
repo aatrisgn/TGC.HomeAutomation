@@ -1,6 +1,13 @@
 name: Deploy PIHole
 
-on: 
+on:
+  push:
+    branches:
+      - main
+    paths:
+    - '.github/workflows/deploy_pihole.yml'
+    - 'terraform/pihole/**'
+    - 'ansible/roles/pihole/**'
   workflow_dispatch:
 
 permissions:
@@ -68,7 +75,7 @@ jobs:
     - name: Fetch secret from Key Vault
       id: get_secret
       run: |
-        secret=$(az keyvault secret show --vault-name "tgckvhadev" --name "PiholeAdminPassword" --query "value" -o tsv)
+        secret=$(az keyvault secret show --vault-name "tgckvhadev" --name "PiholeAdminPassworddev" --query "value" -o tsv)
         echo "::add-mask::$secret"
         echo "PiHoleAdmin=$secret" >> $GITHUB_ENV
 
