@@ -81,7 +81,8 @@ resource "azuread_application_redirect_uris" "example_spa" {
   redirect_uris = [
     "http://localhost:4400",
     "http://localhost:4300",
-    "http://localhost:4200"
+    "http://localhost:4200",
+    "https://homeautomation.dev.tgcportal.com",
   ]
 }
 
