@@ -43,7 +43,8 @@ export const appConfig: ApplicationConfig = {
     },
     {
       provide: MSAL_INTERCEPTOR_CONFIG,
-      useFactory: MSALInterceptorConfigFactory
+      useFactory: MSALInterceptorConfigFactory,
+      deps:[ConfigurationLoaderService]
     },
     MsalService,
     MsalGuard,
