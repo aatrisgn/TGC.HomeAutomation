@@ -1,4 +1,32 @@
 ---
+
+# sudo mkdir -p /etc/apt/keyrings
+
+
+# curl -fsSL https://example.com/repo-public.gpg | sudo tee /etc/apt/keyrings/example.gpg > /dev/null
+
+- name: Ensure keyrings directory exists
+  file:
+    path: /etc/apt/keyrings
+    state: directory
+    mode: '0755'
+
+- name: Download GPG key
+  get_url:
+    url: https://download.docker.com/linux/ubuntu/gpg
+    dest: /etc/apt/keyrings/docker.asc
+    mode: '0644'
+
+- name: Add APT repository
+  apt_repository:
+  repo: "deb [signed-by=/etc/apt/keyrings/docker.asc] https://download.docker.com/linux/ubuntu stable main"
+  filename: example
+  state: present
+
+- name: Update APT cache
+  apt:
+  update_cache: yes
+
 - name: Install Python
   apt:
     name: python3
@@ -46,15 +74,15 @@
     state: latest
     update_cache: true
 
-- name: Add Docker GPG apt Key
-  apt_key:
-    url: https://download.docker.com/linux/ubuntu/gpg
-    state: present
+# - name: Add Docker GPG apt Key
+#   apt_key:
+#     url: https://download.docker.com/linux/ubuntu/gpg
+#     state: present
 
-- name: Add Docker Repository
-  apt_repository:
-    repo: deb https://download.docker.com/linux/ubuntu focal stable
-    state: present
+# - name: Add Docker Repository
+#   apt_repository:
+#     repo: deb https://download.docker.com/linux/ubuntu focal stable
+#     state: present
 
 - name: Update apt and install docker-ce
   apt:
