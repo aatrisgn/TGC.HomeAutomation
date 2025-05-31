@@ -1,6 +1,6 @@
 - name: Ensure the directory exists
   ansible.builtin.file:
-    path: /tmp
+    path: /tmp/certs
     state: directory
     mode: '0755'
 
@@ -20,7 +20,7 @@
   no_log: true
 
 - name: Convert cert.pfx to cert.pem
-  command: openssl pkcs12 -in /tmp/cert.pfx -out /etc/nginx/ssl/cert.pem -nodes -passin pass:{{ certificate_password }}
+  command: openssl pkcs12 -in /tmp/certs/cert.pfx -out /etc/nginx/ssl/cert.pem -nodes -passin pass:{{ certificate_password }}
   no_log: false
 
 - name: Convert cert.pem to privkey.pem
