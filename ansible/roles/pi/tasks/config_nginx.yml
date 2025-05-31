@@ -16,7 +16,7 @@
     state: link
 
 - name: Download certificate from Azure Key Vault
-  command: az keyvault certificate download --vault-name {{ keyvault_name }} --name {{ certificate_name }} --file /tmp/cert.pfx
+  command: az keyvault secret download --vault-name {{ keyvault_name }} --name {{ certificate_name }} --file /tmp/cert.pfx --encoding base64
   no_log: true
 
 - name: Convert cert.pfx to cert.pem
