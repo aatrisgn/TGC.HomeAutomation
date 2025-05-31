@@ -17,19 +17,19 @@
 
 - name: Download certificate from Azure Key Vault
   command: az keyvault certificate download --vault-name {{ keyvault_name }} --name {{ certificate_name }} --file /tmp/cert.pfx
-  no_log: false
+  no_log: true
 
 - name: Convert cert.pfx to cert.pem
   command: openssl pkcs12 -in /tmp/cert.pfx -out /etc/nginx/ssl/cert.pem -nodes -passin pass:{{ certificate_password }}
-  no_log: true
+  no_log: false
 
 - name: Convert cert.pem to privkey.pem
   command: openssl rsa -in /etc/nginx/ssl/cert.pem -out /etc/nginx/ssl/privkey.pem
-  no_log: true
+  no_log: false
 
 - name: Convert cert.pem to fullchain.pem
   command: openssl x509 -in /etc/nginx/ssl/cert.pem -out /etc/nginx/ssl/fullchain.pem
-  no_log: true
+  no_log: false
 
 - name: Test NGINX configuration
   command: nginx -t
