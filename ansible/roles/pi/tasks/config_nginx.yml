@@ -17,7 +17,7 @@
 
 - name: Download certificate from Azure Key Vault
   command: az keyvault certificate download --vault-name {{ keyvault_name }} --name {{ certificate_name }} --file /tmp/cert.pfx --encoding Pkcs12
-  no_log: true
+  no_log: false
 
 - name: Convert cert.pfx to cert.pem
   command: openssl pkcs12 -in /tmp/cert.pfx -out /etc/nginx/ssl/cert.pem -nodes -passin pass:{{ certificate_password }}
