@@ -1,10 +1,4 @@
 ---
-
-# sudo mkdir -p /etc/apt/keyrings
-
-
-# curl -fsSL https://example.com/repo-public.gpg | sudo tee /etc/apt/keyrings/example.gpg > /dev/null
-
 - name: Ensure keyrings directory exists
   file:
     path: /etc/apt/keyrings
