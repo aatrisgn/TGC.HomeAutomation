@@ -18,8 +18,8 @@ export function loggerCallback(logLevel: LogLevel, message: string) {
 export function MSALInstanceFactory(configService:ConfigurationLoaderService): IPublicClientApplication {
   return new PublicClientApplication({
     auth: {
-      clientId: configService.config?.ClientId!, //environment.msalConfig.auth.clientId,
-      authority: configService.config?.Authority, //environment.msalConfig.auth.authority,
+      clientId: configService.config?.ClientId!,
+      authority: configService.config?.Authority,
       redirectUri: '/',
       postLogoutRedirectUri: '/',
     },
@@ -41,7 +41,7 @@ export function MSALInterceptorConfigFactory(configService:ConfigurationLoaderSe
   const protectedResourceMap = new Map<string, Array<string>>();
   protectedResourceMap.set(
     configService.apiBaseUrl,
-    ["api://7e4b8c41-76fd-4f2e-84f7-fbf7541f685b/test"]//environment.apiConfig.scopes
+    ["api://7e4b8c41-76fd-4f2e-84f7-fbf7541f685b/test"]
   );
 
   return {
@@ -54,7 +54,7 @@ export function MSALGuardConfigFactory(): MsalGuardConfiguration {
   return {
     interactionType: InteractionType.Redirect,
     authRequest: {
-      scopes: ["api://7e4b8c41-76fd-4f2e-84f7-fbf7541f685b/test"]//[...environment.apiConfig.scopes],
+      scopes: ["api://7e4b8c41-76fd-4f2e-84f7-fbf7541f685b/test"]
     },
     loginFailedRoute: '/login-failed',
   };
