@@ -4,7 +4,7 @@ import { Routes, RouterModule } from '@angular/router';
 
 // project import
 import { AdminComponent } from './theme/layout/admin/admin.component';
-import { MsalGuard } from '@azure/msal-angular';
+import { MsalGuard, MsalRedirectComponent } from '@azure/msal-angular';
 import { LoginFailedComponent } from './pages/login-failed/login-failed.component';
 import { BrowserUtils } from '@azure/msal-browser';
 
@@ -49,6 +49,9 @@ const routes: Routes = [
       }
     ]
   },
+  {
+    path: 'auth',
+    component: MsalRedirectComponent },
   {
     path: 'login-failed',
     component: LoginFailedComponent
