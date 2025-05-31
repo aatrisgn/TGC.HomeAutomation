@@ -25,7 +25,7 @@
 
 - name: Update APT cache
   apt:
-  update_cache: yes
+    update_cache: yes
 
 - name: Install Python
   apt:
