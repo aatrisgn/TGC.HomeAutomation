@@ -35,7 +35,7 @@
   no_log: false
 
 - name: Convert cert.pem to privkey.pem
-  command: openssl rsa -in /etc/nginx/ssl/cert.pem -out /etc/nginx/ssl/privkey.pem
+  command: openssl pkcs12 -in /tmp/certs/cert.pfx -nocerts -nodes -out /etc/nginx/ssl/privkey.pem -passin pass{{ ":" }} #openssl rsa -in /etc/nginx/ssl/cert.pem -out /etc/nginx/ssl/privkey.pem
   no_log: false
 
 - name: Convert cert.pem to fullchain.pem
