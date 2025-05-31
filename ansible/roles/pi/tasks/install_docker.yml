@@ -19,9 +19,9 @@
 
 - name: Add APT repository
   apt_repository:
-  repo: "deb [signed-by=/etc/apt/keyrings/docker.asc] https://download.docker.com/linux/ubuntu stable main"
-  filename: example
-  state: present
+    repo: "deb [signed-by=/etc/apt/keyrings/docker.asc] https://download.docker.com/linux/ubuntu stable main"
+    filename: example
+    state: present
 
 - name: Update APT cache
   apt:
