@@ -10,6 +10,11 @@
     state: directory
     mode: '0755'
 
+- name: Remove PFX
+  ansible.builtin.file:
+    path: /tmp/certs/cert.pfx
+    state: absent
+
 - name: Copy service file to destination
   ansible.builtin.copy:
     src: ../files/homeautomation.dev.tgcportal.com
@@ -36,6 +41,11 @@
 - name: Convert cert.pem to fullchain.pem
   command: openssl x509 -in /etc/nginx/ssl/cert.pem -out /etc/nginx/ssl/fullchain.pem
   no_log: false
+
+- name: Remove PFX
+  ansible.builtin.file:
+    path: /tmp/certs/cert.pfx
+    state: absent
 
 - name: Test NGINX configuration
   command: nginx -t
