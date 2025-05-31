@@ -1,9 +1,7 @@
-
 server {
-    listen 443 ssl;
-    server_name yourdomain.local;
-
-    ssl_certificate /etc/nginx/ssl/fullchain.pem;
+    listen              443 ssl;
+    server_name         homeautomation.dev.tgcportal.com;
+    ssl_certificate     /etc/nginx/ssl/fullchain.pem;
     ssl_certificate_key /etc/nginx/ssl/privkey.pem;
 
     location / {

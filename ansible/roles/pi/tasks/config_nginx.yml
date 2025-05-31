@@ -28,11 +28,11 @@
 
 - name: Download certificate from Azure Key Vault
   command: az keyvault secret download --vault-name "{{ keyvault_name }}" --name "{{ certificate_name }}" --file "/tmp/certs/cert.pfx" --encoding base64
-  no_log: false
+  no_log: true
 
 - name: Convert cert.pfx to cert.pem
   command: openssl pkcs12 -in /tmp/certs/cert.pfx -out /etc/nginx/ssl/cert.pem -nodes -passin pass{{ ":" }}
-  no_log: false
+  no_log: true
 
 - name: Convert cert.pem to privkey.pem
   command: openssl pkcs12 -in /tmp/certs/cert.pfx -nocerts -nodes -out /etc/nginx/ssl/privkey.pem -passin pass{{ ":" }} #openssl rsa -in /etc/nginx/ssl/cert.pem -out /etc/nginx/ssl/privkey.pem
