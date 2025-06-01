@@ -23,15 +23,8 @@ jobs:
         tenant-id: ${{ secrets.HOMEAUTOMATION_DEV_TENANT_ID }}
         subscription-id: ${{ secrets.HOMEAUTOMATION_DEV_SUBSCRIPTION_ID }}
     
-    - name: Fetch secret from Key Vault
-      id: get_secret
-      run: |
-        secret=$(az keyvault secret show --vault-name "tgckvhadev" --name "certpassword" --query "value" -o tsv)
-        echo "::add-mask::$secret"
-        echo "certpassword=$secret" >> $GITHUB_ENV
-    
     - run: |
-        ansible-playbook ./ansible/roles/pi/playbooks/setup_nginx.yml --extra-vars "certname=asfwf kvname=tgckvhadev pw=$certpassword"
+        ansible-playbook ./ansible/roles/pi/playbooks/setup_nginx.yml --extra-vars "certname=asfwf apiCertName="api-homeautomation-dev-tgcportal-com" kvname=tgckvhadev"
       name: "Configure Nginx"
 
     - run: |

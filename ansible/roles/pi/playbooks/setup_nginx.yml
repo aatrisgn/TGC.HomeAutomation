@@ -6,7 +6,7 @@
   vars:
     certificate_name: "{{ certname }}"
     keyvault_name: "{{ kvname }}"
-    certificate_password: "{{ pw }}"
+    api_certificate_name: "{{ apiCertName  }}"
 
   tasks:
     - name: Install Nginx

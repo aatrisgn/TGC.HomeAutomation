@@ -23,7 +23,11 @@ server {
 
 server {
     listen 80;
+    listen 443 ssl;
     server_name api.homeautomation.dev.tgcportal.com;
+
+    ssl_certificate     /etc/nginx/ssl/api.fullchain.pem;
+    ssl_certificate_key /etc/nginx/ssl/api.privkey.pem;
 
     location / {
         proxy_pass http://localhost:9000;
