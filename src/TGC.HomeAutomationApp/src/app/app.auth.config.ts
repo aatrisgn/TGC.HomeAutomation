@@ -20,7 +20,7 @@ export function MSALInstanceFactory(configService:ConfigurationLoaderService): I
     auth: {
       clientId: configService.config?.ClientId!,
       authority: configService.config?.Authority,
-      redirectUri: window.location.origin + '/auth',
+      redirectUri: window.location.origin,
       postLogoutRedirectUri: window.location.origin,
     },
     cache: {
@@ -30,7 +30,7 @@ export function MSALInstanceFactory(configService:ConfigurationLoaderService): I
       allowPlatformBroker: false, // Disables WAM Broker
       loggerOptions: {
         loggerCallback,
-        logLevel: LogLevel.Warning,
+        logLevel: LogLevel.Info,
         piiLoggingEnabled: false,
       },
     },

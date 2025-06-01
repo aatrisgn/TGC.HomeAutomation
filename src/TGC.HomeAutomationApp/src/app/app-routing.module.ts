@@ -50,9 +50,6 @@ const routes: Routes = [
     ]
   },
   {
-    path: 'auth',
-    component: MsalRedirectComponent },
-  {
     path: 'login-failed',
     component: LoginFailedComponent
   }
