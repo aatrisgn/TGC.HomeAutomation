@@ -15,6 +15,11 @@
     path: /tmp/certs/cert.pfx
     state: absent
 
+- name: Remove PFX 
+  ansible.builtin.file:
+    path: /tmp/certs/api.cert.pfx
+    state: absent
+
 - name: Copy service file to destination
   ansible.builtin.copy:
     src: ../files/homeautomation.dev.tgcportal.com
@@ -61,6 +66,11 @@
 - name: Remove PFX
   ansible.builtin.file:
     path: /tmp/certs/cert.pfx
+    state: absent
+
+- name: Remove PFX 
+  ansible.builtin.file:
+    path: /tmp/certs/api.cert.pfx
     state: absent
 
 - name: Test NGINX configuration
