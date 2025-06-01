@@ -97,12 +97,13 @@ public static class ServiceCollectionExtensions
 
 		var allowedHosts = configuration.GetValue<string>("AllowedHosts");
 
+		// TODO: FIX CORS!
 		services.AddCors(options =>
 		{
 			options.AddPolicy(name: "ALLOW_DEVELOPMENT_CORS_ORIGINS_POLICY",
 				builder =>
 				{
-					builder.WithOrigins(allowedHosts!)
+					builder.AllowAnyOrigin()
 						.AllowAnyMethod()
 						.AllowAnyHeader();
 				});
@@ -113,7 +114,7 @@ public static class ServiceCollectionExtensions
 			options.AddPolicy(name: "ALLOW_PROD_CORS_ORIGINS_POLICY",
 				builder =>
 				{
-					builder.WithOrigins(allowedHosts!)
+					builder.AllowAnyOrigin()
 						.AllowAnyMethod()
 						.AllowAnyHeader();
 				});
