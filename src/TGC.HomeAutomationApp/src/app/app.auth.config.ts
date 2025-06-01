@@ -20,8 +20,8 @@ export function MSALInstanceFactory(configService:ConfigurationLoaderService): I
     auth: {
       clientId: configService.config?.ClientId!,
       authority: configService.config?.Authority,
-      redirectUri: '/',
-      postLogoutRedirectUri: '/',
+      redirectUri: window.location.origin + '/auth',
+      postLogoutRedirectUri: window.location.origin,
     },
     cache: {
       cacheLocation: BrowserCacheLocation.SessionStorage,
