@@ -34,7 +34,7 @@ export class LineChartComponent {
       labels: {
         formatter: function (value: string) {
           const date = new Date(value);
-          return date.toLocaleTimeString('en-DK'); // e.g., "11/05/2025"
+          return date.toUTCString(); // e.g., "11/05/2025"
         }
       }
     },

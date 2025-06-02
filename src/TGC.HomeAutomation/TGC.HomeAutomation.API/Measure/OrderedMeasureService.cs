@@ -40,4 +40,22 @@ public class OrderedMeasureService : IOrderedMeasureService
 
 		return distinctValues.Distinct() ?? [];
 	}
+
+	public async Task<DeviceOrderedMeasureRangeResponse> GetSpecificMeasuresByDeviceId(string measureType, Guid deviceId, DateTime startDate, DateTime endDate)
+	{
+		var locatedOrderedMeasures = await _orderedMeasureRepository
+			.GetAllAsync(m =>
+				m.DeviceId == deviceId
+				&& m.Type == measureType
+				&& m.Created > startDate
+				&& m.Created < endDate);
+
+		return new DeviceOrderedMeasureRangeResponse
+		{
+			DeviceId = deviceId,
+			StartDate = startDate,
+			EndDate = endDate,
+			Measures = locatedOrderedMeasures.OrderBy(m => m.Created).Select(OrderedMeasureResponse.FromEntity)
+		};
+	}
 }

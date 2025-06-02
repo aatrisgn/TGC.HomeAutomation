@@ -1028,6 +1028,84 @@ export class MeasureClient {
         return _observableOf(null as any);
     }
 
+    getMeasuresByDeviceIdMeasureTypeAndDate(deviceId: string, startDate: Date, endDate: Date, measureType: string): Observable<DeviceOrderedMeasureRangeResponse> {
+        let url_ = this.baseUrl + "/api/measure/{deviceId}/{measureType}/{startDate}/{endDate}";
+        if (deviceId === undefined || deviceId === null)
+            throw new Error("The parameter 'deviceId' must be defined.");
+        url_ = url_.replace("{deviceId}", encodeURIComponent("" + deviceId));
+        if (startDate === undefined || startDate === null)
+            throw new Error("The parameter 'startDate' must be defined.");
+        url_ = url_.replace("{startDate}", encodeURIComponent(startDate ? "" + startDate.toISOString() : "null"));
+        if (endDate === undefined || endDate === null)
+            throw new Error("The parameter 'endDate' must be defined.");
+        url_ = url_.replace("{endDate}", encodeURIComponent(endDate ? "" + endDate.toISOString() : "null"));
+        if (measureType === undefined || measureType === null)
+            throw new Error("The parameter 'measureType' must be defined.");
+        url_ = url_.replace("{measureType}", encodeURIComponent("" + measureType));
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Accept": "application/json"
+            })
+        };
+
+        return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processGetMeasuresByDeviceIdMeasureTypeAndDate(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processGetMeasuresByDeviceIdMeasureTypeAndDate(response_ as any);
+                } catch (e) {
+                    return _observableThrow(e) as any as Observable<DeviceOrderedMeasureRangeResponse>;
+                }
+            } else
+                return _observableThrow(response_) as any as Observable<DeviceOrderedMeasureRangeResponse>;
+        }));
+    }
+
+    protected processGetMeasuresByDeviceIdMeasureTypeAndDate(response: HttpResponseBase): Observable<DeviceOrderedMeasureRangeResponse> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (response as any).error instanceof Blob ? (response as any).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 401) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            let result401: any = null;
+            let resultData401 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result401 = ProblemDetails.fromJS(resultData401);
+            return throwException("A server side error occurred.", status, _responseText, _headers, result401);
+            }));
+        } else if (status === 403) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            let result403: any = null;
+            let resultData403 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result403 = ProblemDetails.fromJS(resultData403);
+            return throwException("A server side error occurred.", status, _responseText, _headers, result403);
+            }));
+        } else if (status === 500) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return throwException("A server side error occurred.", status, _responseText, _headers);
+            }));
+        } else if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = DeviceOrderedMeasureRangeResponse.fromJS(resultData200);
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf(null as any);
+    }
+
     create(request: MeasureRequest): Observable<void> {
         let url_ = this.baseUrl + "/api/measure/inside";
         url_ = url_.replace(/[?&]$/, "");
