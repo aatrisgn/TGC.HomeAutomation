@@ -1,0 +1,4 @@
+#sudo apt install nginx
+#sudo ufw allow 'Nginx HTTP'
+
+#https://certbot.eff.org/instructions?ws=nginx&os=pip

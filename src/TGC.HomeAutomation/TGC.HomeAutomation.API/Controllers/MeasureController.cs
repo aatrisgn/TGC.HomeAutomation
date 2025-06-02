@@ -52,6 +52,14 @@ public class MeasureController : HAControllerBase
 		return await _measureService.GetByDeviceId(deviceId, startDate, endDate);
 	}
 
+	[HttpGet]
+	[Route("measure/{deviceId}/{measureType}/{startDate}/{endDate}")]
+	[ProducesResponseType(typeof(DeviceOrderedMeasureRangeResponse), StatusCodes.Status200OK)]
+	public async Task<DeviceOrderedMeasureRangeResponse> GetMeasuresByDeviceIdMeasureTypeAndDate(Guid deviceId, DateTime startDate, DateTime endDate)
+	{
+		throw new NotImplementedException("Endpoint isn't implemented yet.");
+	}
+
 	[HttpPost]
 	[Route("measure/inside")]
 	[ProducesResponseType(StatusCodes.Status200OK)]

@@ -13,15 +13,7 @@ app.UseSwagger();
 app.UseSwaggerUI();
 
 // Configure the HTTP request pipeline.
-if (app.Environment.IsDevelopment())
-{
-	app.UseCors("ALLOW_DEVELOPMENT_CORS_ORIGINS_POLICY");
-}
-else
-{
-	//TODO: Make this in a better way
-	app.UseCors("ALLOW_PROD_CORS_ORIGINS_POLICY");
-}
+app.UseCors("CORS_ORIGINS_POLICY");
 
 app.UseHttpsRedirection();
 

@@ -1,0 +1,24 @@
+<app-card cardTitle="Temp. & Hum. (Outside & Inside)" [options]="false">
+  <div>
+    <label for="device">Select Device:</label>
+    <select id="device" [(ngModel)]="selectedDeviceId" (change)="onDeviceChange()">
+      <option *ngFor="let device of devices" [value]="device.id">{{ device.name }}</option>
+    </select>
+
+    <label for="measureType">Measure type:</label>
+    <select id="measureType" [(ngModel)]="measureTypeValue" (change)="onMeasureTypeChange()">
+      <option *ngFor="let availableMeasureType of availableMeasureTypes" [value]="availableMeasureType">{{ availableMeasureType }}</option>
+    </select>
+
+    <label for="timespan">Timespan:</label>
+    <select id="timespan" [(ngModel)]="timespan" (change)="onTimespanChange()">
+      <option value="24h">Last 24 Hours</option>
+      <option value="7d">Last 7 Days</option>
+      <option value="30d">Last 30 Days</option>
+    </select>
+  </div>
+
+  <div>
+    <app-line-chart [chartData]="chartData"/>
+  </div>
+</app-card>

@@ -21,7 +21,7 @@ public static class ServiceCollectionExtensions
 		// });
 
 		var haConfigSection = configuration.GetSection(HomeAutomationConfiguration.SectionName);
-		services.Configure<StorageConfiguration>(haConfigSection);
+		services.Configure<HomeAutomationConfiguration>(haConfigSection);
 
 		var configSection = configuration.GetSection("TGC.AzureTableStorage");
 		services.Configure<StorageConfiguration>(configSection);
@@ -95,26 +95,14 @@ public static class ServiceCollectionExtensions
 			configuration.StubServices = false;
 		});
 
-		var allowedHosts = configuration.GetValue<string>("AllowedHosts");
-
-		// TODO: FIX CORS!
-		services.AddCors(options =>
-		{
-			options.AddPolicy(name: "ALLOW_DEVELOPMENT_CORS_ORIGINS_POLICY",
-				builder =>
-				{
-					builder.AllowAnyOrigin()
-						.AllowAnyMethod()
-						.AllowAnyHeader();
-				});
-		});
+		var allowedHosts = configuration.GetSection("HomeAutomation:AllowedHosts").Get<string[]>();
 
 		services.AddCors(options =>
 		{
-			options.AddPolicy(name: "ALLOW_PROD_CORS_ORIGINS_POLICY",
+			options.AddPolicy(name: "CORS_ORIGINS_POLICY",
 				builder =>
 				{
-					builder.AllowAnyOrigin()
+					builder.WithOrigins(allowedHosts!)
 						.AllowAnyMethod()
 						.AllowAnyHeader();
 				});

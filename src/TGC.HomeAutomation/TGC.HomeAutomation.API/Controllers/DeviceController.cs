@@ -33,6 +33,16 @@ public class DeviceController : HAControllerBase
 		return locatedDevice != null ? Ok(locatedDevice) : NotFound();
 	}
 
+	[HttpGet]
+	[Route("devices/{id:guid}/measuretypes")]
+	[ProducesResponseType(typeof(DeviceMeasureTypesResponse), StatusCodes.Status200OK)]
+	[ProducesResponseType(StatusCodes.Status404NotFound)]
+	public async Task<IActionResult> GetAvailableMeasuresByDeviceId(Guid id)
+	{
+		var deviceMeasureTypesResponse = await _deviceService.GetAvailableMeasureTypesByDeviceId(id);
+		return deviceMeasureTypesResponse != null ? Ok(deviceMeasureTypesResponse) : NotFound();
+	}
+
 	[HttpPost]
 	[Route("devices")]
 	[ProducesResponseType(typeof(DeviceResponse), StatusCodes.Status200OK)]

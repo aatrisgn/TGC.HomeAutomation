@@ -1,4 +1,5 @@
 ﻿using TGC.AzureTableStorage;
+using TGC.HomeAutomation.API.Measure;
 using TGC.HomeAutomation.API.Sensor;
 using TGC.HomeAutomation.API.Temperature;
 
@@ -10,17 +11,20 @@ public class DeviceService : IDeviceService
 	private readonly IAzureTableStorageRepository<ApiKeyEntity> _apiKeyRepository;
 	private readonly IDeviceAPIKeyGenerator _deviceKeyGenerator;
 	private readonly IDeviceCache _deviceCache;
+	private readonly IOrderedMeasureService _orderedMeasureService;
 
 	public DeviceService(
 		IAzureTableStorageRepository<DeviceEntity> deviceRepository,
 		IDeviceAPIKeyGenerator deviceKeyGenerator,
 		IAzureTableStorageRepository<ApiKeyEntity> apiKeyRepository,
-		IDeviceCache deviceCache)
+		IDeviceCache deviceCache,
+		IOrderedMeasureService orderedMeasureService)
 	{
 		_deviceRepository = deviceRepository;
 		_deviceKeyGenerator = deviceKeyGenerator;
 		_apiKeyRepository = apiKeyRepository;
 		_deviceCache = deviceCache;
+		_orderedMeasureService = orderedMeasureService;
 	}
 
 	public async Task<IEnumerable<DeviceResponse>> GetAllAsync()
@@ -90,5 +94,11 @@ public class DeviceService : IDeviceService
 			Secret = newApiKey,
 			ExpirationDate = apiKeyRequest.ExpirationDate
 		};
+	}
+
+	public async Task<DeviceMeasureTypesResponse> GetAvailableMeasureTypesByDeviceId(Guid id)
+	{
+		var allMeasures = await _orderedMeasureService.GetUniqueMeasureTypesByDeviceId(id);
+		return new DeviceMeasureTypesResponse { DeviceId = id, MeasureTypes = allMeasures };
 	}
 }

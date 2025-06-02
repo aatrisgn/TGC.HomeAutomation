@@ -55,7 +55,6 @@ export class TemperatureSummaryComponent {
     this.plotMeasureData("temperature", twentyFourHoursAgo, now);
     this.plotMeasureData("humidity", twentyFourHoursAgo, now);
     this.plotMeasureData("co2", twentyFourHoursAgo, now);
-
   }
 
   private plotMeasureData(measureType:string, startTime:Date, endtime:Date):void {
