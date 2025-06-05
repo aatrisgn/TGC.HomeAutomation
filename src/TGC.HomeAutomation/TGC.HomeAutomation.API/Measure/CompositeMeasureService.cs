@@ -139,4 +139,10 @@ internal class CompositeMeasureService : ICompositeMeasureService
 				})
 		};
 	}
+
+	public async Task<DeviceOrderedMeasureRangeResponse> GetSpecificMeasuresByDeviceIdForPeriod(string measureType, Guid deviceId, DateTime startDate, DateTime endDate)
+	{
+		var deviceMeasures = await _orderedMeasureService.GetSpecificMeasuresByDeviceId(measureType, deviceId, startDate, endDate);
+		return deviceMeasures;
+	}
 }

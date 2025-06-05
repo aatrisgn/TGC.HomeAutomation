@@ -12,4 +12,5 @@ public interface IDeviceService
 	Task<Guid> DeleteByIdAsync(Guid id);
 	Task<DeviceEntity> GetByMacAddress(string requestMacAddress);
 	Task<ApiKeyResponse> UpsertApiKeyAsync(ApiKeyRequest apiKeyRequest, Guid id);
+	Task<DeviceMeasureTypesResponse> GetAvailableMeasureTypesByDeviceId(Guid id);
 }

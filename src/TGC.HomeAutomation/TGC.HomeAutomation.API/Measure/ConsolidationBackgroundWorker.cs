@@ -83,7 +83,7 @@ public class ConsolidationBackgroundWorker : BackgroundService
 							DataValue = averageDataValue,
 							Created = roundedDownDateTime,
 							DeviceId = measure.Key,
-							Type = measureType.Key,
+							Type = measureType.Key ?? "N/A",
 							Sample = measureType.Count()
 						};
 

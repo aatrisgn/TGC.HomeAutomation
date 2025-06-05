@@ -8,4 +8,5 @@ public interface ICompositeMeasureService
 	Task AddRead(MeasureRequest request);
 	Task<DeviceOrderedMeasureRangeResponse> GetByDeviceId(Guid deviceId, DateTime startDate, DateTime endDate);
 	Task<MeasureRangeResponse> GetLatestActivityByDeviceId(Guid deviceId);
+	Task<DeviceOrderedMeasureRangeResponse> GetSpecificMeasuresByDeviceIdForPeriod(string measureType, Guid deviceId, DateTime startDate, DateTime endDate);
 }
