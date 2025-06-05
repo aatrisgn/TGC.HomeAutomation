@@ -8,10 +8,10 @@
 String serverName = "http://api.homeautomation.dev.tgcportal.com/api";
 
 #define DHTTYPE DHT22
-#define DHTPIN 14
+#define DHTPIN 14 //G5 on ESP8266
 
 WiFiClient espClient;
-DHT dht(DHTPIN, DHTTYPE);  // 11 works fine for ESP8266
+DHT dht(DHTPIN, DHTTYPE);
 
 long lastMsg = 0;
 float temp = 0.0;
@@ -101,8 +101,8 @@ void loop() {
       Serial.print("Current humidity: ");
       Serial.println(hum);
 
-      //sendHttpRequest("temperature", temp);
-      //sendHttpRequest("humidity", hum);
+      sendHttpRequest("temperature", temp);
+      sendHttpRequest("humidity", hum);
 
     } else {
       Serial.println("WiFi Disconnected");
