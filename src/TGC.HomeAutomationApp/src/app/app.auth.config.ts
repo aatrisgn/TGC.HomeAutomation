@@ -30,7 +30,7 @@ export function MSALInstanceFactory(configService:ConfigurationLoaderService): I
       allowPlatformBroker: false, // Disables WAM Broker
       loggerOptions: {
         loggerCallback,
-        logLevel: LogLevel.Info,
+        logLevel: LogLevel.Error,
         piiLoggingEnabled: false,
       },
     },

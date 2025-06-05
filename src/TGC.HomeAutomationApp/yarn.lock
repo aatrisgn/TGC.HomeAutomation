@@ -295,6 +295,13 @@
     fast-glob "3.3.2"
     yargs "^17.2.1"
 
+"@angular/material@19.0.5":
+  version "19.0.5"
+  resolved "https://registry.yarnpkg.com/@angular/material/-/material-19.0.5.tgz#c4c1e0d3346815c11e273213b562a60ffda634f1"
+  integrity sha512-yiW/ZJNkOPlQdqgj5U8DHTu3r7OHMI5R1cAbCpOmHlsVHEoc/Vw4V3RFUgpWLqCGgdRIkayoilMAooT52gG2Dg==
+  dependencies:
+    tslib "^2.3.0"
+
 "@angular/platform-browser-dynamic@19.0.5":
   version "19.0.5"
   resolved "https://registry.yarnpkg.com/@angular/platform-browser-dynamic/-/platform-browser-dynamic-19.0.5.tgz#d28a18151b8bb6401ffea15bab1a4ea7e74ab12b"

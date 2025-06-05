@@ -1,0 +1,18 @@
+<div>
+  <div>
+    <input matInput [matDatepicker]="datepicker" placeholder="{{selectedDate.toLocaleDateString()}}" [(ngModel)]="dateString" (dateChange)="onDateChange($event)">
+    <mat-datepicker #datepicker/>
+    <mat-datepicker-toggle [for]="datepicker" matSuffix/>
+  </div>
+  <div>
+    <input matInput
+      [matTimepicker]="timepicker"
+      placeholder="{{selectedDate.toLocaleTimeString()}}"
+      [(ngModel)]="timeString"
+      [ngModelOptions]="{updateOn: 'blur'}">
+    <mat-timepicker #timepicker/>
+    <mat-timepicker-toggle [for]="timepicker" matSuffix/>
+  </div>
+</div>
+
+<p>Selected date: {{getFormattedSelectedDate()}}</p>

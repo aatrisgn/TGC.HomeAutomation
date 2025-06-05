@@ -24,7 +24,7 @@ export class ChatMsgComponent implements OnInit {
   message_error!: boolean;
   friendWriting!: boolean;
   newReplay: string;
-  direction = 'ltr';
+  direction: 'ltr' | 'rtl' = 'ltr';
 
   // constructor
   constructor() {
