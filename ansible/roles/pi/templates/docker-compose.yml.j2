@@ -7,8 +7,8 @@ services:
     environment:
       - TGC.AzureTableStorage__StorageAccountUrl=https://tgcsthadev.table.core.windows.net/
       - TGC.AzureTableStorage__UseManagedIdentity=true
-      - AllowedHosts=*
       - HomeAutomation__Testing__Enabled=false
+      - HomeAutomation__AllowedHosts=https://homeautomation.dev.tgcportal.com
 
   app:
     image: tgclzdevacr.azurecr.io/tgc-ha-app:latest
