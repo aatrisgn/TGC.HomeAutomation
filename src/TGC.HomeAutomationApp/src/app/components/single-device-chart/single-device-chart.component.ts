@@ -43,6 +43,7 @@ export class DeviceChartComponent implements OnInit {
       if (this.devices.length > 0) {
         this.selectedDeviceId = this.devices[0].id!;
         this.measureTypeValue = 'temperature';
+        this.fetchDeviceData();
       }
     })
   }
