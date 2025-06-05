@@ -28,7 +28,9 @@ export class DeviceChartComponent implements OnInit {
   constructor(
     private readonly deviceClient:DeviceClient,
     private readonly measureClient:MeasureClient
-  ) {}
+  ) {
+    this.startDate = new Date(this.endDate.getTime() - 24 * 60 * 60 * 1000);
+  }
 
   ngOnInit(): void {
     this.fetchDevices();

@@ -5,15 +5,15 @@
 #define wifi_ssid ""
 #define wifi_password ""
 
-String serverName = "http://api.homeautomation.dev.tgcportal.com/api";
-
 #define DHTTYPE DHT22
 #define DHTPIN 14  // GPIO14 (D14 WROOM)
 
 WiFiClient espClient;
+HTTPClient http;
 DHT dht(DHTPIN, DHTTYPE);
 
-long lastMsg = 0;
+const char * serverUri = "http://api.homeautomation.dev.tgcportal.com/api/measure/inside";
+String macAddress = "";
 float temp = 0.0;
 float hum = 0.0;
 
@@ -41,19 +41,16 @@ void setup_wifi() {
   Serial.println(WiFi.localIP());
 
   Serial.print("MAC Address: ");
-  Serial.println(WiFi.macAddress());
+  macAddress = WiFi.macAddress();
+  Serial.println(macAddress);
 }
 
 void sendHttpRequest(String dataType, float dataValue) {
   if (WiFi.status() == WL_CONNECTED) {
-    HTTPClient http;
-    WiFiClient client;
 
-    String serverPath = serverName + "/measure/inside";
-    http.begin(client, serverPath.c_str());
+    http.begin(serverUri);
     http.addHeader("Content-Type", "application/json");
 
-    String macAddress = WiFi.macAddress();
     String httpRequestData = "{\"dataValue\":" + String(dataValue) + ", \"type\": \"" + dataType + "\", \"macAddress\": \"" + macAddress + "\"}";
     Serial.println(httpRequestData);
 
@@ -62,8 +59,7 @@ void sendHttpRequest(String dataType, float dataValue) {
     if (httpResponse > 0) {
       Serial.print("HTTP Response code: ");
       Serial.println(httpResponse);
-      String payload = http.getString();
-      Serial.println(payload);
+      Serial.println(http.getString());
     } else {
       Serial.print("Error code: ");
       Serial.println(httpResponse);
@@ -77,29 +73,23 @@ void sendHttpRequest(String dataType, float dataValue) {
 void loop() {
   delay(10000);
 
-  long now = millis();
+  Serial.print("Free heap: ");
+  Serial.println(ESP.getFreeHeap());
 
-  if (now - lastMsg > 2000) {
-    lastMsg = now;
+  float newTemp = dht.readTemperature();
+  float newHum = dht.readHumidity();
 
-    float newTemp = dht.readTemperature();
-    float newHum = dht.readHumidity();
-
-    if (isnan(newTemp) || isnan(newHum)) {
-      Serial.println("Failed to read from DHT sensor!");
-      return;
-    }
-
-    temp = newTemp;
-    hum = newHum;
-
-    Serial.print("Current temperature: ");
-    Serial.println(temp);
-
-    Serial.print("Current humidity: ");
-    Serial.println(hum);
-
-    sendHttpRequest("temperature", temp);
-    sendHttpRequest("humidity", hum);
+  if (isnan(newTemp) || isnan(newHum)) {
+    Serial.println("Failed to read from DHT sensor!");
+    return;
   }
+
+  Serial.print("Current temperature: ");
+  Serial.println(newTemp);
+
+  Serial.print("Current humidity: ");
+  Serial.println(newHum);
+
+  sendHttpRequest("temperature", newTemp);
+  sendHttpRequest("humidity", newHum);
 }
