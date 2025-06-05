@@ -1,0 +1,23 @@
+<app-card cardTitle="Live device activity" [options]="false" blockClass="table-border-style">
+  <p>Latest measure: {{receivedMessage}}</p>
+
+  <table class="table table-hover">
+    <thead>
+      <tr>
+        <th>Mac Address</th>
+        <th>Measure type</th>
+        <th>Value</th>
+        <th>Message recieved*</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let measure of rawMeasures" [class.new-row]="measure.isNew">
+        <td>{{ measure.macAddress }}</td>
+        <td>{{ measure.type }}</td>
+        <td>{{ measure.dataValue }}</td>
+        <td>{{ measure.received }}</td>
+      </tr>
+    </tbody>
+  </table>
+  <p>* Raw data timestamp is managed in the backend and this value is not determined at the point it is being tracked live.</p>
+</app-card>

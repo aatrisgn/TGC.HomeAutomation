@@ -1,6 +1,7 @@
 using TGC.AzureTableStorage;
 using TGC.HomeAutomation.API.Device;
 using TGC.HomeAutomation.API.Sensor;
+using TGC.SignalR;
 
 namespace TGC.HomeAutomation.API.Measure;
 
@@ -10,6 +11,7 @@ internal class CompositeMeasureService : ICompositeMeasureService
 	private readonly IMeasureTypeConverter _measureTypeConverter;
 	private readonly IOrderedMeasureService _orderedMeasureService;
 	private readonly IAzureTableStorageRepository<OrderedMeasureEntity> _orderedMeasureRepository;
+	private readonly ISignalRNotificationService _notificationService;
 
 	private readonly IAzureTableStorageRepository<MeasureEntity> _measureRepository;
 	private readonly IDeviceService _deviceService;
@@ -20,7 +22,8 @@ internal class CompositeMeasureService : ICompositeMeasureService
 		IAzureTableStorageRepository<MeasureEntity> measureRepository,
 		IAzureTableStorageRepository<OrderedMeasureEntity> orderedMeasureRepository,
 		IDeviceService deviceService,
-		IOrderedMeasureService orderedMeasureService
+		IOrderedMeasureService orderedMeasureService,
+		ISignalRNotificationService notificationService
 		)
 	{
 		_timeProvider = timeProvider;
@@ -29,6 +32,7 @@ internal class CompositeMeasureService : ICompositeMeasureService
 		_measureTypeConverter = measureTypeConverter;
 		_deviceService = deviceService;
 		_orderedMeasureService = orderedMeasureService;
+		_notificationService = notificationService;
 	}
 	public async Task<MeasureResponse> GetCurrentMeasureInside(string measureType)
 	{
@@ -98,6 +102,7 @@ internal class CompositeMeasureService : ICompositeMeasureService
 
 	public async Task AddRead(MeasureRequest request)
 	{
+		await _notificationService.BroadcastMessageAsync(request);
 		ArgumentNullException.ThrowIfNull(request.MacAddress);
 
 		DeviceEntity originDevice = await _deviceService.GetByMacAddress(request.MacAddress);

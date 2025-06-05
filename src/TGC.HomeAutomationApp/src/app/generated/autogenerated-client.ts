@@ -1028,20 +1028,20 @@ export class MeasureClient {
         return _observableOf(null as any);
     }
 
-    getMeasuresByDeviceIdMeasureTypeAndDate(deviceId: string, startDate: Date, endDate: Date, measureType: string): Observable<DeviceOrderedMeasureRangeResponse> {
+    getMeasuresByDeviceIdMeasureTypeAndDate(deviceId: string, measureType: string, startDate: Date, endDate: Date): Observable<DeviceOrderedMeasureRangeResponse> {
         let url_ = this.baseUrl + "/api/measure/{deviceId}/{measureType}/{startDate}/{endDate}";
         if (deviceId === undefined || deviceId === null)
             throw new Error("The parameter 'deviceId' must be defined.");
         url_ = url_.replace("{deviceId}", encodeURIComponent("" + deviceId));
+        if (measureType === undefined || measureType === null)
+            throw new Error("The parameter 'measureType' must be defined.");
+        url_ = url_.replace("{measureType}", encodeURIComponent("" + measureType));
         if (startDate === undefined || startDate === null)
             throw new Error("The parameter 'startDate' must be defined.");
         url_ = url_.replace("{startDate}", encodeURIComponent(startDate ? "" + startDate.toISOString() : "null"));
         if (endDate === undefined || endDate === null)
             throw new Error("The parameter 'endDate' must be defined.");
         url_ = url_.replace("{endDate}", encodeURIComponent(endDate ? "" + endDate.toISOString() : "null"));
-        if (measureType === undefined || measureType === null)
-            throw new Error("The parameter 'measureType' must be defined.");
-        url_ = url_.replace("{measureType}", encodeURIComponent("" + measureType));
         url_ = url_.replace(/[?&]$/, "");
 
         let options_ : any = {

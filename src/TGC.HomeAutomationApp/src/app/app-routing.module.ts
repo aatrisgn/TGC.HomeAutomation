@@ -32,6 +32,10 @@ const routes: Routes = [
         loadComponent: () => import('./pages/devices/add-device/add-devices.component')
       },
       {
+        path: 'live-activity',
+        loadComponent: () => import('./pages/devices/live-activity/live-activity.component')
+      },
+      {
         path: 'component',
         loadChildren: () => import('./demo/ui-element/ui-basic.module').then((m) => m.UiBasicModule)
       },

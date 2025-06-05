@@ -1,4 +1,5 @@
 using TGC.HomeAutomation.API;
+using TGC.SignalR;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -19,6 +20,8 @@ app.UseHttpsRedirection();
 
 app.UseAuthentication();
 app.UseAuthorization();
+
+app.UseSignalR();
 
 app.MapControllers();
 

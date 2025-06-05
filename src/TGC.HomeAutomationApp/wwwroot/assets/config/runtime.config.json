@@ -1,0 +1,6 @@
+{
+  "ApiBaseURL": "http://localhost:5298",
+  "EnvironmentType": "local",
+  "ClientId": "7e4b8c41-76fd-4f2e-84f7-fbf7541f685b",
+  "Authority": "https://login.microsoftonline.com/0552bf76-d799-4ea1-8459-74106c5d04aa/"
+}

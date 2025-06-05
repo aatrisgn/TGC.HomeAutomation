@@ -55,14 +55,15 @@ export class TemperatureSummaryComponent {
   };
 
   constructor(private measureClient: MeasureClient) {
-    const now = new Date(); // current date and time
-    const twentyFourHoursAgo = new Date(now.getTime() - 24 * 60 * 60 * 1000); // subtract 24 hours
-    this.plotMeasureData("temperature");
-    this.plotMeasureData("humidity");
-    this.plotMeasureData("co2");
+    this.reloadData();
   }
 
   onDateChange(date:Date):void{
+    this.reloadData();
+  }
+
+  private reloadData():void {
+    this.summaryChart.series = []; //Resetting data for now. Not ideal, but kinda works, lol.
     this.plotMeasureData("temperature");
     this.plotMeasureData("humidity");
     this.plotMeasureData("co2");

@@ -8,6 +8,7 @@ using TGC.HomeAutomation.API.Authentication;
 using TGC.HomeAutomation.API.Configuration;
 using TGC.HomeAutomation.API.Device;
 using TGC.HomeAutomation.API.Measure;
+using TGC.SignalR;
 
 namespace TGC.HomeAutomation.API;
 
@@ -104,13 +105,16 @@ public static class ServiceCollectionExtensions
 				{
 					builder.WithOrigins(allowedHosts!)
 						.AllowAnyMethod()
-						.AllowAnyHeader();
+						.AllowAnyHeader()
+						.AllowCredentials();
 				});
 		});
 
 		services.AddControllers();
 
 		services.AddHostedService<ConsolidationBackgroundWorker>();
+
+		services.ConfigureSignalR();
 
 		return services;
 	}

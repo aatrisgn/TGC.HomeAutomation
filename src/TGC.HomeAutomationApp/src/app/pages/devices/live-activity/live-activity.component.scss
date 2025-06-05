@@ -1,0 +1,8 @@
+.new-row {
+  animation: highlight 2s ease-out;
+}
+
+@keyframes highlight {
+  from { background-color: #c8f7c5; }
+  to { background-color: white; }
+}

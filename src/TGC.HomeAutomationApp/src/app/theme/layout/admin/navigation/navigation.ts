@@ -53,7 +53,14 @@ export const NavigationItems: NavigationItem[] = [
         type: 'item',
         url: '/devices',
         icon: 'feather icon-home'
-      }
+      },
+      {
+        id: 'live-activity',
+        title: 'Live activity',
+        type: 'item',
+        url: '/live-activity',
+        icon: 'feather icon-activity'
+      },
     ]
   },
   {

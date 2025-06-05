@@ -72,9 +72,7 @@ export class DeviceChartComponent implements OnInit {
 
   fetchDeviceData() {
     this.measureClient.getMeasuresByDeviceIdAndDate(this.selectedDeviceId, this.startDate, this.endDate).subscribe(response => {
-      console.log(response);
       let some = this.groupMeasurementsByType(response.measures!)
-      console.log(some);
       this.chartData = some;
     })
   }

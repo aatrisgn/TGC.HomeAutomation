@@ -28,6 +28,7 @@
     "@angular/router": "19.0.5",
     "@azure/msal-angular": "^4.0.6",
     "@azure/msal-browser": "^4.7.0",
+    "@microsoft/signalr": "^8.0.7",
     "@ng-bootstrap/ng-bootstrap": "18.0.0",
     "@popperjs/core": "2.11.8",
     "apexcharts": "3.49.2",
