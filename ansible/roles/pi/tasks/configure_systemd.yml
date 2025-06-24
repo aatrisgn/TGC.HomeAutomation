@@ -20,7 +20,7 @@
     name: "application-insights-connection-string"
     vault_uri: "https://tgckvhadev.vault.azure.net/"
   register: fetched_secret
-  no_log: true
+  #no_log: true
 
 - name: Template docker-compose file
   ansible.builtin.template:
