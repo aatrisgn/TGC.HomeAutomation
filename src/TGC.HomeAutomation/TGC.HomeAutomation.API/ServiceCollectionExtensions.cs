@@ -1,3 +1,4 @@
+﻿using Azure.Monitor.OpenTelemetry.AspNetCore;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.FeatureManagement;
 using Microsoft.Identity.Web;
@@ -14,12 +15,15 @@ namespace TGC.HomeAutomation.API;
 
 public static class ServiceCollectionExtensions
 {
-	public static IServiceCollection AddHomeAutomationApiInjections(this IServiceCollection services, IConfigurationManager configuration)
+	public static IServiceCollection AddHomeAutomationApiInjections(this IServiceCollection services, IConfigurationManager configuration, IWebHostEnvironment environment)
 	{
-		// services.AddApplicationInsightsTelemetry(options =>
-		// {
-		// 	options.InstrumentationKey = configuration["ApplicationInsights:InstrumentationKey"];
-		// });
+		if(!environment.IsDevelopment())
+		{
+			services.AddOpenTelemetry().UseAzureMonitor(options =>
+			{
+				options.ConnectionString = configuration.GetValue<string>("APPLICATIONINSIGHTS_CONNECTION_STRING");
+			});
+		}
 
 		var haConfigSection = configuration.GetSection(HomeAutomationConfiguration.SectionName);
 		services.Configure<HomeAutomationConfiguration>(haConfigSection);

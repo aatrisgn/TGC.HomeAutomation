@@ -24,6 +24,9 @@ jobs:
         subscription-id: ${{ secrets.HOMEAUTOMATION_DEV_SUBSCRIPTION_ID }}
     
     - run: |
+        ansible-galaxy collection install -r ./ansible/requirements.yml
+
+    - run: |
         ansible-playbook ./ansible/roles/pi/playbooks/setup_nginx.yml --extra-vars "certname=asfwf apiCertName="api-homeautomation-dev-tgcportal-com" kvname=tgckvhadev"
       name: "Configure Nginx"
 

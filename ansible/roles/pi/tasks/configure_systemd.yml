@@ -15,10 +15,18 @@
     src: ../files/homeautomation.service
     dest: /lib/systemd/system
 
-- name: Template identity file
+- name: Fetch secret from Azure Key Vault
+  azure.azcollection.azure_keyvault_secret:
+    name: "application-insights-connection-string"
+    vault_uri: "https://tgckvhadev.vault.azure.net/"
+  register: fetched_secret
+
+- name: Template docker-compose file
   ansible.builtin.template:
     src: ../templates/docker-compose.yml.j2
     dest: /home/homeautomation/docker-compose.yml
+  vars:
+      ai_connectionstring: "{{ fetched_secret.value }}"
 
 - name: Reread configurations
   ansible.builtin.systemd_service:

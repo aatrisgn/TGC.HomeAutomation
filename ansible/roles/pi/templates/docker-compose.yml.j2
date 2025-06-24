@@ -9,6 +9,7 @@ services:
       - TGC.AzureTableStorage__UseManagedIdentity=true
       - HomeAutomation__Testing__Enabled=false
       - HomeAutomation__AllowedHosts__0=https://homeautomation.dev.tgcportal.com
+      - APPLICATIONINSIGHTS_CONNECTION_STRING={{ ai_connectionstring }}
 
   app:
     image: tgclzdevacr.azurecr.io/tgc-ha-app:latest

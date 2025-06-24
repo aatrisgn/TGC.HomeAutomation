@@ -1,4 +1,4 @@
-using TGC.HomeAutomation.API;
+﻿using TGC.HomeAutomation.API;
 using TGC.SignalR;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -6,7 +6,7 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Configuration.AddEnvironmentVariables();
 
 // All injections are/should be handled inside extension
-builder.Services.AddHomeAutomationApiInjections(builder.Configuration);
+builder.Services.AddHomeAutomationApiInjections(builder.Configuration, builder.Environment);
 
 var app = builder.Build();
 
