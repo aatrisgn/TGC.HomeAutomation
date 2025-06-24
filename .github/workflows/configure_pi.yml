@@ -99,7 +99,7 @@ jobs:
 
         source ~/pythonenvs/ansible_venv/bin/activate
         python3 -m pip install --upgrade pip
-        python3 -m pip install ansible==2.18.0
+        python3 -m pip install ansible-core==2.18.0
         ansible --version
       name: "Install Ansible"
     
