@@ -24,7 +24,9 @@ jobs:
         subscription-id: ${{ secrets.HOMEAUTOMATION_DEV_SUBSCRIPTION_ID }}
     
     - run: |
+        source ~/pythonenvs/ansible_venv/bin/activate
         ansible-galaxy collection install -r ./ansible/requirements.yml
+        deactivate
 
     - run: |
         source ~/pythonenvs/ansible_venv/bin/activate
