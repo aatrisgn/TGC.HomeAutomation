@@ -64,27 +64,6 @@ jobs:
     steps:
     - name: Checkout code
       uses: actions/checkout@v2
-      
-    # - run: |
-    #     echo "Installing Ansible..."
-
-    #     echo "Running: apt -y install software-properties-common"
-    #     sudo apt -y install software-properties-common
-
-    #     echo "Running: apt-get -y install python3-launchpadlib"
-    #     sudo apt-get -y install python3-launchpadlib
-
-    #     echo "Running: apt-add-repository --yes --update ppa:ansible/ansible"
-    #     sudo apt-add-repository --yes --update ppa:ansible/ansible
-
-    #     echo "Running: apt -y install ansible"
-    #     sudo apt -y install ansible
-
-    #     echo "Removing ansible repository again"
-    #     sudo add-apt-repository -r https://ppa.launchpadcontent.net/ansible/ansible/ubuntu/
-
-    #     echo "Finished installing!"
-    #   name: "Install Ansible"
 
     - run: |
         echo "Intalling Python..."
@@ -140,6 +119,8 @@ jobs:
         echo "RunnerPassword=$secret" >> $GITHUB_ENV
     
     - run: |
+        source ~/pythonenvs/ansible_venv/bin/activate
         ansible-playbook ./ansible/roles/pi/playbooks/setup_identity.yml --extra-vars "tenantid=${{ secrets.HOMEAUTOMATION_DEV_TENANT_ID }} clientid=$RunnerClientId secret=$RunnerPassword"
+        deactivate
       name: "Run Ansible Playbook"
   

@@ -80,5 +80,7 @@ jobs:
         echo "PiHoleAdmin=$secret" >> $GITHUB_ENV
 
     - run: |
+        source ~/pythonenvs/ansible_venv/bin/activate
         ansible-playbook ./ansible/roles/pihole/playbooks/configure_pihole.yml --extra-vars "password=$PiHoleAdmin"
+        deactivate
       name: "Run Ansible Playbook"

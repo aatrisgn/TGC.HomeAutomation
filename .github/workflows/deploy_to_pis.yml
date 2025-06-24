@@ -27,9 +27,13 @@ jobs:
         ansible-galaxy collection install -r ./ansible/requirements.yml
 
     - run: |
+        source ~/pythonenvs/ansible_venv/bin/activate
         ansible-playbook ./ansible/roles/pi/playbooks/setup_nginx.yml --extra-vars "certname=asfwf apiCertName="api-homeautomation-dev-tgcportal-com" kvname=tgckvhadev"
+        deactivate
       name: "Configure Nginx"
 
     - run: |
+        source ~/pythonenvs/ansible_venv/bin/activate
         ansible-playbook ./ansible/roles/pi/playbooks/refresh_images.yml --extra-vars "acrUrl=tgclzdevacr appImageTag=latest apiImageTag=latest"
+        deactivate
       name: "Run Ansible Playbook"
