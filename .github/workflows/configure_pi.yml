@@ -93,7 +93,7 @@ jobs:
         echo "Installed Python"
 
         echo "Creating venv..."
-        mkdir ~/pythonenvs
+        mkdir -p ~/pythonenvs
         python3 -m venv ~/pythonenvs/ansible_venv
         echo "venv created."
 
