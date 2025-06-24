@@ -17,6 +17,10 @@ export class LineChartComponent {
 
   @Input('chartData') chartData: LineChartData[] = [];
 
+  constructor() {
+    this.summaryChart.series = this.chartData;
+  }
+
   summaryChart: ApexOptions = {
     chart: {
       height: 350,
@@ -25,7 +29,7 @@ export class LineChartComponent {
     dataLabels: {
       enabled: false
     },
-    series: this.chartData,
+    series: [],
     stroke: {
       curve: 'smooth'
     },

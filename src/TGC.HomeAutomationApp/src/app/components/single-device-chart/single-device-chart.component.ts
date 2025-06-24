@@ -16,7 +16,11 @@ import { DateTimeComponent } from "../date-time/date-time.component";
 
 export class DeviceChartComponent implements OnInit {
   devices: DeviceResponse[] = [];
+
   chartData: LineChartData[] = [];
+  temporaryDataStorage: LineChartData[] = [];
+  combinedChartData: LineChartData[] = [];
+
   availableMeasureTypes: string[] = [];
   measureTypeValue: string = 'temperature';
   selectedDeviceId: string = '';
@@ -34,6 +38,19 @@ export class DeviceChartComponent implements OnInit {
 
   ngOnInit(): void {
     this.fetchDevices();
+  }
+
+  keepData(){
+    console.log(this.temporaryDataStorage);
+    this.temporaryDataStorage.push(...this.chartData);
+    console.log(this.temporaryDataStorage);
+  }
+
+  getCurrentDataSelection():LineChartData[]{
+    console.log(this.chartData);
+    console.log(this.temporaryDataStorage);
+    //return [...this.chartData, ...this.temporaryDataStorage];
+    return this.chartData;
   }
 
   fetchDevices() {
@@ -74,7 +91,7 @@ export class DeviceChartComponent implements OnInit {
   }
 
   fetchDeviceData() {
-    this.measureClient.getMeasuresByDeviceIdAndDate(this.selectedDeviceId, this.startDate, this.endDate).subscribe(response => {
+    this.measureClient.getMeasuresByDeviceIdMeasureTypeAndDate(this.selectedDeviceId, this.measureTypeValue , this.startDate, this.endDate).subscribe(response => {
       let some = this.groupMeasurementsByType(response.measures!)
       this.chartData = some;
     })
@@ -91,7 +108,7 @@ export class DeviceChartComponent implements OnInit {
     }
 
     return Object.keys(grouped).map(type => ({
-      name: type,
+      name: this.selectedDeviceId+" "+type,
       data: grouped[type]
     })) as LineChartData[];
   }

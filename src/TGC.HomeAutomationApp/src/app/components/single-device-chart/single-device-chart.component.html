@@ -11,6 +11,7 @@
       <select id="measureType" [(ngModel)]="measureTypeValue" (change)="onMeasureTypeChange()">
         <option *ngFor="let availableMeasureType of availableMeasureTypes" [value]="availableMeasureType">{{ availableMeasureType }}</option>
       </select>
+      <button (click)="keepData()" >Keep data</button>
     </div>
     <div class="col-md-3">
       <p>Start date:</p>
@@ -22,6 +23,6 @@
     </div>
   </div>
   <div>
-    <app-line-chart [chartData]="chartData"/>
+    <app-line-chart [chartData]="getCurrentDataSelection()"/>
   </div>
 </app-card>
