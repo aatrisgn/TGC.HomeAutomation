@@ -97,12 +97,12 @@ jobs:
         python3 -m venv ~/pythonenvs/ansible_venv
         echo "venv created."
 
-        source ~/pythonenvs/ansible-venv/bin/activate
+        source ~/pythonenvs/ansible_venv/bin/activate
         ansible --version
       name: "Install Ansible"
     
     - run: |
-        source ~/pythonenvs/ansible-venv/bin/activate
+        source ~/pythonenvs/ansible_venv/bin/activate
         ansible-playbook ./ansible/roles/pi/playbooks/configure_tools.yml
         deactivate
       name: "Run Ansible Playbook"
