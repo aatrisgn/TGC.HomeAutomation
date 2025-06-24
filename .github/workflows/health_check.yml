@@ -27,7 +27,7 @@ jobs:
       name: "Check alive"
 
     - run: |
-        deactivate
-        ansible-playbook ./ansible/roles/pi/playbooks/update_runner.yml
         source ~/pythonenvs/ansible_venv/bin/activate
+        ansible-playbook ./ansible/roles/pi/playbooks/update_runner.yml
+        deactivate
       name: "Update apt-packages"
