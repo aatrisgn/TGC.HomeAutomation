@@ -58,8 +58,8 @@ resource "azurerm_application_insights" "application_insights" {
 
 resource "azurerm_key_vault_secret" "ai_connectionkey" {
   key_vault_id = azurerm_key_vault.shared_keyvault.id
-  name = "application_insights_connection_string"
-  value = azurerm_application_insights.application_insights.connection_string
+  name         = "application_insights_connection_string"
+  value        = azurerm_application_insights.application_insights.connection_string
 }
 
 ######################################
