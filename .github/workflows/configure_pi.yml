@@ -92,17 +92,17 @@ jobs:
         sudo apt install python3 python3-pip -y
         echo "Installed Python"
 
+        echo "Creating venv..."
         mkdir ~/pythonenvs
-        pwd
-        dir
-
         python3 -m venv ~/pythonenvs/ansible_venv
-        source ~/pythonenvs/ansible-env/bin/activate
+        echo "venv created."
+
+        source ~/pythonenvs/ansible-venv/bin/activate
         ansible --version
       name: "Install Ansible"
     
     - run: |
-        source ~/pythonenvs/ansible-env/bin/activate
+        source ~/pythonenvs/ansible-venv/bin/activate
         ansible-playbook ./ansible/roles/pi/playbooks/configure_tools.yml
         deactivate
       name: "Run Ansible Playbook"
