@@ -17,7 +17,7 @@ public static class ServiceCollectionExtensions
 {
 	public static IServiceCollection AddHomeAutomationApiInjections(this IServiceCollection services, IConfigurationManager configuration, IWebHostEnvironment environment)
 	{
-		if(!environment.IsDevelopment())
+		if (!environment.IsDevelopment())
 		{
 			services.AddOpenTelemetry().UseAzureMonitor(options =>
 			{
