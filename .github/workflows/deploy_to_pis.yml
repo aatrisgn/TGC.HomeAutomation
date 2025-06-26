@@ -37,6 +37,9 @@ jobs:
 
     - run: |
         source ~/pythonenvs/ansible_venv/bin/activate
+        python -c "import azure; print('Azure SDK is installed!')"
+        ansible --version
+        which python
         ansible-playbook ./ansible/roles/pi/playbooks/refresh_images.yml --extra-vars "acrUrl=tgclzdevacr appImageTag=latest apiImageTag=latest"
         deactivate
       name: "Run Ansible Playbook"
