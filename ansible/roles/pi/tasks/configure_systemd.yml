@@ -27,7 +27,7 @@
     src: ../templates/docker-compose.yml.j2
     dest: /home/homeautomation/docker-compose.yml
   vars:
-      ai_connectionstring: "{{ fetched_secret.value }}"
+      ai_connectionstring: "{{ fetched_secret.secrets[0].secret }}"
 
 - name: Reread configurations
   ansible.builtin.systemd_service:
