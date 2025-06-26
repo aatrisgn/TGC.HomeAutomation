@@ -16,7 +16,7 @@
     dest: /lib/systemd/system
 
 - name: Fetch secret from Azure Key Vault
-  azure_rm_keyvaultsecret_info:
+  azure.azcollection.azure_rm_keyvaultsecret_info:
     name: "application-insights-connection-string"
     vault_uri: "https://tgckvhadev.vault.azure.net/"
   register: fetched_secret
