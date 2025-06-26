@@ -27,6 +27,7 @@ jobs:
         source ~/pythonenvs/ansible_venv/bin/activate
         ansible-galaxy collection install -r ./ansible/requirements.yml
         deactivate
+      name: Install collections
 
     - run: |
         source ~/pythonenvs/ansible_venv/bin/activate
