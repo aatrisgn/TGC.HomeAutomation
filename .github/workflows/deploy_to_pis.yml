@@ -26,6 +26,7 @@ jobs:
     - run: |
         source ~/pythonenvs/ansible_venv/bin/activate
         ansible-galaxy collection install -r ./ansible/requirements.yml
+        pip3 install -r ~/.ansible/collections/ansible_collections/azure/azcollection/requirements.txt
         deactivate
       name: Install collections
 
