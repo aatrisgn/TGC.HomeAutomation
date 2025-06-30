@@ -62,7 +62,7 @@ resource "azurerm_monitor_diagnostic_setting" "ai_diagnostic_settings" {
   log_analytics_workspace_id = data.azurerm_log_analytics_workspace.shared_log_analytic_workspace.id
 
   enabled_log {
-    category = "allLogs"
+    category_group = "allLogs"
   }
 
   enabled_metric {
