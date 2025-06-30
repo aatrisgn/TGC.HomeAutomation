@@ -56,6 +56,10 @@ resource "azurerm_application_insights" "application_insights" {
   application_type    = "web"
 }
 
+data "azurerm_monitor_diagnostic_categories" "example" {
+  resource_id = azurerm_application_insights.application_insights.id
+}
+
 resource "azurerm_monitor_diagnostic_setting" "ai_diagnostic_settings" {
   name                       = "ai_diagnostic_settings"
   target_resource_id         = azurerm_application_insights.application_insights.id
@@ -65,7 +69,7 @@ resource "azurerm_monitor_diagnostic_setting" "ai_diagnostic_settings" {
     category_group = "allLogs"
   }
 
-  enabled_metric {
+  metric { #When we bump version to newer TF Provider for AzureRM this needs to be changed to enabled_metrics instead of metric
     category = "AllMetrics"
   }
 }
