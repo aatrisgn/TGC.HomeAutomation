@@ -56,6 +56,20 @@ resource "azurerm_application_insights" "application_insights" {
   application_type    = "web"
 }
 
+resource "azurerm_monitor_diagnostic_setting" "ai_diagnostic_settings" {
+  name                       = "ai_diagnostic_settings"
+  target_resource_id         = azurerm_application_insights.application_insights.id
+  log_analytics_workspace_id = data.azurerm_log_analytics_workspace.shared_log_analytic_workspace.id
+
+  enabled_log {
+    category = "allLogs"
+  }
+
+  enabled_metric {
+    category = "AllMetrics"
+  }
+}
+
 resource "azurerm_key_vault_secret" "ai_connectionkey" {
   key_vault_id = azurerm_key_vault.shared_keyvault.id
   name         = "application-insights-connection-string"
