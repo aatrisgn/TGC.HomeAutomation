@@ -33,7 +33,7 @@ export default class LiveActivityComponent {
   }
 
   ngOnInit(): void {
-    this.signalRService.startConnection().subscribe(() => {
+    this.signalRService.connectToHub().subscribe(() => {
       this.signalRService.receiveMessage().subscribe((message) => {
         this.receivedMessage = message;
 

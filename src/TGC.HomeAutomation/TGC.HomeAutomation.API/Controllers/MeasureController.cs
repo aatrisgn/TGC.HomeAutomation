@@ -1,4 +1,5 @@
 using Microsoft.AspNetCore.Mvc;
+using TGC.HomeAutomation.API.Authentication;
 using TGC.HomeAutomation.API.Measure;
 
 namespace TGC.HomeAutomation.API.Controllers;
@@ -61,6 +62,7 @@ public class MeasureController : HAControllerBase
 	}
 
 	[HttpPost]
+	[APIKeyAuthorize]
 	[Route("measure/inside")]
 	[ProducesResponseType(StatusCodes.Status200OK)]
 	public async Task Create([FromBody] MeasureRequest request)

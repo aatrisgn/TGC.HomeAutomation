@@ -24,6 +24,7 @@ public class DeviceController : HAControllerBase
 	}
 
 	[HttpGet]
+	[JWTAuthorize]
 	[Route("devices/{id:guid}")]
 	[ProducesResponseType(typeof(DeviceResponse), StatusCodes.Status200OK)]
 	[ProducesResponseType(StatusCodes.Status404NotFound)]
@@ -44,6 +45,7 @@ public class DeviceController : HAControllerBase
 	}
 
 	[HttpPost]
+	[JWTAuthorize]
 	[Route("devices")]
 	[ProducesResponseType(typeof(DeviceResponse), StatusCodes.Status200OK)]
 	[ProducesResponseType(StatusCodes.Status400BadRequest)]
@@ -54,6 +56,7 @@ public class DeviceController : HAControllerBase
 	}
 
 	[HttpPut]
+	[JWTAuthorize]
 	[Route("devices/{id:guid}/apikey")]
 	[ProducesResponseType(typeof(ApiKeyResponse), StatusCodes.Status200OK)]
 	[ProducesResponseType(StatusCodes.Status400BadRequest)]
@@ -64,6 +67,7 @@ public class DeviceController : HAControllerBase
 	}
 
 	[HttpPut]
+	[JWTAuthorize]
 	[Route("devices/{id:guid}")]
 	[ProducesResponseType(typeof(DeviceResponse), StatusCodes.Status200OK)]
 	[ProducesResponseType(StatusCodes.Status400BadRequest)]
@@ -74,6 +78,7 @@ public class DeviceController : HAControllerBase
 	}
 
 	[HttpDelete]
+	[JWTAuthorize]
 	[Route("devices/{id:guid}")]
 	[ProducesResponseType(StatusCodes.Status204NoContent)]
 	[ProducesResponseType(StatusCodes.Status400BadRequest)]

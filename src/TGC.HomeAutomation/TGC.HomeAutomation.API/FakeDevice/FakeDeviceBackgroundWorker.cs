@@ -56,13 +56,24 @@ public class FakeDeviceBackgroundWorker : BackgroundService
 				var newDeviceRequest = new DeviceRequest { Name = fakeDevice.Name, MacAddress = fakeDevice.MacAddress, };
 
 				var newTestDevice = await deviceService.CreateAsync(newDeviceRequest);
+				var deviceAPIKey = await deviceService.UpsertApiKeyAsync(
+					new ApiKeyRequest
+					{
+						Name = fakeDevice.Name,
+						ExpirationDate = DateOnly.FromDateTime(DateTime.Now.AddDays(30))
+					}, newTestDevice.Id);
+
 				fakeDevice.Id = newTestDevice.Id;
+				fakeDevice.ApiKey = deviceAPIKey.Secret;
 			}
 
-			var httpClient = new HttpClient();
+			using var httpClient = new HttpClient();
 			httpClient.BaseAddress = new Uri("http://localhost:5298");
 
-			await httpClient.PostAsJsonAsync("/api/measure/inside", GenerateCo2Payload(fakeDevice));
+			httpClient.DefaultRequestHeaders.Add("x-device-api-key", fakeDevice.ApiKey);
+			httpClient.DefaultRequestHeaders.Add("x-device-id", fakeDevice.Id.ToString());
+
+			var result = await httpClient.PostAsJsonAsync("/api/measure/inside", GenerateCo2Payload(fakeDevice));
 			await httpClient.PostAsJsonAsync("/api/measure/inside", GenerateTemperaturePayload(fakeDevice));
 			await httpClient.PostAsJsonAsync("/api/measure/inside", GenerateHumidityPayload(fakeDevice));
 		}

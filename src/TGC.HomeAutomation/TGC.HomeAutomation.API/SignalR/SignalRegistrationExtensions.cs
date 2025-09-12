@@ -1,9 +1,4 @@
-using Microsoft.AspNetCore.Builder;
-using Microsoft.AspNetCore.Mvc.Infrastructure;
-using Microsoft.AspNetCore.Routing;
-using Microsoft.Extensions.DependencyInjection;
-
-namespace TGC.SignalR;
+namespace TGC.HomeAutomation.API.SignalR;
 
 public static class SignalRegistrationExtensions
 {
@@ -13,7 +8,7 @@ public static class SignalRegistrationExtensions
 		services.AddSingleton<ISignalRNotificationService, SignalRNotificationService>();
 		return services;
 	}
-	
+
 	public static IEndpointRouteBuilder UseSignalR(this IEndpointRouteBuilder app)
 	{
 		app.MapHub<AllClientsHub>("/signalr/all");

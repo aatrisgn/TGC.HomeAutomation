@@ -1,7 +1,7 @@
 using System.Text.Json;
 using Microsoft.AspNetCore.SignalR;
 
-namespace TGC.SignalR;
+namespace TGC.HomeAutomation.API.SignalR;
 
 internal class SignalRNotificationService : ISignalRNotificationService
 {

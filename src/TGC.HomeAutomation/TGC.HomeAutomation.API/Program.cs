@@ -1,7 +1,15 @@
 ﻿using TGC.HomeAutomation.API;
-using TGC.SignalR;
+using TGC.HomeAutomation.API.SignalR;
 
 var builder = WebApplication.CreateBuilder(args);
+
+builder.Host.UseDefaultServiceProvider(options =>
+{
+	options.ValidateScopes = true;
+	options.ValidateOnBuild = true;
+});
+
+builder.WebHost.UseKestrel(options => options.AddServerHeader = false);
 
 builder.Configuration.AddEnvironmentVariables();
 

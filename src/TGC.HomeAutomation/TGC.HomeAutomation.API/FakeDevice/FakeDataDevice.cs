@@ -5,4 +5,5 @@ public class FakeDataDevice
 	public required string MacAddress { get; set; }
 	public string Name => "TEST_DEVICE_" + MacAddress;
 	public Guid Id { get; set; }
+	public string? ApiKey { get; set; }
 }

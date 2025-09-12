@@ -1,4 +1,4 @@
-namespace TGC.SignalR;
+namespace TGC.HomeAutomation.API.SignalR;
 
 public interface ISignalRNotificationService
 {

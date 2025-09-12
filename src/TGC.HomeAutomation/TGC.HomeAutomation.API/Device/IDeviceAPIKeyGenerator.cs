@@ -3,5 +3,6 @@
 public interface IDeviceAPIKeyGenerator
 {
 	Task<string> GenerateDeviceAPIKey();
-	Task<string> MaskApiKey(string apiKey);
+	Task<MaskedApiKey> MaskApiKey(string apiKey);
+	Task<MaskedApiKey> MaskApiKey(string apiKey, byte[] salt);
 }

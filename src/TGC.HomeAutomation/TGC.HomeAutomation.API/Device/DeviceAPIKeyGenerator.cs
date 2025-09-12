@@ -20,11 +20,23 @@ public class DeviceAPIKeyGenerator : IDeviceAPIKeyGenerator
 		return Task.FromResult(hashString);
 	}
 
-	public Task<string> MaskApiKey(string apiKey)
+	public Task<MaskedApiKey> MaskApiKey(string apiKey)
 	{
 		byte[] salt = GenerateSalt();
 		byte[] hashedString = HashStringWithSalt(apiKey, salt);
-		return Task.FromResult(Convert.ToBase64String(hashedString));
+		var maskedSecret = Convert.ToBase64String(hashedString);
+
+		var result = new MaskedApiKey { Secret = maskedSecret, Salt = salt };
+		return Task.FromResult(result);
+	}
+
+	public Task<MaskedApiKey> MaskApiKey(string apiKey, byte[] salt)
+	{
+		byte[] hashedString = HashStringWithSalt(apiKey, salt);
+		var maskedSecret = Convert.ToBase64String(hashedString);
+
+		var result = new MaskedApiKey { Secret = maskedSecret, Salt = salt };
+		return Task.FromResult(result);
 	}
 
 	private static byte[] GenerateSalt(int size = 32)

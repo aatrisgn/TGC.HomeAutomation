@@ -1,7 +1,7 @@
 using TGC.AzureTableStorage;
 using TGC.HomeAutomation.API.Device;
 using TGC.HomeAutomation.API.Sensor;
-using TGC.SignalR;
+using TGC.HomeAutomation.API.SignalR;
 
 namespace TGC.HomeAutomation.API.Measure;
 

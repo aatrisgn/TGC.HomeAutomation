@@ -1,7 +1,7 @@
 ﻿using Azure.Monitor.OpenTelemetry.AspNetCore;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.FeatureManagement;
-using Microsoft.Identity.Web;
 using Microsoft.OpenApi.Models;
 using TGC.AzureTableStorage.Configuration;
 using TGC.AzureTableStorage.IoC;
@@ -9,7 +9,7 @@ using TGC.HomeAutomation.API.Authentication;
 using TGC.HomeAutomation.API.Configuration;
 using TGC.HomeAutomation.API.Device;
 using TGC.HomeAutomation.API.Measure;
-using TGC.SignalR;
+using TGC.HomeAutomation.API.SignalR;
 
 namespace TGC.HomeAutomation.API;
 
@@ -62,7 +62,6 @@ public static class ServiceCollectionExtensions
 
 		services.AddScoped<IDeviceAPIKeyGenerator, DeviceAPIKeyGenerator>();
 		services.AddScoped<IDeviceService, DeviceService>();
-		services.AddScoped<IAPIKeyRepository, MockAPIKeyRepository>();
 		services.AddScoped<IOrderedMeasureService, OrderedMeasureService>();
 
 		services.AddScoped<ICompositeMeasureService, CompositeMeasureService>();
@@ -79,14 +78,48 @@ public static class ServiceCollectionExtensions
 			services.AddHostedService<FakeDeviceBackgroundWorker>();
 		}
 
-		services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
-			.AddMicrosoftIdentityWebApi(configuration.GetSection("AzureAd"));
+		var clientId = configuration.GetSection("AzureAd:ClientId").Get<string>();
+		var tenantId = configuration.GetSection("AzureAd:TenantId").Get<string>();
+		var instance = configuration.GetSection("AzureAd:Instance").Get<string>();
+
+		services.AddAuthentication(options =>
+			{
+				options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+				options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+			})
+			.AddJwtBearer(options =>
+			{
+				options.Authority = $"{instance}{tenantId}/v2.0";
+				options.Audience = clientId;
+
+				options.Events = new JwtBearerEvents
+				{
+					OnMessageReceived = context =>
+					{
+						var accessToken = context.Request.Query["access_token"];
+						var path = context.HttpContext.Request.Path;
+						if (!string.IsNullOrEmpty(accessToken) && path.StartsWithSegments("/signalr"))
+						{
+							context.Token = accessToken;
+						}
+
+						return Task.CompletedTask;
+					}
+				};
+			});
 
 		//Should be changed to default to Entra once that's implemented
 		services.AddAuthentication(ApiKeyAuthSchemeOptions.DefaultScheme)
 			.AddScheme<ApiKeyAuthSchemeOptions, ApiKeyAuthSchemeHandler>(
 				ApiKeyAuthSchemeOptions.DefaultScheme,
 				options => { });
+
+		services.AddAuthorization(options =>
+			{
+				options.FallbackPolicy = new AuthorizationPolicyBuilder()
+					.RequireAuthenticatedUser()
+					.Build();
+			});
 
 		var useManagedIdentity = configuration.GetValue<bool>("TGC.AzureTableStorage:UseManagedIdentity");
 		var connectionString = configuration.GetValue<string>("TGC.AzureTableStorage:ConnectionString");

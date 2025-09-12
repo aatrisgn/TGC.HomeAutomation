@@ -1,7 +1,9 @@
 using Microsoft.AspNetCore.SignalR;
+using TGC.HomeAutomation.API.Authentication;
 
-namespace TGC.SignalR;
+namespace TGC.HomeAutomation.API.SignalR;
 
+[JWTAuthorize]
 internal class AllClientsHub : Hub
 {
 	//Not exposed but kept as example for now.
@@ -9,7 +11,6 @@ internal class AllClientsHub : Hub
 	// {
 	// 	await Clients.All.SendAsync("ReceiveMessage", connectionId, message);
 	// }
-	
 	public async Task SendMessage(object messageObject)
 	{
 		await Clients.All.SendAsync("ReceiveMessage", messageObject);
