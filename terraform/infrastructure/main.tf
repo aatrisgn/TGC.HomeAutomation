@@ -112,7 +112,9 @@ resource "azuread_application_redirect_uris" "example_spa" {
     "http://localhost:4300",
     "http://localhost:4200",
     "https://homeautomation.dev.tgcportal.com",
-    "https://homeautomation.dev.tgcportal.com/auth"
+    "https://homeautomation.dev.tgcportal.com/auth",
+    "https://app.homeautomation.dev.tgcportal.com",
+    "https://app.homeautomation.dev.tgcportal.com/auth"
   ]
 }
 
