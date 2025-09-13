@@ -56,28 +56,32 @@ resource "azurerm_application_insights" "application_insights" {
   application_type    = "web"
 }
 
-data "azurerm_monitor_diagnostic_categories" "example" {
-  resource_id = azurerm_application_insights.application_insights.id
-}
-
-resource "azurerm_monitor_diagnostic_setting" "ai_diagnostic_settings" {
-  name                       = "ai_diagnostic_settings"
-  target_resource_id         = azurerm_application_insights.application_insights.id
-  log_analytics_workspace_id = data.azurerm_log_analytics_workspace.shared_log_analytic_workspace.id
-
-  enabled_log {
-    category_group = "allLogs"
-  }
-
-  metric { #When we bump version to newer TF Provider for AzureRM this needs to be changed to enabled_metrics instead of metric
-    category = "AllMetrics"
-  }
-}
-
 resource "azurerm_key_vault_secret" "ai_connectionkey" {
   key_vault_id = azurerm_key_vault.shared_keyvault.id
   name         = "application-insights-connection-string"
   value        = azurerm_application_insights.application_insights.connection_string
+}
+
+resource "azurerm_user_assigned_identity" "k8_uaid" {
+  resource_group_name = data.azurerm_resource_group.default_resource_group.name
+  location            = data.azurerm_resource_group.default_resource_group.location
+  name                = "tgc-uaid-k8-${var.environment}"
+}
+
+resource "azuread_service_principal" "web_auth_enterprise_application" {
+  client_id = azurerm_user_assigned_identity.k8_uaid.client_id
+}
+
+resource "azurerm_key_vault_secret" "test_value" {
+  key_vault_id = azurerm_key_vault.shared_keyvault.id
+  name         = "test-value"
+  value        = "SomeIrrelevantValue"
+}
+
+resource "azurerm_role_assignment" "uaid_secret_reader" {
+  scope                = azurerm_key_vault_secret.test_value.id
+  role_definition_name = "Key Vault Secrets User" # or "Key Vault Administrator"
+  principal_id         = azurerm_user_assigned_identity.k8_uaid.principal_id
 }
 
 ######################################
