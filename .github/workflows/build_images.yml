@@ -26,7 +26,6 @@ jobs:
     env:
       image_name: tgc-ha-api
       app_image_name: tgc-ha-app
-      test_console: tgc-ha-test-console
       project_name: TGC.HomeAutomation
       api_path: src/TGC.HomeAutomation/TGC.HomeAutomation.API/TGC.HomeAutomation.API.csproj
       acr_registry: tgclzdevacr.azurecr.io
@@ -119,7 +118,7 @@ jobs:
 
     - run: |
         az acr login --name tgclzdevacr.azurecr.io
-        cd src/TGC.HomeAutomation
+        cd src/TGC.HomeAutomation/TGC.HomeAutomation.TestConsole
 
         docker build . -t $acr_registry/$test_console:${{ github.sha }}
         docker build . -t $acr_registry/$test_console:latest
