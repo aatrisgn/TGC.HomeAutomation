@@ -65,7 +65,7 @@ resource "azurerm_key_vault_secret" "ai_connectionkey" {
 resource "azurerm_user_assigned_identity" "k8_uaid" {
   resource_group_name = data.azurerm_resource_group.default_resource_group.name
   location            = data.azurerm_resource_group.default_resource_group.location
-  name                = "tgc-uaid-k8-${var.environment}"
+  name                = "mi-homeautomation-k8-${var.environment}-weu"
 }
 
 resource "azuread_service_principal" "k8_uaid_enterprise_application" {
