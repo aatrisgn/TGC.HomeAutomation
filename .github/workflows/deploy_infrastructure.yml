@@ -56,5 +56,5 @@ jobs:
       id: plan
       run: terraform plan -input=false -var="tenant_id=${{ secrets.HOMEAUTOMATION_DEV_TENANT_ID }}" -var-file="envs/dev.tfvars" -out=tfplan
 
-    # - name: Terraform Apply
-    #   run: terraform apply -auto-approve tfplan
+    - name: Terraform Apply
+      run: terraform apply -auto-approve tfplan
