@@ -1,8 +1,8 @@
-﻿FROM mcr.microsoft.com/dotnet/aspnet:8.0.0-jammy AS base
+﻿FROM mcr.microsoft.com/dotnet/aspnet:8.0-noble-arm64v8 AS base
 USER $APP_UID
 WORKDIR /app
 
-FROM mcr.microsoft.com/dotnet/sdk:8.0.100-jammy AS build
+FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
 ARG BUILD_CONFIGURATION=Release
 WORKDIR /src
 COPY ["TGC.HomeAutomation.TestConsole.csproj", "TGC.HomeAutomation.TestConsole/"]
