@@ -1,0 +1,15 @@
+apiVersion: argoproj.io/v1alpha1
+kind: CronWorkflow
+metadata:
+  name: hourly-acr-job-cron
+spec:
+  schedule: "0 * * * *"  # Runs every hour
+  timezone: "UTC"
+  workflowSpec:
+    entrypoint: acr-job
+    templates:
+    - name: acr-job
+      container:
+        image: tgclzdevacr.azurecr.io/tgc-ha-test-console:latest
+        command: ["/bin/sh", "-c"]
+        args: ["echo Running scheduled job from ACR"]
