@@ -1,12 +1,12 @@
-apiVersion: argoproj.io/v1alpha1
-kind: WorkflowTemplate
-metadata:
-  name: hourly-acr-job
-spec:
-  entrypoint: acr-job
-  templates:
-  - name: acr-job
-    container:
-      image: tgclzdevacr.azurecr.io/tgc-ha-test-console:latest
-      command: ["/bin/sh", "-c"]
-      args: ["echo Running scheduled job from ACR"]
+# apiVersion: argoproj.io/v1alpha1
+# kind: WorkflowTemplate
+# metadata:
+#   name: hourly-acr-job
+# spec:
+#   entrypoint: acr-job
+#   templates:
+#   - name: acr-job
+#     container:
+#       image: tgclzdevacr.azurecr.io/tgc-ha-test-console:latest
+#       command: ["/bin/sh", "-c"]
+#       args: ["echo Running scheduled job from ACR"]

@@ -1,15 +1,34 @@
-apiVersion: argoproj.io/v1alpha1
-kind: CronWorkflow
+apiVersion: batch/v1
+kind: CronJob
 metadata:
   name: hourly-acr-job-cron
+  namespace: homeautomation
 spec:
   schedule: "0 * * * *"  # Runs every hour
   timezone: "UTC"
-  workflowSpec:
-    entrypoint: acr-job
-    templates:
-    - name: acr-job
-      container:
-        image: tgclzdevacr.azurecr.io/tgc-ha-test-console:latest
-        command: ["/bin/sh", "-c"]
-        args: ["echo Running scheduled job from ACR"]
+  jobTemplate:
+    spec:
+      template:
+        spec:
+          containers:
+          - name: test-console-job
+            image: tgclzdevacr.azurecr.io/tgc-ha-test-console:latest
+            imagePullPolicy: IfNotPresent
+            command: ["/bin/sh", "-c"]
+          restartPolicy: OnFailure
+
+# apiVersion: argoproj.io/v1alpha1
+# kind: CronWorkflow
+# metadata:
+#   name: hourly-acr-job-cron
+# spec:
+#   schedule: "0 * * * *"  # Runs every hour
+#   timezone: "UTC"
+#   workflowSpec:
+#     entrypoint: acr-job
+#     templates:
+#     - name: acr-job
+#       container:
+#         image: tgclzdevacr.azurecr.io/tgc-ha-test-console:latest
+#         command: ["/bin/sh", "-c"]
+#         args: ["echo Running scheduled job from ACR"]
