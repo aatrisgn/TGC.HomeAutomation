@@ -68,10 +68,6 @@ resource "azurerm_user_assigned_identity" "k8_uaid" {
   name                = "mi-homeautomation-k8-${var.environment}-weu"
 }
 
-resource "azuread_service_principal" "k8_uaid_enterprise_application" {
-  client_id = azurerm_user_assigned_identity.k8_uaid.client_id
-}
-
 resource "azurerm_key_vault_secret" "test_value" {
   key_vault_id = azurerm_key_vault.shared_keyvault.id
   name         = "test-value"
