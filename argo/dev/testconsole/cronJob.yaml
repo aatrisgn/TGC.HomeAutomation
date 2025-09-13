@@ -18,12 +18,12 @@ spec:
           - name: test-console-job
             image: tgclzdevacr.azurecr.io/tgc-ha-test-console:latest
 
-            env:
-            - name: MY_SECRET_ENV_VAR
-              valueFrom:
-                secretKeyRef:
-                  name: my-kv-secret
-                  key: MY_SECRET_ENV_VAR
+            # env:
+            # - name: MY_SECRET_ENV_VAR
+            #   valueFrom:
+            #     secretKeyRef:
+            #       name: my-kv-secret
+            #       key: MY_SECRET_ENV_VAR
 
             volumeMounts:
             - name: secrets-store
