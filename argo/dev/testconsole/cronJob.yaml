@@ -2,7 +2,7 @@ apiVersion: batch/v1
 kind: CronJob
 metadata:
   name: hourly-acr-job-cron
-  namespace: homeautomation
+  namespace: HomeAutomation
 spec:
   schedule: "0 * * * *"  # Runs every hour
   timezone: "UTC"
