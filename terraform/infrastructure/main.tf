@@ -74,8 +74,26 @@ resource "azurerm_key_vault_secret" "test_value" {
   value        = "SomeIrrelevantValue"
 }
 
+resource "azurerm_role_assignment" "table_storage_contributor" {
+  scope                = azurerm_storage_account.ha_storage_account.id
+  role_definition_name = "Storage Table Data Contributor"
+  principal_id         = azurerm_user_assigned_identity.k8_uaid.principal_id
+}
+
+resource "azurerm_role_assignment" "storage_account_reader" {
+  scope                = azurerm_storage_account.ha_storage_account.id
+  role_definition_name = "Reader"
+  principal_id         = azurerm_user_assigned_identity.k8_uaid.principal_id
+}
+
 resource "azurerm_role_assignment" "uaid_secret_reader" {
   scope                = azurerm_key_vault_secret.test_value.resource_versionless_id
+  role_definition_name = "Key Vault Secrets User" # or "Key Vault Administrator"
+  principal_id         = azurerm_user_assigned_identity.k8_uaid.principal_id
+}
+
+resource "azurerm_role_assignment" "uaid_secret_reader_ai_connectionkey" {
+  scope                = azurerm_key_vault_secret.ai_connectionkey.resource_versionless_id
   role_definition_name = "Key Vault Secrets User" # or "Key Vault Administrator"
   principal_id         = azurerm_user_assigned_identity.k8_uaid.principal_id
 }
