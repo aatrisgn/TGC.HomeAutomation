@@ -10,10 +10,10 @@ spec:
   ingressClassName: nginx
   tls:
     - hosts:
-        - app.dev.homeautomation.tgcportal.com
+        - app.homeautomation.dev.tgcportal.com
       secretName: dev-homeautomation-app-tls
   rules:
-    - host: app.dev.homeautomation.tgcportal.com
+    - host: app.homeautomation.dev.tgcportal.com
       http:
         paths:
           - path: /
