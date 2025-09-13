@@ -5,7 +5,6 @@ using Azure.Security.KeyVault.Secrets;
 
 Console.WriteLine("Starting application...");
 
-
 string keyVaultUrl = "https://tgckvhadev.vault.azure.net/";
 string secretName = "test-value";
 
@@ -18,4 +17,13 @@ var client = new SecretClient(new Uri(keyVaultUrl), new DefaultAzureCredential(o
 
 KeyVaultSecret secret = await client.GetSecretAsync(secretName);
 
-Console.WriteLine($"Secret value: {secret.Value}");
+Console.WriteLine($"Secret value from KV via MI: {secret.Value}");
+
+string envSecret = Environment.GetEnvironmentVariable("MY_SECRET_ENV_VAR");
+
+if (string.IsNullOrEmpty(envSecret))
+{
+	Console.WriteLine("Could not find CSI key.");	
+}
+
+Console.WriteLine($"Secret value from KV via CSI: {envSecret}");

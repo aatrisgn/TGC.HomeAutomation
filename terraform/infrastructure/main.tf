@@ -75,7 +75,7 @@ resource "azurerm_key_vault_secret" "test_value" {
 }
 
 resource "azurerm_role_assignment" "uaid_secret_reader" {
-  scope                = azurerm_key_vault_secret.test_value.resource_id
+  scope                = azurerm_key_vault_secret.test_value.resource_versionless_id
   role_definition_name = "Key Vault Secrets User" # or "Key Vault Administrator"
   principal_id         = azurerm_user_assigned_identity.k8_uaid.principal_id
 }

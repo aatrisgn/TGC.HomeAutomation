@@ -11,12 +11,34 @@ spec:
       template:
         metadata:
           annotations:
-            azure.workload.identity/client-id: 19ec7ba5-8986-4d46-84a3-c27524ceb2b6
+            azure.workload.identity/client-id: 19ec7ba5-8986-4d46-84a3-c27524ceb2b6 #<-- Should be taken from kv
 
         spec:
           containers:
           - name: test-console-job
             image: tgclzdevacr.azurecr.io/tgc-ha-test-console:latest
+
+            env:
+            - name: MY_SECRET_ENV_VAR
+              valueFrom:
+                secretKeyRef:
+                  name: my-kv-secret
+                  key: MY_SECRET_ENV_VAR
+
+            volumeMounts:
+            - name: secrets-store
+              mountPath: "/mnt/secrets-store"
+              readOnly: true
+
+          
+          volumes:
+          - name: secrets-store
+            csi:
+              driver: secrets-store.csi.k8s.io
+              readOnly: true
+              volumeAttributes:
+                secretProviderClass: "azure-kv-provider"
+
           restartPolicy: OnFailure
           nodeSelector:
             agentpool: workload
