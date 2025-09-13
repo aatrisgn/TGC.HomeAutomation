@@ -81,7 +81,7 @@ jobs:
 
   build_test_console:
     runs-on: ubuntu-latest
-    name: Build and deploy to ACR
+    name: "TestConsole: Build and deploy to ACR"
     environment: dev
     env:
       test_console: tgc-ha-test-console
@@ -120,8 +120,8 @@ jobs:
         az acr login --name tgclzdevacr.azurecr.io
         cd src/TGC.HomeAutomation/TGC.HomeAutomation.TestConsole
 
-        docker build . -t $acr_registry/$test_console:${{ github.sha }}
-        docker build . -t $acr_registry/$test_console:latest
+        docker build --platform linux/amd64 . -t $acr_registry/$test_console:${{ github.sha }}
+        docker build --platform linux/amd64 . -t $acr_registry/$test_console:latest
 
         docker push $acr_registry/$test_console:${{ github.sha }}
         docker push $acr_registry/$test_console:latest
