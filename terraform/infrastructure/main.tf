@@ -80,6 +80,17 @@ resource "azurerm_role_assignment" "uaid_secret_reader" {
   principal_id         = azurerm_user_assigned_identity.k8_uaid.principal_id
 }
 
+# Use this when we know how it'll work
+# resource "azurerm_federated_identity_credential" "example" {
+#   name                = "my-federated-credential"
+#   resource_group_name = "my-resource-group"
+#   identity_name       = azurerm_user_assigned_identity.example.name
+#   audience            = ["api://AzureADTokenExchange"]
+#   issuer              = "https://oidc.prod.k8s.io/<aks-cluster-id>"
+#   subject             = "system:serviceaccount:<namespace>:<service-account-name>"
+# }
+
+
 ######################################
 # Web App authentication application #
 ######################################

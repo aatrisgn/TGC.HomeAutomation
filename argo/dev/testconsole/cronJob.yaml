@@ -9,8 +9,15 @@ spec:
   jobTemplate:
     spec:
       template:
+        metadata:
+          annotations:
+            azure.workload.identity/client-id: 19ec7ba5-8986-4d46-84a3-c27524ceb2b6
+
         spec:
           containers:
           - name: test-console-job
             image: tgclzdevacr.azurecr.io/tgc-ha-test-console:latest
           restartPolicy: OnFailure
+          nodeSelector:
+            agentpool: workload
+          serviceAccountName: my-cronjob-sa
