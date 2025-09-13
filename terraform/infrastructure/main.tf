@@ -68,7 +68,7 @@ resource "azurerm_user_assigned_identity" "k8_uaid" {
   name                = "tgc-uaid-k8-${var.environment}"
 }
 
-resource "azuread_service_principal" "web_auth_enterprise_application" {
+resource "azuread_service_principal" "k8_uaid_enterprise_application" {
   client_id = azurerm_user_assigned_identity.k8_uaid.client_id
 }
 
