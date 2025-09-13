@@ -120,8 +120,8 @@ jobs:
         az acr login --name tgclzdevacr.azurecr.io
         cd src/TGC.HomeAutomation/TGC.HomeAutomation.TestConsole
 
-        docker build --platform linux/amd64 . -t $acr_registry/$test_console:${{ github.sha }}
-        docker build --platform linux/amd64 . -t $acr_registry/$test_console:latest
+        docker build . -t $acr_registry/$test_console:${{ github.sha }}
+        docker build . -t $acr_registry/$test_console:latest
 
         docker push $acr_registry/$test_console:${{ github.sha }}
         docker push $acr_registry/$test_console:latest
