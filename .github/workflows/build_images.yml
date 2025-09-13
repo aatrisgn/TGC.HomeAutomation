@@ -1,4 +1,4 @@
-name: Build & deploy TGC.DHT
+name: Build images
 concurrency:
   group: ${{ github.workflow }}
 
@@ -26,6 +26,7 @@ jobs:
     env:
       image_name: tgc-ha-api
       app_image_name: tgc-ha-app
+      test_console: tgc-ha-test-console
       project_name: TGC.HomeAutomation
       api_path: src/TGC.HomeAutomation/TGC.HomeAutomation.API/TGC.HomeAutomation.API.csproj
       acr_registry: tgclzdevacr.azurecr.io
@@ -78,3 +79,51 @@ jobs:
         docker push $acr_registry/$app_image_name:${{ github.sha }}
         docker push $acr_registry/$app_image_name:latest
       name: "Build and publish NG App to ACR"
+
+  build_test_console:
+    runs-on: ubuntu-latest
+    name: Build and deploy to ACR
+    environment: dev
+    env:
+      test_console: tgc-ha-test-console
+      project_name: TGC.HomeAutomation
+      test_console_path: src/TGC.HomeAutomation/TGC.HomeAutomation.TestConsole/TGC.HomeAutomation.TestConsole.csproj
+      acr_registry: tgclzdevacr.azurecr.io
+
+    steps:
+    - uses: actions/checkout@v3
+
+    - name: Setup NuGet
+      uses: NuGet/setup-nuget@v1.0.5
+
+    - name: Setup .NET
+      uses: actions/setup-dotnet@v3
+      with:
+        dotnet-version: 8.0.x
+
+    - run: |
+        docker --version
+
+    - name: Restore dependencies
+      run: dotnet restore $test_console_path
+
+    - name: Build
+      run: dotnet build $test_console_path --no-restore
+
+    - name: 'Az CLI login'
+      uses: azure/login@v2
+      with:
+        client-id: ${{ secrets.HOMEAUTOMATION_DEV_CLIENT_ID }}
+        tenant-id: ${{ secrets.HOMEAUTOMATION_DEV_TENANT_ID }}
+        subscription-id: ${{ secrets.HOMEAUTOMATION_DEV_SUBSCRIPTION_ID }}
+
+    - run: |
+        az acr login --name tgclzdevacr.azurecr.io
+        cd src/TGC.HomeAutomation
+
+        docker build . -t $acr_registry/$test_console:${{ github.sha }}
+        docker build . -t $acr_registry/$test_console:latest
+
+        docker push $acr_registry/$test_console:${{ github.sha }}
+        docker push $acr_registry/$test_console:latest
+      name: "Build and publish API to ACR"

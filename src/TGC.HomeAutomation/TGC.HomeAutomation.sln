@@ -6,6 +6,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TGC.HomeAutomation.TestDevi
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TGC.HomeAutomation.Api.IntegrationTests", "TGC.HomeAutomation.Api.IntegrationTests\TGC.HomeAutomation.Api.IntegrationTests.csproj", "{231E79B9-50D1-4CC2-A29B-A34E5A4072BB}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TGC.HomeAutomation.TestConsole", "TGC.HomeAutomation.TestConsole\TGC.HomeAutomation.TestConsole.csproj", "{AF19E21C-BB27-4DA2-981B-456A6BC1FBA2}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -24,5 +26,9 @@ Global
 		{231E79B9-50D1-4CC2-A29B-A34E5A4072BB}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{231E79B9-50D1-4CC2-A29B-A34E5A4072BB}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{231E79B9-50D1-4CC2-A29B-A34E5A4072BB}.Release|Any CPU.Build.0 = Release|Any CPU
+		{AF19E21C-BB27-4DA2-981B-456A6BC1FBA2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{AF19E21C-BB27-4DA2-981B-456A6BC1FBA2}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{AF19E21C-BB27-4DA2-981B-456A6BC1FBA2}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{AF19E21C-BB27-4DA2-981B-456A6BC1FBA2}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal
