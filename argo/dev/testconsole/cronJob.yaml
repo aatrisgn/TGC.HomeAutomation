@@ -13,8 +13,6 @@ spec:
           containers:
           - name: test-console-job
             image: tgclzdevacr.azurecr.io/tgc-ha-test-console:latest
-            imagePullPolicy: IfNotPresent
-            command: ["/bin/sh", "-c"]
           restartPolicy: OnFailure
 
 # apiVersion: argoproj.io/v1alpha1
