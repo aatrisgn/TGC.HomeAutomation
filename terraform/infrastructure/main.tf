@@ -112,10 +112,46 @@ resource "azurerm_role_assignment" "uaid_secret_reader_ai_connectionkey" {
 ######################################
 # Web App authentication application #
 ######################################
+resource "azuread_application" "api_auth_app_registration" {
+  display_name = "tgc-homeautomation-api-auth-${lower(var.environment)}"
+
+  api {
+    requested_access_token_version = 2
+
+    oauth2_permission_scope {
+      admin_consent_description  = "Allow the app to read data"
+      admin_consent_display_name = "Read data"
+      id                         = uuid()  # Or a fixed UUID
+      type                       = "User"
+      value                      = "api.read"
+      enabled                    = true
+    }
+
+    oauth2_permission_scope {
+      admin_consent_description  = "Allow the app to manage data"
+      admin_consent_display_name = "Maanage data"
+      id                         = uuid()
+      type                       = "User"
+      value                      = "api.manage"
+      enabled                    = true
+    }
+
+    oauth2_permission_scope {
+      admin_consent_description  = "Allows the app to communicate via SignalR"
+      admin_consent_display_name = "Communicate via SignalR"
+      id                         = uuid()
+      type                       = "User"
+      value                      = "api.signalr"
+      enabled                    = true
+    }
+  }
+}
+
 resource "azuread_application_registration" "web_auth_app_registration" {
   display_name     = "tgc-homeautomation-web-auth-${lower(var.environment)}"
   sign_in_audience = "AzureADMyOrg"
 }
+
 
 resource "azuread_service_principal" "web_auth_enterprise_application" {
   client_id = azuread_application_registration.web_auth_app_registration.client_id
@@ -148,5 +184,16 @@ resource "azuread_application_api_access" "example_msgraph" {
 
   scope_ids = [
     data.azuread_service_principal.msgraph.oauth2_permission_scope_ids["User.ReadWrite"],
+  ]
+}
+
+resource "azuread_application_api_access" "example_msgraph" {
+  application_id = azuread_application_registration.web_auth_app_registration.id
+  api_client_id  = azuread_application.api_auth_app_registration.client_id
+
+  scope_ids = [
+    azuread_application.api_auth_app_registration.api[0].oauth2_permission_scope[0].id,
+    azuread_application.api_auth_app_registration.api[0].oauth2_permission_scope[1].id,
+    azuread_application.api_auth_app_registration.api[0].oauth2_permission_scope[2].id,
   ]
 }
