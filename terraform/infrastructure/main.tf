@@ -148,7 +148,7 @@ resource "azuread_application" "api_auth_app_registration" {
   }
 }
 
-resource "azuread_service_principal" "web_auth_enterprise_application" {
+resource "azuread_service_principal" "api_auth_enterprise_application" {
   client_id = azuread_application.api_auth_app_registration.client_id
 }
 
