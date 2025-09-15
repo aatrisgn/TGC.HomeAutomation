@@ -123,16 +123,16 @@ resource "azuread_application" "api_auth_app_registration" {
       admin_consent_display_name = "Read data"
       id                         = uuid()
       type                       = "User"
-      value                      = "api.read"
+      value                      = local.api_read_value
       enabled                    = true
     }
 
     oauth2_permission_scope {
       admin_consent_description  = "Allow the app to manage data"
-      admin_consent_display_name = "Maanage data"
+      admin_consent_display_name = "Manage data"
       id                         = uuid()
       type                       = "User"
-      value                      = "api.manage"
+      value                      = local.api_manage_value
       enabled                    = true
     }
 
@@ -141,7 +141,7 @@ resource "azuread_application" "api_auth_app_registration" {
       admin_consent_display_name = "Communicate via SignalR"
       id                         = uuid()
       type                       = "User"
-      value                      = "api.signalr"
+      value                      = local.api_signalr_value
       enabled                    = true
     }
   }
@@ -192,8 +192,8 @@ resource "azuread_application_api_access" "api_scope_permissions" {
   api_client_id  = azuread_application.api_auth_app_registration.client_id
 
   scope_ids = [
-    azuread_application.api_auth_app_registration.oauth2_permission_scope_ids[0],
-    azuread_application.api_auth_app_registration.oauth2_permission_scope_ids[1],
-    azuread_application.api_auth_app_registration.oauth2_permission_scope_ids[2],
+    azuread_application.api_auth_app_registration.oauth2_permission_scope_ids[local.api_read_value],
+    azuread_application.api_auth_app_registration.oauth2_permission_scope_ids[local.api_manage_value],
+    azuread_application.api_auth_app_registration.oauth2_permission_scope_ids[local.api_signalr_value],
   ]
 }
