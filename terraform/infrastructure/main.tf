@@ -113,8 +113,8 @@ resource "azurerm_role_assignment" "uaid_secret_reader_ai_connectionkey" {
 # Web App authentication application #
 ######################################
 resource "azuread_application" "api_auth_app_registration" {
-  display_name = "tgc-homeautomation-api-auth-${lower(var.environment)}"
-  identifier_uris  = ["api://tgc-homeautomation-${lower(var.environment)}"]
+  display_name    = "tgc-homeautomation-api-auth-${lower(var.environment)}"
+  identifier_uris = ["api://tgc-homeautomation-${lower(var.environment)}"]
 
   api {
     requested_access_token_version = 2
