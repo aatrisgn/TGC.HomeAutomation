@@ -121,7 +121,7 @@ resource "azuread_application" "api_auth_app_registration" {
     oauth2_permission_scope {
       admin_consent_description  = "Allow the app to read data"
       admin_consent_display_name = "Read data"
-      id                         = uuid() # Or a fixed UUID
+      id                         = uuid()
       type                       = "User"
       value                      = "api.read"
       enabled                    = true
@@ -187,13 +187,13 @@ resource "azuread_application_api_access" "example_msgraph" {
   ]
 }
 
-resource "azuread_application_api_access" "example_msgraph" {
+resource "azuread_application_api_access" "api_scope_permissions" {
   application_id = azuread_application_registration.web_auth_app_registration.id
   api_client_id  = azuread_application.api_auth_app_registration.client_id
 
   scope_ids = [
-    azuread_application.api_auth_app_registration.api[0].oauth2_permission_scope[0].id,
-    azuread_application.api_auth_app_registration.api[0].oauth2_permission_scope[1].id,
-    azuread_application.api_auth_app_registration.api[0].oauth2_permission_scope[2].id,
+    azuread_application.api_auth_app_registration.oauth2_permission_scope_ids[0],
+    azuread_application.api_auth_app_registration.oauth2_permission_scope_ids[1],
+    azuread_application.api_auth_app_registration.oauth2_permission_scope_ids[2],
   ]
 }
