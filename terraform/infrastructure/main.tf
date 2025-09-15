@@ -114,6 +114,7 @@ resource "azurerm_role_assignment" "uaid_secret_reader_ai_connectionkey" {
 ######################################
 resource "azuread_application" "api_auth_app_registration" {
   display_name = "tgc-homeautomation-api-auth-${lower(var.environment)}"
+  identifier_uris  = ["api://tgc-homeautomation-${lower(var.environment)}"]
 
   api {
     requested_access_token_version = 2
@@ -145,6 +146,10 @@ resource "azuread_application" "api_auth_app_registration" {
       enabled                    = true
     }
   }
+}
+
+resource "azuread_service_principal" "web_auth_enterprise_application" {
+  client_id = azuread_application.api_auth_app_registration.client_id
 }
 
 resource "azuread_application_registration" "web_auth_app_registration" {
