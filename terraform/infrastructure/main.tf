@@ -121,7 +121,7 @@ resource "azuread_application" "api_auth_app_registration" {
     oauth2_permission_scope {
       admin_consent_description  = "Allow the app to read data"
       admin_consent_display_name = "Read data"
-      id                         = uuid()  # Or a fixed UUID
+      id                         = uuid() # Or a fixed UUID
       type                       = "User"
       value                      = "api.read"
       enabled                    = true
