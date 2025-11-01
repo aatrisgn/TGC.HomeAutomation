@@ -113,7 +113,6 @@ resource "azurerm_role_assignment" "uaid_secret_reader_ai_connectionkey" {
 #   subject             = "system:serviceaccount:<namespace>:<service-account-name>"
 # }
 
-
 ######################################
 # Web App authentication application #
 ######################################
