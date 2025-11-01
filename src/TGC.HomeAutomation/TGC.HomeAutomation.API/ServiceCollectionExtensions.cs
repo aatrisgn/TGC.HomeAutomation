@@ -17,13 +17,16 @@ public static class ServiceCollectionExtensions
 {
 	public static IServiceCollection AddHomeAutomationApiInjections(this IServiceCollection services, IConfigurationManager configuration, IWebHostEnvironment environment)
 	{
-		if (!environment.IsDevelopment())
+		if (!environment.IsDevelopment() && !environment.IsEnvironment("IntegrationTests"))
 		{
 			services.AddOpenTelemetry().UseAzureMonitor(options =>
 			{
 				options.ConnectionString = configuration.GetValue<string>("APPLICATIONINSIGHTS_CONNECTION_STRING");
 			});
 		}
+
+		services.AddExceptionHandler<ApiExceptionHandler>();
+		services.AddProblemDetails();
 
 		var haConfigSection = configuration.GetSection(HomeAutomationConfiguration.SectionName);
 		services.Configure<HomeAutomationConfiguration>(haConfigSection);
@@ -78,45 +81,21 @@ public static class ServiceCollectionExtensions
 			services.AddHostedService<FakeDeviceBackgroundWorker>();
 		}
 
-		var clientId = configuration.GetSection("AzureAd:ClientId").Get<string>();
-		var tenantId = configuration.GetSection("AzureAd:TenantId").Get<string>();
-		var instance = configuration.GetSection("AzureAd:Instance").Get<string>();
+		RegisterPortalJwtAuthentication(services, configuration);
 
-		services.AddAuthentication(options =>
-			{
-				options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
-				options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
-			})
-			.AddJwtBearer(options =>
-			{
-				options.Authority = $"{instance}{tenantId}/v2.0";
-				options.Audience = clientId;
+		// services.AddAuthentication(ApiKeyAuthSchemeOptions.DefaultScheme)
+		// 	.AddScheme<PortalJwtAuthenticationOptions, PortalJwtAuthenticationHandler>(
+		// 		JwtBearerDefaults.AuthenticationScheme,
+		// 		_ => { });
 
-				options.Events = new JwtBearerEvents
-				{
-					OnMessageReceived = context =>
-					{
-						var accessToken = context.Request.Query["access_token"];
-						var path = context.HttpContext.Request.Path;
-						if (!string.IsNullOrEmpty(accessToken) && path.StartsWithSegments("/signalr"))
-						{
-							context.Token = accessToken;
-						}
-
-						return Task.CompletedTask;
-					}
-				};
-			});
-
-		//Should be changed to default to Entra once that's implemented
 		services.AddAuthentication(ApiKeyAuthSchemeOptions.DefaultScheme)
 			.AddScheme<ApiKeyAuthSchemeOptions, ApiKeyAuthSchemeHandler>(
 				ApiKeyAuthSchemeOptions.DefaultScheme,
-				options => { });
+				_ => { });
 
 		services.AddAuthorization(options =>
 			{
-				options.FallbackPolicy = new AuthorizationPolicyBuilder()
+				options.FallbackPolicy = new AuthorizationPolicyBuilder(JwtBearerDefaults.AuthenticationScheme)
 					.RequireAuthenticatedUser()
 					.Build();
 			});
@@ -153,6 +132,41 @@ public static class ServiceCollectionExtensions
 
 		services.ConfigureSignalR();
 
+		return services;
+	}
+
+	//Should be internal since used in implementation tests as well
+	public static IServiceCollection RegisterPortalJwtAuthentication(this IServiceCollection services, IConfigurationManager configuration)
+	{
+		var clientId = configuration.GetSection("AzureAd:ClientId").Get<string>();
+		var tenantId = configuration.GetSection("AzureAd:TenantId").Get<string>();
+		var instance = configuration.GetSection("AzureAd:Instance").Get<string>();
+
+		services.AddAuthentication(options =>
+			{
+				options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+				options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+			})
+			.AddJwtBearer(options =>
+			{
+				options.Authority = $"{instance}{tenantId}/v2.0";
+				options.Audience = clientId;
+
+				options.Events = new JwtBearerEvents
+				{
+					OnMessageReceived = context =>
+					{
+						var accessToken = context.Request.Query["access_token"];
+						var path = context.HttpContext.Request.Path;
+						if (!string.IsNullOrEmpty(accessToken) && path.StartsWithSegments("/signalr"))
+						{
+							context.Token = accessToken;
+						}
+
+						return Task.CompletedTask;
+					}
+				};
+			});
 		return services;
 	}
 }

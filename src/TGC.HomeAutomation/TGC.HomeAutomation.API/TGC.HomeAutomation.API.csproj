@@ -16,13 +16,14 @@
         <PackageReference Include="Microsoft.Azure.Cosmos.Table" Version="1.0.8" />
         <PackageReference Include="Microsoft.FeatureManagement" Version="4.0.0" />
         <PackageReference Include="Microsoft.Identity.Web" Version="3.8.0" />
-        <PackageReference Include="NSwag.AspNetCore" Version="14.2.0" />
-        <PackageReference Include="NSwag.MSBuild" Version="14.2.0">
+        <PackageReference Include="NSwag.AspNetCore" Version="14.6.1" />
+		<PackageReference Include="NSwag.Generation" Version="14.6.1" />
+		<PackageReference Include="NSwag.MSBuild" Version="14.6.1">
           <PrivateAssets>all</PrivateAssets>
           <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
         </PackageReference>
         <PackageReference Include="Swashbuckle.AspNetCore" Version="6.4.0" />
-        <PackageReference Include="TGC.AzureTableStorage" Version="0.7.0" />
+        <PackageReference Include="TGC.AzureTableStorage" Version="0.8.1" />
         <PackageReference Include="TGC.CSharpCodingStandards" Version="2.1.0" />
     </ItemGroup>
 

@@ -23,6 +23,7 @@ app.UseSwaggerUI();
 
 // Configure the HTTP request pipeline.
 app.UseCors("CORS_ORIGINS_POLICY");
+app.UseExceptionHandler();
 
 app.UseHttpsRedirection();
 
@@ -34,3 +35,5 @@ app.UseSignalR();
 app.MapControllers();
 
 app.Run();
+
+public partial class Program { }

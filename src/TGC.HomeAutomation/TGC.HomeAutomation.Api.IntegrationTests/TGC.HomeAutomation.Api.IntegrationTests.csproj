@@ -7,17 +7,51 @@
 
         <IsPackable>false</IsPackable>
         <IsTestProject>true</IsTestProject>
+        <buildTestClient>true</buildTestClient>
+        <NSwagConfigurationFile>NSwagConfiguration.json</NSwagConfigurationFile>
     </PropertyGroup>
 
     <ItemGroup>
         <PackageReference Include="coverlet.collector" Version="6.0.0"/>
+        <PackageReference Include="Microsoft.AspNetCore.Mvc.Testing" Version="8.0.20" />
         <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.8.0"/>
+        <PackageReference Include="NSwag.Generation" Version="14.6.1" />
+        <PackageReference Include="NSwag.MSBuild" Version="14.6.1">
+          <PrivateAssets>all</PrivateAssets>
+          <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+        </PackageReference>
+        <PackageReference Include="TGC.CSharpCodingStandards" Version="2.1.0" />
         <PackageReference Include="xunit" Version="2.5.3"/>
         <PackageReference Include="xunit.runner.visualstudio" Version="2.5.3"/>
     </ItemGroup>
 
     <ItemGroup>
+        <Compile Remove="Generated/*/*.cs" />
+        <Compile Include="Generated/*/*.cs" />
+    </ItemGroup>
+    
+    <ItemGroup>
         <Using Include="Xunit"/>
     </ItemGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\TGC.HomeAutomation.API\TGC.HomeAutomation.API.csproj" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <Content Update="NSwagConfiguration.json">
+        <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+      </Content>
+    </ItemGroup>
+
+    <ItemGroup>
+      <Folder Include="TestClient\Generated\" />
+    </ItemGroup>
+
+    <Target Name="NSwag" Condition="'$(buildTestClient)' == 'true'" AfterTargets="Build">
+        <Exec EnvironmentVariables="ASPNETCORE_ENVIRONMENT=Development" Command="$(NSwagExe_Net80) run $(NSwagConfigurationFile) /variables:OutputPath=$(OutputPath)" />
+    </Target>
 
 </Project>

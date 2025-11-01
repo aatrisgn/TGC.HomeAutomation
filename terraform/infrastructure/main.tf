@@ -13,6 +13,11 @@ terraform {
       source  = "hashicorp/azurerm"
       version = "=4.30.0"
     }
+
+    random = {
+      source  = "hashicorp/random"
+      version = "= 3.7.2"
+    }
   }
 }
 
@@ -112,17 +117,26 @@ resource "azurerm_role_assignment" "uaid_secret_reader_ai_connectionkey" {
 ######################################
 # Web App authentication application #
 ######################################
+
+resource "random_uuid" "api_read_id" {
+}
+
+resource "random_uuid" "api_manage_id" {
+}
+
+resource "random_uuid" "api_signalr" {
+}
+
 resource "azuread_application" "api_auth_app_registration" {
   display_name    = "tgc-homeautomation-api-auth-${lower(var.environment)}"
   identifier_uris = ["api://tgc-homeautomation-${lower(var.environment)}"]
-
   api {
     requested_access_token_version = 2
 
     oauth2_permission_scope {
       admin_consent_description  = "Allow the app to read data"
       admin_consent_display_name = "Read data"
-      id                         = uuid()
+      id                         = random_uuid.api_read_id.result
       type                       = "User"
       value                      = local.api_read_value
       enabled                    = true
@@ -131,7 +145,7 @@ resource "azuread_application" "api_auth_app_registration" {
     oauth2_permission_scope {
       admin_consent_description  = "Allow the app to manage data"
       admin_consent_display_name = "Manage data"
-      id                         = uuid()
+      id                         = random_uuid.api_manage_id.result
       type                       = "User"
       value                      = local.api_manage_value
       enabled                    = true
@@ -140,7 +154,7 @@ resource "azuread_application" "api_auth_app_registration" {
     oauth2_permission_scope {
       admin_consent_description  = "Allows the app to communicate via SignalR"
       admin_consent_display_name = "Communicate via SignalR"
-      id                         = uuid()
+      id                         = random_uuid.api_signalr.result
       type                       = "User"
       value                      = local.api_signalr_value
       enabled                    = true
