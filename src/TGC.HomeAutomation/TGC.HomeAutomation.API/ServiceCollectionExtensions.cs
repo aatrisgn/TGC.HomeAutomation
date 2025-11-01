@@ -3,7 +3,6 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.FeatureManagement;
 using Microsoft.OpenApi.Models;
-using Namotion.Reflection;
 using TGC.AzureTableStorage.Configuration;
 using TGC.AzureTableStorage.IoC;
 using TGC.HomeAutomation.API.Authentication;
@@ -99,7 +98,7 @@ public static class ServiceCollectionExtensions
 		var useManagedIdentity = configuration.GetValue<bool>("TGC.AzureTableStorage:UseManagedIdentity");
 		var connectionString = configuration.GetValue<string>("TGC.AzureTableStorage:ConnectionString");
 		var storageAccountUrl = configuration.GetValue<string>("TGC.AzureTableStorage:StorageAccountUrl");
-		var managedIdentityId = configuration.TryGetPropertyValue<Guid>("TGC.AzureTableStorage:ManagedIdentityId");
+		var managedIdentityId = configuration.GetValue<string>("TGC.AzureTableStorage:ManagedIdentityId");
 
 		services.AddAzureTableStorage(configuration =>
 		{
@@ -107,7 +106,7 @@ public static class ServiceCollectionExtensions
 			configuration.StorageAccountUrl = storageAccountUrl;
 			configuration.UseManagedIdentity = useManagedIdentity;
 			configuration.StubServices = false;
-			configuration.ManagedIdentityId = managedIdentityId;
+			configuration.ManagedIdentityId = string.IsNullOrEmpty(managedIdentityId) ? Guid.Empty : Guid.Parse(managedIdentityId);
 		});
 
 		var allowedHosts = configuration.GetSection("HomeAutomation:AllowedHosts").Get<string[]>();
