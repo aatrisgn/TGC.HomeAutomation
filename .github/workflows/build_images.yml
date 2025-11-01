@@ -8,12 +8,13 @@ on:
     paths:
     - 'src/**'
     - '!.github/workflows/configure_pi.yml'
-    - '!.github/workflows/build_images.yml'
+    - '.github/workflows/build_images.yml'
   pull_request:
     branches: ["main"]
     paths:
+    - 'src/**'
     - '!.github/workflows/configure_pi.yml'
-    - '!.github/workflows/build_images.yml'
+    - '.github/workflows/build_images.yml'
   workflow_dispatch:
 
 permissions:
@@ -53,7 +54,7 @@ jobs:
       run: dotnet build $api_path --no-restore
 
     - name: Run Unit Tests
-      run: dotnet test src/TGC.HomeAutomation/TGC.HomeAutomation.Api.IntegrationTests/TGC.HomeAutomation.Api.IntegrationTests.csproj --no-build --verbosity normal
+      run: dotnet test src/TGC.HomeAutomation/TGC.HomeAutomation.Api.IntegrationTests/TGC.HomeAutomation.Api.IntegrationTests.csproj --verbosity normal
 
     - name: 'Az CLI login'
       uses: azure/login@v2
