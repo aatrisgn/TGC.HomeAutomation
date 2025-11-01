@@ -61,6 +61,12 @@ resource "azurerm_application_insights" "application_insights" {
   application_type    = "web"
 }
 
+resource "azurerm_key_vault_secret" "storage_account_table_url" {
+  key_vault_id = azurerm_key_vault.shared_keyvault.id
+  name         = "storage-account-table-url"
+  value        = sensitive(azurerm_storage_account.ha_storage_account.primary_table_endpoint)
+}
+
 resource "azurerm_key_vault_secret" "ai_connectionkey" {
   key_vault_id = azurerm_key_vault.shared_keyvault.id
   name         = "application-insights-connection-string"
