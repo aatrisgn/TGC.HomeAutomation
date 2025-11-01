@@ -109,6 +109,12 @@ resource "azurerm_role_assignment" "uaid_secret_reader_ai_connectionkey" {
   principal_id         = azurerm_user_assigned_identity.k8_uaid.principal_id
 }
 
+resource "azurerm_role_assignment" "uaid_secret_reader_ai_connectionkey" {
+  scope                = azurerm_key_vault_secret.storage_account_reader.resource_versionless_id
+  role_definition_name = "Key Vault Secrets User" # or "Key Vault Administrator"
+  principal_id         = azurerm_user_assigned_identity.k8_uaid.principal_id
+}
+
 # Use this when we know how it'll work
 resource "azurerm_federated_identity_credential" "api-server-credentials" {
   parent_id           = azurerm_user_assigned_identity.k8_uaid.id
