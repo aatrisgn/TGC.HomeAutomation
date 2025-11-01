@@ -110,14 +110,14 @@ resource "azurerm_role_assignment" "uaid_secret_reader_ai_connectionkey" {
 }
 
 # Use this when we know how it'll work
-# resource "azurerm_federated_identity_credential" "example" {
-#   name                = "my-federated-credential"
-#   resource_group_name = "my-resource-group"
-#   identity_name       = azurerm_user_assigned_identity.example.name
-#   audience            = ["api://AzureADTokenExchange"]
-#   issuer              = "https://oidc.prod.k8s.io/<aks-cluster-id>"
-#   subject             = "system:serviceaccount:<namespace>:<service-account-name>"
-# }
+resource "azurerm_federated_identity_credential" "api-server-credentials" {
+  parent_id           = azurerm_user_assigned_identity.k8_uaid.id
+  name                = "homeautomation-api-credentials"
+  resource_group_name = data.azurerm_resource_group.default_resource_group.name
+  audience            = ["api://AzureADTokenExchange"]
+  issuer              = "https://westeurope.oic.prod-aks.azure.com/0552bf76-d799-4ea1-8459-74106c5d04aa/0b3bcfef-ec19-488d-afad-7d89bba3c65a/"
+  subject             = "system:serviceaccount:homeautomation:api-server"
+}
 
 ######################################
 # Web App authentication application #
