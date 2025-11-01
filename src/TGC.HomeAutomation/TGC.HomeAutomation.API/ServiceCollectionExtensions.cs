@@ -83,11 +83,6 @@ public static class ServiceCollectionExtensions
 
 		RegisterPortalJwtAuthentication(services, configuration);
 
-		// services.AddAuthentication(ApiKeyAuthSchemeOptions.DefaultScheme)
-		// 	.AddScheme<PortalJwtAuthenticationOptions, PortalJwtAuthenticationHandler>(
-		// 		JwtBearerDefaults.AuthenticationScheme,
-		// 		_ => { });
-
 		services.AddAuthentication(ApiKeyAuthSchemeOptions.DefaultScheme)
 			.AddScheme<ApiKeyAuthSchemeOptions, ApiKeyAuthSchemeHandler>(
 				ApiKeyAuthSchemeOptions.DefaultScheme,

@@ -48,15 +48,10 @@ public class StubJWTAuthenticationHandler : AuthenticationHandler<Authentication
 			{
 				var principal = tokenHandler.ValidateToken(token, tokenValidationParameters, out SecurityToken validatedToken);
 
-				// Optionally check if the token is a JwtSecurityToken
-				if (validatedToken is JwtSecurityToken jwtToken)
+				if (validatedToken is JwtSecurityToken)
 				{
-					var issuer = jwtToken.Issuer;
-					var audience = jwtToken.Audiences.FirstOrDefault();
-					// You can also access claims from `principal`
+					return Task.FromResult(AuthenticateResult.Success(new AuthenticationTicket(principal, Scheme.Name)));
 				}
-
-				return Task.FromResult(AuthenticateResult.Success(new AuthenticationTicket(principal, Scheme.Name)));
 			}
 			catch (Exception ex)
 			{

@@ -50,6 +50,9 @@ jobs:
     - name: Build
       run: dotnet build $api_path --no-restore
 
+    - name: Run Unit Tests
+      run: dotnet test src/TGC.HomeAutomation/integrationtests/integrationtests.csproj --no-build --verbosity normal
+
     - name: 'Az CLI login'
       uses: azure/login@v2
       with:

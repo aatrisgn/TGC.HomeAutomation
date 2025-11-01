@@ -2,6 +2,7 @@ namespace TGC.HomeAutomation.Api.IntegrationTests.Authentication;
 
 internal class AuthenticationConstants
 {
+	//These values are randomly generated. No need to keep them secure. Only used for local integration testing where stubbing is needed.
 	public const string WrongAudience = "6E5DFBDB-D264-46B2-9BB7-13837AF03288";
 	public const string WrongIssuer = "https://login.microsoftonline.com/D08FD8DD-9C3B-4E34-B330-110D08FFAB3A/v2.0";
 	public const string WrongSigningKey = "WowPleaseDontStealThisKeyUncool!";
