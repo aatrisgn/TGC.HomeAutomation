@@ -79,12 +79,6 @@ resource "azurerm_user_assigned_identity" "k8_uaid" {
   name                = "mi-homeautomation-k8-${var.environment}-weu"
 }
 
-resource "azurerm_key_vault_secret" "test_value" {
-  key_vault_id = azurerm_key_vault.shared_keyvault.id
-  name         = "test-value"
-  value        = "SomeIrrelevantValue"
-}
-
 resource "azurerm_role_assignment" "table_storage_contributor" {
   scope                = azurerm_storage_account.ha_storage_account.id
   role_definition_name = "Storage Table Data Contributor"
@@ -97,20 +91,14 @@ resource "azurerm_role_assignment" "storage_account_reader" {
   principal_id         = azurerm_user_assigned_identity.k8_uaid.principal_id
 }
 
-resource "azurerm_role_assignment" "uaid_secret_reader" {
-  scope                = azurerm_key_vault_secret.test_value.resource_versionless_id
-  role_definition_name = "Key Vault Secrets User" # or "Key Vault Administrator"
-  principal_id         = azurerm_user_assigned_identity.k8_uaid.principal_id
-}
-
 resource "azurerm_role_assignment" "uaid_secret_reader_ai_connectionkey" {
   scope                = azurerm_key_vault_secret.ai_connectionkey.resource_versionless_id
   role_definition_name = "Key Vault Secrets User" # or "Key Vault Administrator"
   principal_id         = azurerm_user_assigned_identity.k8_uaid.principal_id
 }
 
-resource "azurerm_role_assignment" "uaid_secret_reader_ai_connectionkey" {
-  scope                = azurerm_key_vault_secret.storage_account_reader.resource_versionless_id
+resource "azurerm_role_assignment" "uaid_secret_reader_storage_account_table_url" {
+  scope                = azurerm_key_vault_secret.storage_account_table_url.resource_versionless_id
   role_definition_name = "Key Vault Secrets User" # or "Key Vault Administrator"
   principal_id         = azurerm_user_assigned_identity.k8_uaid.principal_id
 }
