@@ -1,25 +1,31 @@
-#include <ESP8266WiFi.h>
 #include <DHT.h>
+#include <Arduino.h>
+#include <ESP8266WiFi.h>
 #include <ESP8266HTTPClient.h>
+#include <WiFiClientSecureBearSSL.h>
 
 #define wifi_ssid ""
 #define wifi_password ""
 
-String serverName = "http://api.homeautomation.dev.tgcportal.com/api";
+String serverName = "";
 
 #define DHTTYPE DHT22
 #define DHTPIN 14 //G5 on ESP8266
 
 WiFiClient espClient;
+std::unique_ptr<BearSSL::WiFiClientSecure> client(new BearSSL::WiFiClientSecure);
 DHT dht(DHTPIN, DHTTYPE);
+
+String deviceId = "";
+String deviceApiKey = "";
 
 long lastMsg = 0;
 float temp = 0.0;
 float hum = 0.0;
-char* macAddress = "";
+String macAddress = "";
 
 void setup() {
-  Serial.begin(9600);
+  Serial.begin(115200);
   dht.begin();
   setup_wifi();
 }
@@ -44,17 +50,21 @@ void setup_wifi() {
 
   macAddress = WiFi.macAddress();
   Serial.println(macAddress);
+
+  // Ignore SSL certificate validation
+  client->setInsecure();
 }
 
 void sendHttpRequest(String dataType, float dataValue){
   HTTPClient http;
-  WiFiClient client;
 
   String serverPath = serverName + "/measure/inside";
   // Your Domain name with URL path or IP address with path
-  http.begin(client, serverPath.c_str());
+  http.begin(*client, serverPath.c_str());
   // Specify content-type header
   http.addHeader("Content-Type", "application/json");
+  http.addHeader("x-device-id", deviceId);
+  http.addHeader("x-device-api-key", deviceApiKey);
 
   String macAddress = WiFi.macAddress();
   Serial.println(macAddress);
