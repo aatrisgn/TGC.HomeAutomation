@@ -103,7 +103,6 @@ resource "azurerm_role_assignment" "uaid_secret_reader_storage_account_table_url
   principal_id         = azurerm_user_assigned_identity.k8_uaid.principal_id
 }
 
-# Use this when we know how it'll work
 resource "azurerm_federated_identity_credential" "api-server-credentials" {
   parent_id           = azurerm_user_assigned_identity.k8_uaid.id
   name                = "homeautomation-api-credentials"
