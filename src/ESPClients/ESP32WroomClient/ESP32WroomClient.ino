@@ -1,6 +1,7 @@
 #include <WiFi.h>
 #include <HTTPClient.h>
 #include <DHT.h>
+#include <WiFiClientSecure.h>
 
 #define wifi_ssid ""
 #define wifi_password ""
@@ -10,10 +11,14 @@
 
 WiFiClient espClient;
 HTTPClient http;
+
+WiFiClientSecure *client = new WiFiClientSecure;
 DHT dht(DHTPIN, DHTTYPE);
 
-const char * serverUri = "http://api.homeautomation.dev.tgcportal.com/api/measure/inside";
+const char * serverUri = "";
 String macAddress = "";
+String deviceId = "";
+String deviceApiKey = "";
 float temp = 0.0;
 float hum = 0.0;
 
@@ -43,6 +48,8 @@ void setup_wifi() {
   Serial.print("MAC Address: ");
   macAddress = WiFi.macAddress();
   Serial.println(macAddress);
+
+  client->setInsecure();
 }
 
 void sendHttpRequest(String dataType, float dataValue) {
@@ -50,6 +57,8 @@ void sendHttpRequest(String dataType, float dataValue) {
 
     http.begin(serverUri);
     http.addHeader("Content-Type", "application/json");
+    http.addHeader("x-device-id", deviceId);
+    http.addHeader("x-device-api-key", deviceApiKey);
 
     String httpRequestData = "{\"dataValue\":" + String(dataValue) + ", \"type\": \"" + dataType + "\", \"macAddress\": \"" + macAddress + "\"}";
     Serial.println(httpRequestData);
