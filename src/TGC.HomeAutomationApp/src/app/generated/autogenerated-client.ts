@@ -410,6 +410,82 @@ export class DeviceClient {
         return _observableOf(null as any);
     }
 
+    getHealthCheckById(id: string): Observable<DeviceHealthCheckResponse> {
+        let url_ = this.baseUrl + "/api/devices/{id}/healthcheck";
+        if (id === undefined || id === null)
+            throw new globalThis.Error("The parameter 'id' must be defined.");
+        url_ = url_.replace("{id}", encodeURIComponent("" + id));
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Accept": "application/json"
+            })
+        };
+
+        return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processGetHealthCheckById(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processGetHealthCheckById(response_ as any);
+                } catch (e) {
+                    return _observableThrow(e) as any as Observable<DeviceHealthCheckResponse>;
+                }
+            } else
+                return _observableThrow(response_) as any as Observable<DeviceHealthCheckResponse>;
+        }));
+    }
+
+    protected processGetHealthCheckById(response: HttpResponseBase): Observable<DeviceHealthCheckResponse> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (response as any).error instanceof Blob ? (response as any).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = DeviceHealthCheckResponse.fromJS(resultData200);
+            return _observableOf(result200);
+            }));
+        } else if (status === 401) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            let result401: any = null;
+            let resultData401 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result401 = ProblemDetails.fromJS(resultData401);
+            return throwException("A server side error occurred.", status, _responseText, _headers, result401);
+            }));
+        } else if (status === 403) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            let result403: any = null;
+            let resultData403 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result403 = ProblemDetails.fromJS(resultData403);
+            return throwException("A server side error occurred.", status, _responseText, _headers, result403);
+            }));
+        } else if (status === 404) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            let result404: any = null;
+            let resultData404 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result404 = ProblemDetails.fromJS(resultData404);
+            return throwException("A server side error occurred.", status, _responseText, _headers, result404);
+            }));
+        } else if (status === 500) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return throwException("A server side error occurred.", status, _responseText, _headers);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf(null as any);
+    }
+
     getAvailableMeasuresByDeviceId(id: string): Observable<DeviceMeasureTypesResponse> {
         let url_ = this.baseUrl + "/api/devices/{id}/measuretypes";
         if (id === undefined || id === null)
@@ -1282,6 +1358,65 @@ export interface IDeviceResponse {
     macAddress?: string | undefined;
     created?: Date;
     id?: string;
+}
+
+export class DeviceHealthCheckResponse implements IDeviceHealthCheckResponse {
+    status?: DeviceHealthCheckStatusEnum;
+    deviceName?: string;
+    macAddress?: string;
+    id?: string;
+    lastActivity?: Date;
+
+    constructor(data?: IDeviceHealthCheckResponse) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (this as any)[property] = (data as any)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.status = _data["status"];
+            this.deviceName = _data["deviceName"];
+            this.macAddress = _data["macAddress"];
+            this.id = _data["id"];
+            this.lastActivity = _data["lastActivity"] ? new Date(_data["lastActivity"].toString()) : undefined as any;
+        }
+    }
+
+    static fromJS(data: any): DeviceHealthCheckResponse {
+        data = typeof data === 'object' ? data : {};
+        let result = new DeviceHealthCheckResponse();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["status"] = this.status;
+        data["deviceName"] = this.deviceName;
+        data["macAddress"] = this.macAddress;
+        data["id"] = this.id;
+        data["lastActivity"] = this.lastActivity ? this.lastActivity.toISOString() : undefined as any;
+        return data;
+    }
+}
+
+export interface IDeviceHealthCheckResponse {
+    status?: DeviceHealthCheckStatusEnum;
+    deviceName?: string;
+    macAddress?: string;
+    id?: string;
+    lastActivity?: Date;
+}
+
+export enum DeviceHealthCheckStatusEnum {
+    Unhealthy = 0,
+    Healthy = 1,
+    Degraded = 2,
+    Unknown = 3,
 }
 
 export class DeviceMeasureTypesResponse implements IDeviceMeasureTypesResponse {

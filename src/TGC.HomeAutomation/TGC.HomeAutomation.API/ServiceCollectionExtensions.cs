@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.FeatureManagement;
 using Microsoft.OpenApi.Models;
+using TGC.OpenWeatherApi;
 using TGC.AzureTableStorage.Configuration;
 using TGC.AzureTableStorage.IoC;
 using TGC.HomeAutomation.API.Authentication;
@@ -109,6 +110,17 @@ public static class ServiceCollectionExtensions
 			configuration.ManagedIdentityId = string.IsNullOrEmpty(managedIdentityId) ? Guid.Empty : Guid.Parse(managedIdentityId);
 		});
 
+		var keyvaultUrl = configuration.GetValue<string>("TGC.OpenWeahterApi:KeyvaultUrl") ?? string.Empty;
+		var secretName = configuration.GetValue<string>("TGC.OpenWeahterApi:secretName") ?? string.Empty;
+
+		services.AddOpenWeatherApi(options =>
+		{
+			options.KeyvaultUrl = keyvaultUrl;
+			options.KeyvaultSecretName = secretName;
+			options.UseKeyvault = true;
+			options.Mock = environment.IsEnvironment("IntegrationTests");
+		});
+
 		var allowedHosts = configuration.GetSection("HomeAutomation:AllowedHosts").Get<string[]>();
 
 		services.AddCors(options =>
@@ -126,6 +138,7 @@ public static class ServiceCollectionExtensions
 		services.AddControllers();
 
 		services.AddHostedService<ConsolidationBackgroundWorker>();
+		services.AddHostedService<SystemDeviceSeedingBackgroundWorker>();
 
 		services.ConfigureSignalR();
 

@@ -24,9 +24,10 @@ public class MeasureController : HAControllerBase
 	[HttpGet]
 	[Route("measure/{measureType}/outside/current")]
 	[ProducesResponseType(typeof(MeasureResponse), StatusCodes.Status200OK)]
-	public async Task<MeasureResponse> GetCurrentOutside(string measureType)
+	public async Task<IActionResult> GetCurrentOutside(string measureType)
 	{
-		return await _measureService.GetCurrentOutside(measureType);
+		var apiResult = await _measureService.GetCurrentOutside(measureType);
+		return apiResult.ToActionResult();
 	}
 
 	[HttpGet]

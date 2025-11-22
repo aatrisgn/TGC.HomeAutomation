@@ -1,7 +1,9 @@
+using TGC.OpenWeatherApi;
 using TGC.AzureTableStorage;
 using TGC.HomeAutomation.API.Device;
 using TGC.HomeAutomation.API.Sensor;
 using TGC.HomeAutomation.API.SignalR;
+using TGC.WebApi.Communication;
 
 namespace TGC.HomeAutomation.API.Measure;
 
@@ -12,6 +14,7 @@ internal class CompositeMeasureService : ICompositeMeasureService
 	private readonly IOrderedMeasureService _orderedMeasureService;
 	private readonly IAzureTableStorageRepository<OrderedMeasureEntity> _orderedMeasureRepository;
 	private readonly ISignalRNotificationService _notificationService;
+	private readonly IOpenWeatherApiClient _openWeatherApiClient;
 
 	private readonly IAzureTableStorageRepository<MeasureEntity> _measureRepository;
 	private readonly IDeviceService _deviceService;
@@ -23,7 +26,8 @@ internal class CompositeMeasureService : ICompositeMeasureService
 		IAzureTableStorageRepository<OrderedMeasureEntity> orderedMeasureRepository,
 		IDeviceService deviceService,
 		IOrderedMeasureService orderedMeasureService,
-		ISignalRNotificationService notificationService
+		ISignalRNotificationService notificationService,
+		IOpenWeatherApiClient openWeatherApiClient
 		)
 	{
 		_timeProvider = timeProvider;
@@ -33,6 +37,7 @@ internal class CompositeMeasureService : ICompositeMeasureService
 		_deviceService = deviceService;
 		_orderedMeasureService = orderedMeasureService;
 		_notificationService = notificationService;
+		_openWeatherApiClient = openWeatherApiClient;
 	}
 	public async Task<MeasureResponse> GetCurrentMeasureInside(string measureType)
 	{
@@ -59,21 +64,43 @@ internal class CompositeMeasureService : ICompositeMeasureService
 		};
 	}
 
-	public Task<MeasureResponse> GetCurrentOutside(string measureType)
+	public async Task<ApiResult> GetCurrentOutside(string measureType)
 	{
-		var measure = new MeasureResponse
-		{
-			DataValue = 10,
-			Created = _timeProvider.GetUtcNow().DateTime,
-			DeviceId = Guid.Empty,
-		};
+		var apiResult = await _openWeatherApiClient.GetCurrentWeatherAsync("55.520099", "11.142788");
 
-		return Task.FromResult(measure);
+		var responseContent = apiResult.Result();
+
+		if (measureType.Equals("temperature", StringComparison.CurrentCultureIgnoreCase))
+		{
+			var measure = new MeasureResponse
+			{
+				DataValue = responseContent.WeatherDetails.Temp,
+				Created = _timeProvider.GetUtcNow().DateTime,
+				DeviceId = Guid.Empty,
+			};
+
+			return ApiResult<MeasureResponse>.AsOk(measure);
+		}
+		if (measureType.Equals("humidity", StringComparison.CurrentCultureIgnoreCase))
+		{
+			var measure = new MeasureResponse
+			{
+				DataValue = responseContent.WeatherDetails.Humidity,
+				Created = _timeProvider.GetUtcNow().DateTime,
+				DeviceId = Guid.Empty,
+			};
+
+			return ApiResult<MeasureResponse>.AsOk(measure);
+		}
+
+		return ApiResult.AsNotFound();
 	}
 
 	public async Task<MeasureRangeResponse> GetAverageBy10Minutes(string measureType, DateTime startDate, DateTime endDate)
 	{
-		var measures = await _orderedMeasureRepository.GetAllAsync(t => t.Created >= startDate && t.Created <= endDate && t.Type == measureType);
+		var outdoorDevice = await _deviceService.GetByMacAddress(DeviceConstants.OutsideDeviceMacAddress);
+
+		var measures = await _orderedMeasureRepository.GetAllAsync(t => t.Created >= startDate && t.Created <= endDate && t.Type == measureType && t.DeviceId != Guid.Parse(outdoorDevice.RowKey));
 
 		if (measures.Any())
 		{

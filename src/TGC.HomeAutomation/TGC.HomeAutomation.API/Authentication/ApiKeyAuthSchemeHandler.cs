@@ -47,7 +47,8 @@ public class ApiKeyAuthSchemeHandler : AuthenticationHandler<ApiKeyAuthSchemeOpt
 			return AuthenticateResult.Fail("Uauthorized");
 		}
 
-		var device = await _deviceService.GetByIdAsync(parsedDeviceId);
+		var deviceResult = await _deviceService.GetByIdAsync(parsedDeviceId);
+		var device = deviceResult.Result();
 
 		if (device is null)
 		{

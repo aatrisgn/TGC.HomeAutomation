@@ -1,29 +1,21 @@
-﻿// See https://aka.ms/new-console-template for more information
-
-using Azure.Identity;
-using Azure.Security.KeyVault.Secrets;
+﻿using Microsoft.Extensions.DependencyInjection;
+using TGC.OpenWeatherApi;
 
 Console.WriteLine("Starting application...");
 
-string keyVaultUrl = "https://tgckvhadev.vault.azure.net/";
-string secretName = "test-value";
+var serviceCollection = new ServiceCollection();
 
-var options = new DefaultAzureCredentialOptions
+serviceCollection.AddOpenWeatherApi(options =>
 {
-	ManagedIdentityClientId = "19ec7ba5-8986-4d46-84a3-c27524ceb2b6"
-};
+	options.KeyvaultUrl = "";
+	options.KeyvaultSecretName = "";
+	options.UseKeyvault = true;
+});
 
-var client = new SecretClient(new Uri(keyVaultUrl), new DefaultAzureCredential(options));
+var serviceProvider = serviceCollection.BuildServiceProvider();
 
-KeyVaultSecret secret = await client.GetSecretAsync(secretName);
+var openWeatherApiClient = serviceProvider.GetService<IOpenWeatherApiClient>();
 
-Console.WriteLine($"Secret value from KV via MI: {secret.Value}");
+var some = openWeatherApiClient.GetCurrentWeatherAsync("55", "11").Result;
 
-string envSecret = Environment.GetEnvironmentVariable("MY_SECRET_ENV_VAR");
-
-if (string.IsNullOrEmpty(envSecret))
-{
-	Console.WriteLine("Could not find CSI key.");	
-}
-
-Console.WriteLine($"Secret value from KV via CSI: {envSecret}");
+Console.WriteLine(some);

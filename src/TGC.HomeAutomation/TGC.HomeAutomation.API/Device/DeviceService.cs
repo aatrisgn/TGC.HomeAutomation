@@ -2,6 +2,7 @@
 using TGC.HomeAutomation.API.Measure;
 using TGC.HomeAutomation.API.Sensor;
 using TGC.HomeAutomation.API.Temperature;
+using TGC.WebApi.Communication;
 
 namespace TGC.HomeAutomation.API.Device;
 
@@ -33,11 +34,12 @@ public class DeviceService : IDeviceService
 		return allEntities.Select(e => DeviceResponse.FromEntity(e)).ToList();
 	}
 
-	public async Task<DeviceResponse?> GetByIdAsync(Guid id)
+	public async Task<ApiResult<DeviceResponse?>> GetByIdAsync(Guid id)
 	{
 		var allEntities = await _deviceRepository.GetAllAsync(e => true);
 		var specificEntity = allEntities.SingleOrDefault(e => e.RowKey == id.ToString());
-		return specificEntity == null ? null : DeviceResponse.FromEntity(specificEntity);
+		var entityResponse = specificEntity == null ? null : DeviceResponse.FromEntity(specificEntity);
+		return entityResponse is null ? ApiResult<DeviceResponse?>.AsNotFound() : ApiResult<DeviceResponse?>.AsOk(entityResponse);
 	}
 
 	public async Task<DeviceResponse> CreateAsync(DeviceRequest deviceRequest)
@@ -133,5 +135,10 @@ public class DeviceService : IDeviceService
 		}
 
 		return true;
+	}
+
+	public Task<ApiResult> CheckDeviceHealthAsync(Guid id)
+	{
+		return Task.FromResult(ApiResult.AsNotFound());
 	}
 }

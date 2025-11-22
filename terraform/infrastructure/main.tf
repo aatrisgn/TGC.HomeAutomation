@@ -93,13 +93,19 @@ resource "azurerm_role_assignment" "storage_account_reader" {
 
 resource "azurerm_role_assignment" "uaid_secret_reader_ai_connectionkey" {
   scope                = azurerm_key_vault_secret.ai_connectionkey.resource_versionless_id
-  role_definition_name = "Key Vault Secrets User" # or "Key Vault Administrator"
+  role_definition_name = "Key Vault Secrets User"
   principal_id         = azurerm_user_assigned_identity.k8_uaid.principal_id
 }
 
 resource "azurerm_role_assignment" "uaid_secret_reader_storage_account_table_url" {
   scope                = azurerm_key_vault_secret.storage_account_table_url.resource_versionless_id
-  role_definition_name = "Key Vault Secrets User" # or "Key Vault Administrator"
+  role_definition_name = "Key Vault Secrets User"
+  principal_id         = azurerm_user_assigned_identity.k8_uaid.principal_id
+}
+
+resource "azurerm_role_assignment" "uaid_secret_reader_storage_account_table_url" {
+  scope                = data.azurerm_key_vault_secret.openweather_api_key.resource_versionless_id
+  role_definition_name = "Key Vault Secrets User"
   principal_id         = azurerm_user_assigned_identity.k8_uaid.principal_id
 }
 

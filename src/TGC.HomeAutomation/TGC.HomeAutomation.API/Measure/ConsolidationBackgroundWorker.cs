@@ -1,4 +1,9 @@
+using Microsoft.Extensions.Options;
+using TGC.OpenWeatherApi;
 using TGC.AzureTableStorage;
+using TGC.HomeAutomation.API.Configuration;
+using TGC.HomeAutomation.API.Device;
+using TGC.HomeAutomation.API.Sensor;
 
 namespace TGC.HomeAutomation.API.Measure;
 
@@ -41,7 +46,7 @@ public class ConsolidationBackgroundWorker : BackgroundService
 	{
 		using (var scope = _serviceProvider.CreateScope())
 		{
-			//Change implementation to get "raw measures" and make them "ordered" by 10 minute averages 
+			//Change implementation to get "raw measures" and make them "ordered" by 10 minute averages
 			var rawMeasureRepository = scope.ServiceProvider.GetRequiredService<IAzureTableStorageRepository<MeasureEntity>>();
 			var orderedMeasureRepository = scope.ServiceProvider.GetRequiredService<IAzureTableStorageRepository<OrderedMeasureEntity>>();
 
@@ -57,6 +62,9 @@ public class ConsolidationBackgroundWorker : BackgroundService
 
 			// Start by iterating over each and locate related measure within the same 30-minute period.
 			// Then group by device ID to accumulate on individual device level.
+
+			Task outsideTemperatureFetchingTask = FetchOutsideTemperatureAsync(scope, roundedTimeAgo.AddMinutes(30));
+
 			foreach (var rawMeasure in orderedRawMeasures)
 			{
 				var roundedDownDateTime = RoundDown(rawMeasure.Created, TimeSpan.FromMinutes(30));
@@ -102,8 +110,64 @@ public class ConsolidationBackgroundWorker : BackgroundService
 			{
 				await rawMeasureRepository.DeleteAsync(measure);
 			}
+
+			await outsideTemperatureFetchingTask;
 		}
 		_logger.LogInformation("Finished processing measures.");
+	}
+
+	private async Task FetchOutsideTemperatureAsync(IServiceScope scope, DateTime time)
+	{
+		var deviceRepository = scope.ServiceProvider.GetRequiredService<IAzureTableStorageRepository<DeviceEntity>>();
+
+		var openWeatherApiClient = scope.ServiceProvider.GetRequiredService<IOpenWeatherApiClient>();
+		var configurationOptions = scope.ServiceProvider.GetRequiredService<IOptions<HomeAutomationConfiguration>>().Value;
+		var orderedMeasureRepository = scope.ServiceProvider.GetRequiredService<IAzureTableStorageRepository<OrderedMeasureEntity>>();
+
+		DeviceEntity? systemDevice = null;
+
+		var deviceExists = await deviceRepository.ExistsAsync(d => d.MacAddress == DeviceConstants.OutsideDeviceMacAddress && d.Name == DeviceConstants.OutsideDeviceName);
+		if (deviceExists)
+		{
+			systemDevice = await deviceRepository.GetSingleAsync(d => d.MacAddress == DeviceConstants.OutsideDeviceMacAddress);
+		}
+
+		if (systemDevice is not null)
+		{
+			var currentWeather = await openWeatherApiClient.GetCurrentWeatherAsync(configurationOptions.Coordinates.Latitude, configurationOptions.Coordinates.Longitude);
+
+			var existingTemperatureMeasure = await orderedMeasureRepository.ExistsAsync(m => m.Created == time && m.Type == "temperature" && m.DeviceId == Guid.Parse(systemDevice.RowKey));
+			var existingHumidityMeasure = await orderedMeasureRepository.ExistsAsync(m => m.Created == time && m.Type == "humidity" && m.DeviceId == Guid.Parse(systemDevice.RowKey));
+
+			var result = currentWeather.Result();
+
+			if (!existingTemperatureMeasure)
+			{
+				var outsideTemperature = new OrderedMeasureEntity
+				{
+					DataValue = result.WeatherDetails.Temp,
+					Created = time,
+					DeviceId = Guid.Parse(systemDevice.RowKey),
+					Type = "temperature",
+					Sample = 1
+				};
+				await orderedMeasureRepository.CreateAsync(outsideTemperature);
+			}
+
+			if (!existingHumidityMeasure)
+			{
+				var outsideHumidity = new OrderedMeasureEntity
+				{
+					DataValue = result.WeatherDetails.Humidity,
+					Created = time,
+					DeviceId = Guid.Parse(systemDevice.RowKey),
+					Type = "humidity",
+					Sample = 1
+				};
+
+				await orderedMeasureRepository.CreateAsync(outsideHumidity);
+			}
+		}
 	}
 
 	private DateTime RoundDown(DateTime dt, TimeSpan d)

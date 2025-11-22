@@ -33,6 +33,11 @@
       </Content>
     </ItemGroup>
 
+    <ItemGroup>
+      <ProjectReference Include="..\TGC.OpenWeatherApi\TGC.OpenWeatherApi.csproj" />
+      <ProjectReference Include="..\TGC.WebApi.Communication\TGC.WebApi.Communication.csproj" />
+    </ItemGroup>
+
 	<Target Name="NSwag" Condition="'$(buildAngularClient)' == 'true'" AfterTargets="Build">
 		<Exec EnvironmentVariables="ASPNETCORE_ENVIRONMENT=Development" Command="$(NSwagExe_Net80) run $(NSwagConfigurationFile) /variables:OutputPath=$(OutputPath)" />
 	</Target>

@@ -8,6 +8,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TGC.HomeAutomation.Api.Inte
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TGC.HomeAutomation.TestConsole", "TGC.HomeAutomation.TestConsole\TGC.HomeAutomation.TestConsole.csproj", "{AF19E21C-BB27-4DA2-981B-456A6BC1FBA2}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TGC.WebApi.Communication", "TGC.WebApi.Communication\TGC.WebApi.Communication.csproj", "{C240D9CB-5910-4B0F-9F32-2A5D25D45A72}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TGC.OpenWeatherApi", "TGC.OpenWeatherApi\TGC.OpenWeatherApi.csproj", "{4FE5A95E-3BD1-45AA-B682-D5D420F08869}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -30,5 +34,13 @@ Global
 		{AF19E21C-BB27-4DA2-981B-456A6BC1FBA2}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{AF19E21C-BB27-4DA2-981B-456A6BC1FBA2}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{AF19E21C-BB27-4DA2-981B-456A6BC1FBA2}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C240D9CB-5910-4B0F-9F32-2A5D25D45A72}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C240D9CB-5910-4B0F-9F32-2A5D25D45A72}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C240D9CB-5910-4B0F-9F32-2A5D25D45A72}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C240D9CB-5910-4B0F-9F32-2A5D25D45A72}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4FE5A95E-3BD1-45AA-B682-D5D420F08869}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4FE5A95E-3BD1-45AA-B682-D5D420F08869}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4FE5A95E-3BD1-45AA-B682-D5D420F08869}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4FE5A95E-3BD1-45AA-B682-D5D420F08869}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal

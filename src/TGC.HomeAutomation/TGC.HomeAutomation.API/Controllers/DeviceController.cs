@@ -1,6 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
-using TGC.HomeAutomation.API.Authentication;
 using TGC.HomeAutomation.API.Device;
+using TGC.HomeAutomation.API.Device.DTO;
 using TGC.HomeAutomation.API.Sensor;
 using TGC.HomeAutomation.API.Temperature;
 
@@ -15,7 +15,6 @@ public class DeviceController : HAControllerBase
 	}
 
 	[HttpGet]
-	[JWTAuthorize]
 	[Route("devices")]
 	[ProducesResponseType(typeof(IEnumerable<DeviceResponse>), StatusCodes.Status200OK)]
 	public async Task<IEnumerable<DeviceResponse>> GetAllDevices()
@@ -24,14 +23,23 @@ public class DeviceController : HAControllerBase
 	}
 
 	[HttpGet]
-	[JWTAuthorize]
 	[Route("devices/{id:guid}")]
 	[ProducesResponseType(typeof(DeviceResponse), StatusCodes.Status200OK)]
 	[ProducesResponseType(StatusCodes.Status404NotFound)]
 	public async Task<IActionResult> GetSingleDeviceById(Guid id)
 	{
-		var locatedDevice = await _deviceService.GetByIdAsync(id);
-		return locatedDevice != null ? Ok(locatedDevice) : NotFound();
+		var result = await _deviceService.GetByIdAsync(id);
+		return result.ToActionResult();
+	}
+
+	[HttpGet]
+	[Route("devices/{id:guid}/healthcheck")]
+	[ProducesResponseType(typeof(DeviceHealthCheckResponse), StatusCodes.Status200OK)]
+	[ProducesResponseType(StatusCodes.Status404NotFound)]
+	public async Task<IActionResult> GetHealthCheckById(Guid id)
+	{
+		var result = await _deviceService.CheckDeviceHealthAsync(id);
+		return result.ToActionResult();
 	}
 
 	[HttpGet]
@@ -45,7 +53,6 @@ public class DeviceController : HAControllerBase
 	}
 
 	[HttpPost]
-	[JWTAuthorize]
 	[Route("devices")]
 	[ProducesResponseType(typeof(DeviceResponse), StatusCodes.Status200OK)]
 	[ProducesResponseType(StatusCodes.Status400BadRequest)]
@@ -56,7 +63,6 @@ public class DeviceController : HAControllerBase
 	}
 
 	[HttpPut]
-	[JWTAuthorize]
 	[Route("devices/{id:guid}/apikey")]
 	[ProducesResponseType(typeof(ApiKeyResponse), StatusCodes.Status200OK)]
 	[ProducesResponseType(StatusCodes.Status400BadRequest)]
@@ -67,7 +73,6 @@ public class DeviceController : HAControllerBase
 	}
 
 	[HttpPut]
-	[JWTAuthorize]
 	[Route("devices/{id:guid}")]
 	[ProducesResponseType(typeof(DeviceResponse), StatusCodes.Status200OK)]
 	[ProducesResponseType(StatusCodes.Status400BadRequest)]
@@ -78,7 +83,6 @@ public class DeviceController : HAControllerBase
 	}
 
 	[HttpDelete]
-	[JWTAuthorize]
 	[Route("devices/{id:guid}")]
 	[ProducesResponseType(StatusCodes.Status204NoContent)]
 	[ProducesResponseType(StatusCodes.Status400BadRequest)]

@@ -1,0 +1,7 @@
+<div class="popup-overlay" (click)="closePopup()">
+  <div class="popup-content" (click)="$event.stopPropagation()">
+	<h2>Welcome to the Popup!</h2>
+	<p>This is a simple popup component in Angular.</p>
+	<button (click)="closePopup()">Close</button>
+  </div>
+</div>
