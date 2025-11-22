@@ -51,7 +51,7 @@
     </ItemGroup>
 
     <Target Name="NSwag" Condition="'$(buildTestClient)' == 'true'" AfterTargets="Build">
-        <Exec EnvironmentVariables="ASPNETCORE_ENVIRONMENT=Development" Command="$(NSwagExe_Net80) run $(NSwagConfigurationFile) /variables:OutputPath=$(OutputPath)" />
+        <Exec EnvironmentVariables="ASPNETCORE_ENVIRONMENT=IntegrationTests" Command="$(NSwagExe_Net80) run $(NSwagConfigurationFile) /variables:OutputPath=$(OutputPath)" />
     </Target>
 
 </Project>
