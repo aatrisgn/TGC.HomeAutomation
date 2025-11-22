@@ -103,7 +103,7 @@ resource "azurerm_role_assignment" "uaid_secret_reader_storage_account_table_url
   principal_id         = azurerm_user_assigned_identity.k8_uaid.principal_id
 }
 
-resource "azurerm_role_assignment" "uaid_secret_reader_storage_account_table_url" {
+resource "azurerm_role_assignment" "uaid_secret_reader_openweather_api_key" {
   scope                = data.azurerm_key_vault_secret.openweather_api_key.resource_versionless_id
   role_definition_name = "Key Vault Secrets User"
   principal_id         = azurerm_user_assigned_identity.k8_uaid.principal_id

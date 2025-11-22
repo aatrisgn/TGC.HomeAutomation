@@ -39,7 +39,7 @@
     </ItemGroup>
 
 	<Target Name="NSwag" Condition="'$(buildAngularClient)' == 'true'" AfterTargets="Build">
-		<Exec EnvironmentVariables="ASPNETCORE_ENVIRONMENT=Development" Command="$(NSwagExe_Net80) run $(NSwagConfigurationFile) /variables:OutputPath=$(OutputPath)" />
+		<Exec EnvironmentVariables="ASPNETCORE_ENVIRONMENT=CICD" Command="$(NSwagExe_Net80) run $(NSwagConfigurationFile) /variables:OutputPath=$(OutputPath)" />
 	</Target>
 
 </Project>

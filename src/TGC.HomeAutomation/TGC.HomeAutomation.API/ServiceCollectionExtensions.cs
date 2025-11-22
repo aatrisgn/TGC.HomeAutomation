@@ -18,7 +18,7 @@ public static class ServiceCollectionExtensions
 {
 	public static IServiceCollection AddHomeAutomationApiInjections(this IServiceCollection services, IConfigurationManager configuration, IWebHostEnvironment environment)
 	{
-		if (!environment.IsDevelopment() && !environment.IsEnvironment("IntegrationTests"))
+		if (!environment.IsDevelopment() && !environment.IsEnvironment("IntegrationTests") && !environment.IsEnvironment("CICD"))
 		{
 			services.AddOpenTelemetry().UseAzureMonitor(options =>
 			{
@@ -118,7 +118,7 @@ public static class ServiceCollectionExtensions
 			options.KeyvaultUrl = keyvaultUrl;
 			options.KeyvaultSecretName = secretName;
 			options.UseKeyvault = true;
-			options.Mock = environment.IsEnvironment("IntegrationTests");
+			options.Mock = environment.IsEnvironment("IntegrationTests") || environment.IsEnvironment("CICD");
 		});
 
 		var allowedHosts = configuration.GetSection("HomeAutomation:AllowedHosts").Get<string[]>();
