@@ -34,6 +34,9 @@
     </ItemGroup>
 
     <ItemGroup>
+      <ProjectReference Include="..\TGC.HomeAutomation.Application\TGC.HomeAutomation.Application.csproj" />
+      <ProjectReference Include="..\TGC.HomeAutomation.Domain\TGC.HomeAutomation.Domain.csproj" />
+      <ProjectReference Include="..\TGC.HomeAutomation.Infrastructure\TGC.HomeAutomation.Infrastructure.csproj" />
       <ProjectReference Include="..\TGC.OpenWeatherApi\TGC.OpenWeatherApi.csproj" />
       <ProjectReference Include="..\TGC.WebApi.Communication\TGC.WebApi.Communication.csproj" />
     </ItemGroup>

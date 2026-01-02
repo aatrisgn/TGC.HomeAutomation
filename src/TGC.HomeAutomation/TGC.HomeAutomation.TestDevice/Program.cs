@@ -1,6 +1,5 @@
 ﻿using System.Net.Http.Json;
 using TGC.HomeAutomation.API.Measure;
-using TGC.HomeAutomation.API.Temperature;
 
 Console.WriteLine("Hello, World!");
 

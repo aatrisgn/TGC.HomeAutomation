@@ -1,6 +1,7 @@
 using TGC.AzureTableStorage;
+using TGC.HomeAutomation.API.Contracts.Device;
 using TGC.HomeAutomation.API.Sensor;
-using TGC.HomeAutomation.API.Temperature;
+using TGC.HomeAutomation.Domain.Constants;
 
 namespace TGC.HomeAutomation.API.Device;
 

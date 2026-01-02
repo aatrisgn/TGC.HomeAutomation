@@ -30,11 +30,11 @@ namespace TGC.HomeAutomation.API.IntegrationTests.Generated
     public partial interface IHomeAutomationApiClient
     {
         /// <exception cref="ApiException">A server side error occurred.</exception>
-        System.Threading.Tasks.Task<SwaggerResponse<System.Collections.Generic.IEnumerable<DeviceResponse>>> Device_GetAllDevicesAsync();
+        System.Threading.Tasks.Task<SwaggerResponse<DeviceCollectionResponse>> Device_GetAllDevicesAsync();
 
         /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
         /// <exception cref="ApiException">A server side error occurred.</exception>
-        System.Threading.Tasks.Task<SwaggerResponse<System.Collections.Generic.IEnumerable<DeviceResponse>>> Device_GetAllDevicesAsync(System.Threading.CancellationToken cancellationToken);
+        System.Threading.Tasks.Task<SwaggerResponse<DeviceCollectionResponse>> Device_GetAllDevicesAsync(System.Threading.CancellationToken cancellationToken);
 
         /// <exception cref="ApiException">A server side error occurred.</exception>
         System.Threading.Tasks.Task<SwaggerResponse<DeviceResponse>> Device_CreateNewDeviceAsync(DeviceRequest deviceRequest);
@@ -135,11 +135,11 @@ namespace TGC.HomeAutomation.API.IntegrationTests.Generated
         System.Threading.Tasks.Task<SwaggerResponse<DeviceOrderedMeasureRangeResponse>> Measure_GetMeasuresByDeviceIdMeasureTypeAndDateAsync(System.Guid deviceId, string measureType, System.DateTime startDate, System.DateTime endDate, System.Threading.CancellationToken cancellationToken);
 
         /// <exception cref="ApiException">A server side error occurred.</exception>
-        System.Threading.Tasks.Task<SwaggerResponse> Measure_CreateAsync(MeasureRequest request);
+        System.Threading.Tasks.Task<SwaggerResponse> Measure_CreateAsync(MeasureRequest measureRequest);
 
         /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
         /// <exception cref="ApiException">A server side error occurred.</exception>
-        System.Threading.Tasks.Task<SwaggerResponse> Measure_CreateAsync(MeasureRequest request, System.Threading.CancellationToken cancellationToken);
+        System.Threading.Tasks.Task<SwaggerResponse> Measure_CreateAsync(MeasureRequest measureRequest, System.Threading.CancellationToken cancellationToken);
 
     }
 
@@ -192,14 +192,14 @@ namespace TGC.HomeAutomation.API.IntegrationTests.Generated
         partial void ProcessResponse(System.Net.Http.HttpClient client, System.Net.Http.HttpResponseMessage response);
 
         /// <exception cref="ApiException">A server side error occurred.</exception>
-        public virtual System.Threading.Tasks.Task<SwaggerResponse<System.Collections.Generic.IEnumerable<DeviceResponse>>> Device_GetAllDevicesAsync()
+        public virtual System.Threading.Tasks.Task<SwaggerResponse<DeviceCollectionResponse>> Device_GetAllDevicesAsync()
         {
             return Device_GetAllDevicesAsync(System.Threading.CancellationToken.None);
         }
 
         /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
         /// <exception cref="ApiException">A server side error occurred.</exception>
-        public virtual async System.Threading.Tasks.Task<SwaggerResponse<System.Collections.Generic.IEnumerable<DeviceResponse>>> Device_GetAllDevicesAsync(System.Threading.CancellationToken cancellationToken)
+        public virtual async System.Threading.Tasks.Task<SwaggerResponse<DeviceCollectionResponse>> Device_GetAllDevicesAsync(System.Threading.CancellationToken cancellationToken)
         {
             var client_ = _httpClient;
             var disposeClient_ = false;
@@ -240,12 +240,12 @@ namespace TGC.HomeAutomation.API.IntegrationTests.Generated
                         var status_ = (int)response_.StatusCode;
                         if (status_ == 200)
                         {
-                            var objectResponse_ = await ReadObjectResponseAsync<System.Collections.Generic.IEnumerable<DeviceResponse>>(response_, headers_, cancellationToken).ConfigureAwait(false);
+                            var objectResponse_ = await ReadObjectResponseAsync<DeviceCollectionResponse>(response_, headers_, cancellationToken).ConfigureAwait(false);
                             if (objectResponse_.Object == null)
                             {
                                 throw new ApiException("Response was null which was not expected.", status_, objectResponse_.Text, headers_, null);
                             }
-                            return new SwaggerResponse<System.Collections.Generic.IEnumerable<DeviceResponse>>(status_, headers_, objectResponse_.Object);
+                            return new SwaggerResponse<DeviceCollectionResponse>(status_, headers_, objectResponse_.Object);
                         }
                         else
                         if (status_ == 401)
@@ -1916,17 +1916,17 @@ namespace TGC.HomeAutomation.API.IntegrationTests.Generated
         }
 
         /// <exception cref="ApiException">A server side error occurred.</exception>
-        public virtual System.Threading.Tasks.Task<SwaggerResponse> Measure_CreateAsync(MeasureRequest request)
+        public virtual System.Threading.Tasks.Task<SwaggerResponse> Measure_CreateAsync(MeasureRequest measureRequest)
         {
-            return Measure_CreateAsync(request, System.Threading.CancellationToken.None);
+            return Measure_CreateAsync(measureRequest, System.Threading.CancellationToken.None);
         }
 
         /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
         /// <exception cref="ApiException">A server side error occurred.</exception>
-        public virtual async System.Threading.Tasks.Task<SwaggerResponse> Measure_CreateAsync(MeasureRequest request, System.Threading.CancellationToken cancellationToken)
+        public virtual async System.Threading.Tasks.Task<SwaggerResponse> Measure_CreateAsync(MeasureRequest measureRequest, System.Threading.CancellationToken cancellationToken)
         {
-            if (request == null)
-                throw new System.ArgumentNullException("request");
+            if (measureRequest == null)
+                throw new System.ArgumentNullException("measureRequest");
 
             var client_ = _httpClient;
             var disposeClient_ = false;
@@ -1934,7 +1934,7 @@ namespace TGC.HomeAutomation.API.IntegrationTests.Generated
             {
                 using (var request_ = await CreateHttpRequestMessageAsync(cancellationToken).ConfigureAwait(false))
                 {
-                    var json_ = Newtonsoft.Json.JsonConvert.SerializeObject(request, JsonSerializerSettings);
+                    var json_ = Newtonsoft.Json.JsonConvert.SerializeObject(measureRequest, JsonSerializerSettings);
                     var content_ = new System.Net.Http.StringContent(json_);
                     content_.Headers.ContentType = System.Net.Http.Headers.MediaTypeHeaderValue.Parse("application/json");
                     request_.Content = content_;
@@ -2243,6 +2243,46 @@ namespace TGC.HomeAutomation.API.IntegrationTests.Generated
         {
 
             return Newtonsoft.Json.JsonConvert.DeserializeObject<ProblemDetails>(data, new Newtonsoft.Json.JsonSerializerSettings());
+
+        }
+        public event System.ComponentModel.PropertyChangedEventHandler? PropertyChanged;
+
+        protected virtual void RaisePropertyChanged([System.Runtime.CompilerServices.CallerMemberName] string? propertyName = null)
+        {
+            var handler = PropertyChanged;
+            if (handler != null)
+                handler(this, new System.ComponentModel.PropertyChangedEventArgs(propertyName));
+        }
+    }
+
+    [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "14.6.1.0 (NJsonSchema v11.5.1.0 (Newtonsoft.Json v13.0.0.0))")]
+    public partial class DeviceCollectionResponse : System.ComponentModel.INotifyPropertyChanged
+    {
+        private System.Collections.Generic.IEnumerable<DeviceResponse> _devices = default!;
+
+        [Newtonsoft.Json.JsonProperty("devices", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        public System.Collections.Generic.IEnumerable<DeviceResponse> Devices    {
+            get { return _devices; }
+            set
+            {
+                if (_devices != value)
+                {
+                    _devices = value;
+                    RaisePropertyChanged();
+                }
+            }
+        }
+
+        public string ToJson()
+        {
+
+            return Newtonsoft.Json.JsonConvert.SerializeObject(this, new Newtonsoft.Json.JsonSerializerSettings());
+
+        }
+        public static DeviceCollectionResponse FromJson(string data)
+        {
+
+            return Newtonsoft.Json.JsonConvert.DeserializeObject<DeviceCollectionResponse>(data, new Newtonsoft.Json.JsonSerializerSettings());
 
         }
         public event System.ComponentModel.PropertyChangedEventHandler? PropertyChanged;

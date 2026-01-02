@@ -9,6 +9,6 @@ namespace TGC.HomeAutomation.API.Controllers;
 [ProducesResponseType(StatusCodes.Status401Unauthorized)]
 [ProducesResponseType(StatusCodes.Status403Forbidden)]
 [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-public class HAControllerBase : ControllerBase
+public abstract class HAControllerBase : ControllerBase
 {
 }

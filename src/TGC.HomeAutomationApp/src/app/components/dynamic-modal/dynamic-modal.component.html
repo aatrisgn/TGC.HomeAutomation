@@ -1,1 +1,16 @@
-<p>dynamic-modal works!</p>
+<div class="modal-backdrop" *ngIf="isVisible" (click)="onClose()"></div>
+<div class="modal" *ngIf="isVisible">
+  <div class="col-xl-12">
+    <div class="modal-header">
+        <div class="row container">
+          <p class="col-xl-11">{{title}}</p>
+          <p class="col-xl-1 close-button" (click)="onClose()">×</p>
+        </div>
+    </div>
+    <div class="col-xl-12">
+      <div class="modal-body">
+        <ng-content></ng-content> <!-- Custom content goes here -->
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,25 +1,37 @@
 using Microsoft.AspNetCore.Mvc;
+using TGC.HomeAutomation.API.Contracts.Device;
 using TGC.HomeAutomation.API.Device;
-using TGC.HomeAutomation.API.Device.DTO;
-using TGC.HomeAutomation.API.Sensor;
-using TGC.HomeAutomation.API.Temperature;
+using TGC.HomeAutomation.Application.Abstractions;
+using TGC.HomeAutomation.Application.Features.Devices.Commands.DeleteDevice;
+using TGC.HomeAutomation.Application.Features.Devices.Commands.UpsertApiKeyForDevice;
+using TGC.HomeAutomation.Application.Features.Devices.Queries.GetAllDevices;
+using TGC.HomeAutomation.Application.Features.Devices.Queries.GetDeviceById;
+using TGC.WebApi.Communication;
 
 namespace TGC.HomeAutomation.API.Controllers;
 
 public class DeviceController : HAControllerBase
 {
 	private readonly IDeviceService _deviceService;
-	public DeviceController(IDeviceService deviceService)
+	private readonly IMediator _mediator;
+
+	public DeviceController(IDeviceService deviceService, IMediator mediator)
 	{
 		_deviceService = deviceService;
+		_mediator = mediator;
 	}
 
 	[HttpGet]
 	[Route("devices")]
-	[ProducesResponseType(typeof(IEnumerable<DeviceResponse>), StatusCodes.Status200OK)]
-	public async Task<IEnumerable<DeviceResponse>> GetAllDevices()
+	[ProducesResponseType(typeof(DeviceCollectionResponse), StatusCodes.Status200OK)]
+	public async Task<IActionResult> GetAllDevices()
 	{
-		return await _deviceService.GetAllAsync();
+		var query = GetAllDevicesQuery.Empty();
+		var result = await _mediator.HandleQueryAsync<GetAllDevicesQuery, GetAllDevicesResponse>(query);
+
+		var response = DeviceCollectionResponse.FromQueryResponse(result);
+
+		return ApiResult<DeviceCollectionResponse>.AsOk(response).ToActionResult();
 	}
 
 	[HttpGet]
@@ -28,8 +40,11 @@ public class DeviceController : HAControllerBase
 	[ProducesResponseType(StatusCodes.Status404NotFound)]
 	public async Task<IActionResult> GetSingleDeviceById(Guid id)
 	{
-		var result = await _deviceService.GetByIdAsync(id);
-		return result.ToActionResult();
+		var query = new GetDeviceByIdQuery(id);
+		var result = await _mediator.HandleQueryAsync<GetDeviceByIdQuery, GetDeviceByIdResponse>(query);
+		var response = DeviceResponse.FromQueryResponse(result);
+
+		return ApiResult<DeviceResponse>.AsOk(response).ToActionResult();
 	}
 
 	[HttpGet]
@@ -68,18 +83,23 @@ public class DeviceController : HAControllerBase
 	[ProducesResponseType(StatusCodes.Status400BadRequest)]
 	public async Task<ApiKeyResponse> UpdateApiKey(Guid id, [FromBody] ApiKeyRequest apiKeyRequest)
 	{
-		var apiKeyResponse = await _deviceService.UpsertApiKeyAsync(apiKeyRequest, id);
-		return apiKeyResponse;
+		var command = apiKeyRequest.ToCommand(id);
+
+		var result = await _mediator.HandleCommandAsync<UpsertApiKeyForDeviceCommand, UpsertApiKeyForDeviceResponse>(command);
+
+		var response = ApiKeyResponse.FromCommand(result);
+
+		return response;
 	}
 
 	[HttpPut]
 	[Route("devices/{id:guid}")]
 	[ProducesResponseType(typeof(DeviceResponse), StatusCodes.Status200OK)]
 	[ProducesResponseType(StatusCodes.Status400BadRequest)]
-	public async Task<DeviceResponse> UpdateSingleDevice([FromBody] DeviceRequest deviceRequest, Guid id)
+	public Task<IActionResult> UpdateSingleDevice([FromBody] DeviceRequest deviceRequest, Guid id)
 	{
-		var updatedDevice = await _deviceService.UpdateAsync(id, deviceRequest);
-		return updatedDevice;
+		var response = new BadRequestResult();
+		return Task.FromResult((IActionResult)response);
 	}
 
 	[HttpDelete]
@@ -87,8 +107,10 @@ public class DeviceController : HAControllerBase
 	[ProducesResponseType(StatusCodes.Status204NoContent)]
 	[ProducesResponseType(StatusCodes.Status400BadRequest)]
 	[ProducesResponseType(StatusCodes.Status404NotFound)]
-	public async Task DeleteDevice(Guid id)
+	public async Task<IActionResult> DeleteDevice(Guid id)
 	{
-		await _deviceService.DeleteByIdAsync(id);
+		var command = new DeleteDeviceCommand(id);
+		await _mediator.HandleCommandAsync<DeleteDeviceCommand, DeleteDeviceResponse>(command);
+		return NoContent();
 	}
 }

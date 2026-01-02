@@ -17,11 +17,67 @@
           <td>{{ device.name }}</td>
           <td>{{ device.macAddress }}</td>
           <td>{{ device.created }}</td>
-          <td><i (click)="generateNewApiKey(device.id!)" ngbTooltip="Generate new API Key" class="delete-device-btn feather icon-lock"></i></td>
-          <td><i (click)="getLatestOrderedMeasuresForDevice(device.id!)" ngbTooltip="Latest measures" class="delete-device-btn feather icon-activity"></i></td>
+          <td><i (click)="openGenerateApiKeyModal(device.id!)" ngbTooltip="Generate new API Key" class="delete-device-btn feather icon-lock"></i></td>
+          <td><i (click)="openLatestActivityModal(device.id!)" ngbTooltip="Latest measures" class="delete-device-btn feather icon-activity"></i></td>
           <td><i (click)="deleteDevice(device.id!)" ngbTooltip="Delete" class="delete-device-btn feather icon-trash-2"></i></td>
         </tr>
       </tbody>
     </table>
   </div>
 </app-card>
+<app-dynamic-modal [(isVisible)]="isUpdateApiKeyModalVisible" title="New API Key" (closeEvent)="onModalClose()">
+  <form [formGroup]="formData">
+    <div>
+      <div class="col-xl-12">
+        <div class="container-flex">
+          <label class="col-xl-5" for="name">Name:</label>
+          <input class="col-xl-7" id="name" name="name" formControlName="name" />
+        </div>
+
+      </div>
+      <div class="col-xl-12">
+        <div class="container-flex">
+          <label class="col-xl-5" for="expiration">Expiration Days:</label>
+          <select class="col-xl-7" id="expiration" name="expiration" formControlName="expirationDays">
+            <option value="30">30</option>
+            <option value="90">90</option>
+            <option value="180">180</option>
+            <option value="365">365</option>
+          </select>
+        </div>
+      </div>
+    </div>
+
+    <div *ngIf="apiResponse">
+      <h4>API Response:</h4>
+      <pre>{{ apiResponse | json }}</pre>
+      <p>Store this value somewhere secure! You will not be able to retrieve it.</p>
+    </div>
+
+    <div class="col-xl-12">
+      <button type="button" (click)="generateNewApiKey()">Submit</button>
+    </div>
+
+  </form>
+</app-dynamic-modal>
+<app-dynamic-modal [(isVisible)]="isLatestActivityModalVisible" title="Latest Activity" (closeEvent)="onModalClose()">
+  <div class="table-responsive">
+    <table class="table table-hover">
+      <thead>
+        <tr>
+          <th>Measured</th>
+          <th>Type</th>
+          <th>Value</th>
+        </tr>
+      </thead>
+
+      <tbody>
+        <tr *ngFor="let activity of specificDeviceActivity.dataValues">
+          <td>{{ activity.created }}</td>
+          <td>{{ activity.type }}</td>
+          <td>{{ activity.dataValue }}</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</app-dynamic-modal>

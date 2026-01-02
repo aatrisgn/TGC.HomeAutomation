@@ -1,0 +1,21 @@
+using System.Text.Json;
+using Microsoft.AspNetCore.SignalR;
+using TGC.HomeAutomation.Application.Abstractions;
+
+namespace TGC.HomeAutomation.Infrastructure.SignalR;
+
+internal class SignalRNotificationService : ISignalRNotificationService
+{
+	private readonly IHubContext<AllClientsHub> _hubContext;
+
+	public SignalRNotificationService(IHubContext<AllClientsHub> hubContext)
+	{
+		_hubContext = hubContext;
+	}
+
+	public async Task BroadcastMessageAsync<T>(T payload) where T : class
+	{
+		var serializedPayload = JsonSerializer.Serialize(payload, new JsonSerializerOptions { PropertyNamingPolicy = JsonNamingPolicy.CamelCase });
+		await _hubContext.Clients.All.SendAsync("MeasureMessages", serializedPayload);
+	}
+}

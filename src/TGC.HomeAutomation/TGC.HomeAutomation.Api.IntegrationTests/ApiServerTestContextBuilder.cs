@@ -6,9 +6,9 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.Options;
-using TGC.HomeAutomation.API.Authentication;
 using TGC.HomeAutomation.Api.IntegrationTests.Authentication;
 using TGC.HomeAutomation.Api.IntegrationTests.Tests;
+using TGC.HomeAutomation.Infrastructure.Authentication;
 
 namespace TGC.HomeAutomation.Api.IntegrationTests;
 

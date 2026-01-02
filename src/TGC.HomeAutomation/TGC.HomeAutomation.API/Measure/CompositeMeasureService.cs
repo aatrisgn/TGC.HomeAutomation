@@ -1,8 +1,7 @@
 using TGC.OpenWeatherApi;
 using TGC.AzureTableStorage;
 using TGC.HomeAutomation.API.Device;
-using TGC.HomeAutomation.API.Sensor;
-using TGC.HomeAutomation.API.SignalR;
+using TGC.HomeAutomation.Domain.Constants;
 using TGC.WebApi.Communication;
 
 namespace TGC.HomeAutomation.API.Measure;
@@ -13,7 +12,6 @@ internal class CompositeMeasureService : ICompositeMeasureService
 	private readonly IMeasureTypeConverter _measureTypeConverter;
 	private readonly IOrderedMeasureService _orderedMeasureService;
 	private readonly IAzureTableStorageRepository<OrderedMeasureEntity> _orderedMeasureRepository;
-	private readonly ISignalRNotificationService _notificationService;
 	private readonly IOpenWeatherApiClient _openWeatherApiClient;
 
 	private readonly IAzureTableStorageRepository<MeasureEntity> _measureRepository;
@@ -26,7 +24,6 @@ internal class CompositeMeasureService : ICompositeMeasureService
 		IAzureTableStorageRepository<OrderedMeasureEntity> orderedMeasureRepository,
 		IDeviceService deviceService,
 		IOrderedMeasureService orderedMeasureService,
-		ISignalRNotificationService notificationService,
 		IOpenWeatherApiClient openWeatherApiClient
 		)
 	{
@@ -36,7 +33,6 @@ internal class CompositeMeasureService : ICompositeMeasureService
 		_measureTypeConverter = measureTypeConverter;
 		_deviceService = deviceService;
 		_orderedMeasureService = orderedMeasureService;
-		_notificationService = notificationService;
 		_openWeatherApiClient = openWeatherApiClient;
 	}
 	public async Task<MeasureResponse> GetCurrentMeasureInside(string measureType)
@@ -125,19 +121,6 @@ internal class CompositeMeasureService : ICompositeMeasureService
 		}
 
 		return new MeasureRangeResponse();
-	}
-
-	public async Task AddRead(MeasureRequest request)
-	{
-		await _notificationService.BroadcastMessageAsync(request);
-		ArgumentNullException.ThrowIfNull(request.MacAddress);
-
-		DeviceEntity originDevice = await _deviceService.GetByMacAddress(request.MacAddress);
-
-		ArgumentNullException.ThrowIfNull(originDevice.RowKey);
-
-		var entityMeasure = await _measureTypeConverter.RequestToEntity(request, Guid.Parse(originDevice.RowKey));
-		await _measureRepository.CreateAsync(entityMeasure);
 	}
 
 	public async Task<DeviceOrderedMeasureRangeResponse> GetByDeviceId(Guid deviceId, DateTime startDate, DateTime endDate)
