@@ -23,14 +23,6 @@ public class DeviceService : IDeviceService
 		_orderedMeasureService = orderedMeasureService;
 	}
 
-	public async Task<ApiResult<DeviceResponse?>> GetByIdAsync(Guid id)
-	{
-		var allEntities = await _deviceRepository.GetAllAsync(e => true);
-		var specificEntity = allEntities.SingleOrDefault(e => e.RowKey == id.ToString());
-		var entityResponse = specificEntity == null ? null : DeviceResponse.FromEntity(specificEntity);
-		return entityResponse is null ? ApiResult<DeviceResponse?>.AsNotFound() : ApiResult<DeviceResponse?>.AsOk(entityResponse);
-	}
-
 	public async Task<DeviceEntity> GetByMacAddress(string requestMacAddress)
 	{
 		var entitiyMatch = await _deviceCache.GetEntity(requestMacAddress);
@@ -42,13 +34,6 @@ public class DeviceService : IDeviceService
 		await _deviceRepository.CreateAsync(deviceRequest.ToEntity());
 		var createdDevice = await _deviceRepository.GetSingleAsync(d => d.Name == deviceRequest.Name && d.MacAddress == deviceRequest.MacAddress);
 		return DeviceResponse.FromEntity(createdDevice);
-	}
-
-	public async Task<Guid> DeleteByIdAsync(Guid id)
-	{
-		var allEntities = await _deviceRepository.GetAllAsync(e => true);
-		var specificEntity = allEntities.Single(e => e.RowKey == id.ToString());
-		return await _deviceRepository.DeleteAsync(specificEntity);
 	}
 
 	public async Task<DeviceMeasureTypesResponse> GetAvailableMeasureTypesByDeviceId(Guid id)
