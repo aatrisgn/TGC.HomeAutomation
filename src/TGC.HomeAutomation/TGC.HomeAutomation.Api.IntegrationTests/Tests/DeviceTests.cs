@@ -14,12 +14,163 @@ public class DeviceTests : BaseApiTest
 	{
 		var testContext = _testContext
 			.NewApiServerTextContextBuilder()
-			.ReplacePortalAuthWithEmpty()
+			.ReplacePortalAuthWithStub()
 			.Build();
 
-		var client = testContext.GetClientBuilder().Build();
+		var client = testContext.GetClientBuilder().WithJwtToken().Build();
 
 		await client.Device_GetAllDevicesAsync().AssertOk();
+	}
+
+	[Fact]
+	public async Task WHEN_GettingSingleDeviceById_GIVEN_ValidToken_200IsReturned()
+	{
+		var testContext = _testContext
+			.NewApiServerTextContextBuilder()
+			.ReplacePortalAuthWithStub()
+			.Build();
+
+		var client = testContext.GetClientBuilder().WithJwtToken().Build();
+
+		var deviceRequest = new DeviceRequest
+		{
+			MacAddress = "123456",
+			Name = "TestDevice"
+		};
+
+		var deviceResponse = await client.Device_CreateNewDeviceAsync(deviceRequest).AssertOk();
+
+		await client.Device_GetSingleDeviceByIdAsync(deviceResponse.Result.Id).AssertOk();
+	}
+
+	[Fact]
+	public async Task WHEN_GettingHealthCheckById_GIVEN_ValidToken_404IsReturned()
+	{
+		var testContext = _testContext
+			.NewApiServerTextContextBuilder()
+			.ReplacePortalAuthWithStub()
+			.Build();
+
+		var client = testContext.GetClientBuilder().WithJwtToken().Build();
+
+		var deviceRequest = new DeviceRequest
+		{
+			MacAddress = "123456",
+			Name = "TestDevice"
+		};
+
+		var deviceResponse = await client.Device_CreateNewDeviceAsync(deviceRequest).AssertOk();
+
+		// Currently returns 404 NotFound as per implementation
+		await client.Device_GetHealthCheckByIdAsync(deviceResponse.Result.Id).AssertNotFound();
+	}
+
+	[Fact]
+	public async Task WHEN_GettingAvailableMeasuresByDevice_GIVEN_ValidToken_200IsReturned()
+	{
+		var testContext = _testContext
+			.NewApiServerTextContextBuilder()
+			.ReplacePortalAuthWithStub()
+			.Build();
+
+		var client = testContext.GetClientBuilder().WithJwtToken().Build();
+
+		var deviceRequest = new DeviceRequest
+		{
+			MacAddress = "123456",
+			Name = "TestDevice"
+		};
+
+		var deviceResponse = await client.Device_CreateNewDeviceAsync(deviceRequest).AssertOk();
+
+		await client.Device_GetAvailableMeasuresByDeviceIdAsync(deviceResponse.Result.Id).AssertOk();
+	}
+
+	[Fact]
+	public async Task WHEN_CreatingNewDevice_GIVEN_ValidToken_200IsReturned()
+	{
+		var testContext = _testContext
+			.NewApiServerTextContextBuilder()
+			.ReplacePortalAuthWithStub()
+			.Build();
+
+		var client = testContext.GetClientBuilder().WithJwtToken().Build();
+
+		var deviceRequest = new DeviceRequest
+		{
+			MacAddress = "123456",
+			Name = "TestDevice"
+		};
+
+		await client.Device_CreateNewDeviceAsync(deviceRequest).AssertOk();
+	}
+
+	[Fact]
+	public async Task WHEN_UpdatingDeviceApiKey_GIVEN_ValidToken_200IsReturned()
+	{
+		var testContext = _testContext
+			.NewApiServerTextContextBuilder()
+			.ReplacePortalAuthWithStub()
+			.Build();
+
+		var client = testContext.GetClientBuilder().WithJwtToken().Build();
+
+		var deviceRequest = new DeviceRequest
+		{
+			MacAddress = "123456",
+			Name = "TestDevice"
+		};
+
+		var deviceResponse = await client.Device_CreateNewDeviceAsync(deviceRequest).AssertOk();
+
+		await client.Device_UpdateApiKeyAsync(deviceResponse.Result.Id, new ApiKeyRequest
+		{
+			Name = "TestKey",
+			ExpirationDate = DateOnly.FromDateTime(DateTime.Now.AddDays(1))
+		}).AssertOk();
+	}
+
+	[Fact]
+	public async Task WHEN_UpdatingSingleDevice_GIVEN_ValidToken_400IsReturned()
+	{
+		var testContext = _testContext
+			.NewApiServerTextContextBuilder()
+			.ReplacePortalAuthWithStub()
+			.Build();
+
+		var client = testContext.GetClientBuilder().WithJwtToken().Build();
+
+		var deviceRequest = new DeviceRequest
+		{
+			MacAddress = "123456",
+			Name = "TestDevice"
+		};
+
+		var deviceResponse = await client.Device_CreateNewDeviceAsync(deviceRequest).AssertOk();
+
+		// Currently returns 400 BadRequest as per implementation
+		await client.Device_UpdateSingleDeviceAsync(deviceResponse.Result.Id, deviceRequest).AssertBadRequest();
+	}
+
+	[Fact]
+	public async Task WHEN_DeletingDevice_GIVEN_ValidToken_204IsReturned()
+	{
+		var testContext = _testContext
+			.NewApiServerTextContextBuilder()
+			.ReplacePortalAuthWithStub()
+			.Build();
+
+		var client = testContext.GetClientBuilder().WithJwtToken().Build();
+
+		var deviceRequest = new DeviceRequest
+		{
+			MacAddress = "123456",
+			Name = "TestDevice"
+		};
+
+		var deviceResponse = await client.Device_CreateNewDeviceAsync(deviceRequest).AssertOk();
+
+		await client.Device_DeleteDeviceAsync(deviceResponse.Result.Id).AssertNoContent();
 	}
 
 	[Fact]

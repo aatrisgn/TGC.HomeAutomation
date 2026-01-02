@@ -55,7 +55,7 @@ export class DeviceChartComponent implements OnInit {
 
   fetchDevices() {
     this.deviceClient.getAllDevices().subscribe(data => {
-      this.devices = data;
+      this.devices = data.devices ?? [];
 
       if (this.devices.length > 0) {
         this.selectedDeviceId = this.devices[0].id!;

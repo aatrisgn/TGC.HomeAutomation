@@ -254,7 +254,7 @@ export default class DashAnalyticsComponent {
 
   ngOnInit() {
     this.deviceClient.getAllDevices().subscribe(data => {
-      this.deviceData = data;
+      this.deviceData = data.devices ?? [];
     })
   }
 

@@ -55,7 +55,7 @@ export class TemperatureSummaryComponent {
   };
 
   constructor(private measureClient: MeasureClient) {
-    this.startDate = new Date(this.endDate.getTime() - 24 * 60 * 60 * 1000);
+    this.startDate = new Date(this.endDate.getTime() - 24 * 60 * 60 * 7000);
     this.reloadData();
   }
 

@@ -6,11 +6,13 @@ using Microsoft.OpenApi.Models;
 using TGC.OpenWeatherApi;
 using TGC.AzureTableStorage.Configuration;
 using TGC.AzureTableStorage.IoC;
-using TGC.HomeAutomation.API.Authentication;
 using TGC.HomeAutomation.API.Configuration;
 using TGC.HomeAutomation.API.Device;
 using TGC.HomeAutomation.API.Measure;
-using TGC.HomeAutomation.API.SignalR;
+using TGC.HomeAutomation.Application;
+using TGC.HomeAutomation.Application.Abstractions;
+using TGC.HomeAutomation.Infrastructure;
+using TGC.HomeAutomation.Infrastructure.Authentication;
 
 namespace TGC.HomeAutomation.API;
 
@@ -59,19 +61,33 @@ public static class ServiceCollectionExtensions
 				Description = "ID of device to authorize",
 				Type = SecuritySchemeType.ApiKey
 			});
+
+			options.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
+			{
+				Description = @"JWT Authorization header using the Bearer scheme. \r\n\r\n 
+                      Enter 'Bearer' [space] and then your token in the text input below.
+                      \r\n\r\nExample: 'Bearer 12345abcdef'",
+				Name = "Authorization",
+				In = ParameterLocation.Header,
+				Type = SecuritySchemeType.ApiKey,
+				Scheme = "Bearer"
+			});
+
 			options.OperationFilter<AuthorizationHeaderParameterOperationFilter>();
 		});
 
 		services.AddFeatureManagement();
 
-		services.AddScoped<IDeviceAPIKeyGenerator, DeviceAPIKeyGenerator>();
 		services.AddScoped<IDeviceService, DeviceService>();
 		services.AddScoped<IOrderedMeasureService, OrderedMeasureService>();
 
 		services.AddScoped<ICompositeMeasureService, CompositeMeasureService>();
 		services.AddScoped<IMeasureTypeConverter, MeasureTypeConverter>();
 
-		services.AddScoped<IDeviceCache, DeviceMacAddressCache>();
+		services.AddScoped<IMediator, Mediator>();
+
+		services.RegisterApplicationServices();
+		services.RegisterInfrastructure();
 
 		var isTestDevicesEnabled = configuration.GetValue<bool>("HomeAutomation:Testing:Enabled");
 		var testDeviceCount = configuration.GetValue<int>("HomeAutomation:Testing:TestDevices");
@@ -139,8 +155,6 @@ public static class ServiceCollectionExtensions
 
 		services.AddHostedService<ConsolidationBackgroundWorker>();
 		services.AddHostedService<SystemDeviceSeedingBackgroundWorker>();
-
-		services.ConfigureSignalR();
 
 		return services;
 	}

@@ -2,8 +2,8 @@ using Microsoft.Extensions.Options;
 using TGC.OpenWeatherApi;
 using TGC.AzureTableStorage;
 using TGC.HomeAutomation.API.Configuration;
-using TGC.HomeAutomation.API.Device;
 using TGC.HomeAutomation.API.Sensor;
+using TGC.HomeAutomation.Domain.Constants;
 
 namespace TGC.HomeAutomation.API.Measure;
 

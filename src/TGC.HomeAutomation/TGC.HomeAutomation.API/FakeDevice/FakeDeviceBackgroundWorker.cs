@@ -1,5 +1,7 @@
-﻿using TGC.HomeAutomation.API.Measure;
-using TGC.HomeAutomation.API.Temperature;
+﻿using TGC.HomeAutomation.API.Contracts.Device;
+using TGC.HomeAutomation.API.Measure;
+using TGC.HomeAutomation.Application.Abstractions;
+using TGC.HomeAutomation.Application.Features.Devices.Commands.UpsertApiKeyForDevice;
 
 namespace TGC.HomeAutomation.API.Device;
 
@@ -52,16 +54,18 @@ public class FakeDeviceBackgroundWorker : BackgroundService
 			if (fakeDevice.Id == Guid.Empty)
 			{
 				var deviceService = scope.ServiceProvider.GetRequiredService<IDeviceService>();
+				var apiKeyManager = scope.ServiceProvider.GetRequiredService<IApiKeyManager>();
 
 				var newDeviceRequest = new DeviceRequest { Name = fakeDevice.Name, MacAddress = fakeDevice.MacAddress, };
 
 				var newTestDevice = await deviceService.CreateAsync(newDeviceRequest);
-				var deviceAPIKey = await deviceService.UpsertApiKeyAsync(
-					new ApiKeyRequest
+				var deviceAPIKey = await apiKeyManager.UpsertApiKeyAsync(
+					new UpsertApiKeyForDeviceCommand
 					{
 						Name = fakeDevice.Name,
-						ExpirationDate = DateOnly.FromDateTime(DateTime.Now.AddDays(30))
-					}, newTestDevice.Id);
+						ExpirationDate = DateOnly.FromDateTime(DateTime.Now.AddDays(30)),
+						DeviceId = newTestDevice.Id
+					});
 
 				fakeDevice.Id = newTestDevice.Id;
 				fakeDevice.ApiKey = deviceAPIKey.Secret;
@@ -87,7 +91,14 @@ public class FakeDeviceBackgroundWorker : BackgroundService
 		double randomNumber = _random.NextDouble() * (maxRead - minRead) + minRead;
 		var randomRoundedNumber = Math.Round(randomNumber, 1);
 
-		return new MeasureRequest() { DataValue = randomRoundedNumber, Type = "co2", MacAddress = fakeDevice.MacAddress };
+		var createDeviceMeasureCommand = new MeasureRequest
+		{
+			DataValue = randomRoundedNumber,
+			Type = "co2",
+			MacAddress = fakeDevice.MacAddress
+		};
+
+		return createDeviceMeasureCommand;
 	}
 
 	public MeasureRequest GenerateTemperaturePayload(FakeDataDevice fakeDevice)
@@ -98,7 +109,14 @@ public class FakeDeviceBackgroundWorker : BackgroundService
 		double randomNumber = _random.NextDouble() * (maxRead - minRead) + minRead;
 		var randomRoundedNumber = Math.Round(randomNumber, 1);
 
-		return new MeasureRequest() { DataValue = randomRoundedNumber, Type = "temperature", MacAddress = fakeDevice.MacAddress };
+		var createDeviceMeasureCommand = new MeasureRequest
+		{
+			DataValue = randomRoundedNumber,
+			Type = "temperature",
+			MacAddress = fakeDevice.MacAddress
+		};
+
+		return createDeviceMeasureCommand;
 	}
 
 	public MeasureRequest GenerateHumidityPayload(FakeDataDevice fakeDevice)
@@ -109,7 +127,14 @@ public class FakeDeviceBackgroundWorker : BackgroundService
 		double randomNumber = _random.NextDouble() * (maxRead - minRead) + minRead;
 		var randomRoundedNumber = Math.Round(randomNumber, 1);
 
-		return new MeasureRequest() { DataValue = randomRoundedNumber, Type = "humidity", MacAddress = fakeDevice.MacAddress };
+		var createDeviceMeasureCommand = new MeasureRequest
+		{
+			DataValue = randomRoundedNumber,
+			Type = "humidity",
+			MacAddress = fakeDevice.MacAddress
+		};
+
+		return createDeviceMeasureCommand;
 	}
 
 	private static string GenerateRandomMacAddress()

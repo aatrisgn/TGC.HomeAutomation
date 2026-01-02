@@ -28,6 +28,13 @@ internal static class ApiResponseExtensions
 
 	public static Task<ApiException> AssertNotFound<T>(this Task<SwaggerResponse<T>> request)
 		=> AssertError(request, HttpStatusCode.NotFound);
+
+	public static Task<ApiException> AssertBadRequest(this Task<SwaggerResponse> request)
+		=> AssertError(request, HttpStatusCode.BadRequest);
+
+	public static Task<ApiException> AssertBadRequest<T>(this Task<SwaggerResponse<T>> request)
+		=> AssertError(request, HttpStatusCode.BadRequest);
+
 	public static Task<ApiException> AssertForbidden<T>(this Task<SwaggerResponse<T>> request)
 		=> AssertError(request, HttpStatusCode.Forbidden);
 

@@ -25,7 +25,7 @@ export class DeviceClient {
         this.baseUrl = baseUrl ?? "";
     }
 
-    getAllDevices(): Observable<DeviceResponse[]> {
+    getAllDevices(): Observable<DeviceCollectionResponse> {
         let url_ = this.baseUrl + "/api/devices";
         url_ = url_.replace(/[?&]$/, "");
 
@@ -44,14 +44,14 @@ export class DeviceClient {
                 try {
                     return this.processGetAllDevices(response_ as any);
                 } catch (e) {
-                    return _observableThrow(e) as any as Observable<DeviceResponse[]>;
+                    return _observableThrow(e) as any as Observable<DeviceCollectionResponse>;
                 }
             } else
-                return _observableThrow(response_) as any as Observable<DeviceResponse[]>;
+                return _observableThrow(response_) as any as Observable<DeviceCollectionResponse>;
         }));
     }
 
-    protected processGetAllDevices(response: HttpResponseBase): Observable<DeviceResponse[]> {
+    protected processGetAllDevices(response: HttpResponseBase): Observable<DeviceCollectionResponse> {
         const status = response.status;
         const responseBlob =
             response instanceof HttpResponse ? response.body :
@@ -62,14 +62,7 @@ export class DeviceClient {
             return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
             let result200: any = null;
             let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            if (Array.isArray(resultData200)) {
-                result200 = [] as any;
-                for (let item of resultData200)
-                    result200!.push(DeviceResponse.fromJS(item));
-            }
-            else {
-                result200 = null as any;
-            }
+            result200 = DeviceCollectionResponse.fromJS(resultData200);
             return _observableOf(result200);
             }));
         } else if (status === 401) {
@@ -1181,11 +1174,11 @@ export class MeasureClient {
         return _observableOf(null as any);
     }
 
-    create(request: MeasureRequest): Observable<void> {
+    create(measureRequest: MeasureRequest): Observable<void> {
         let url_ = this.baseUrl + "/api/measure/inside";
         url_ = url_.replace(/[?&]$/, "");
 
-        const content_ = JSON.stringify(request);
+        const content_ = JSON.stringify(measureRequest);
 
         let options_ : any = {
             body: content_,
@@ -1310,6 +1303,50 @@ export interface IProblemDetails {
     instance?: string | undefined;
 
     [key: string]: any;
+}
+
+export class DeviceCollectionResponse implements IDeviceCollectionResponse {
+    devices?: DeviceResponse[];
+
+    constructor(data?: IDeviceCollectionResponse) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (this as any)[property] = (data as any)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            if (Array.isArray(_data["devices"])) {
+                this.devices = [] as any;
+                for (let item of _data["devices"])
+                    this.devices!.push(DeviceResponse.fromJS(item));
+            }
+        }
+    }
+
+    static fromJS(data: any): DeviceCollectionResponse {
+        data = typeof data === 'object' ? data : {};
+        let result = new DeviceCollectionResponse();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        if (Array.isArray(this.devices)) {
+            data["devices"] = [];
+            for (let item of this.devices)
+                data["devices"].push(item ? item.toJSON() : undefined as any);
+        }
+        return data;
+    }
+}
+
+export interface IDeviceCollectionResponse {
+    devices?: DeviceResponse[];
 }
 
 export class DeviceResponse implements IDeviceResponse {

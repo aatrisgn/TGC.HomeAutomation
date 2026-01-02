@@ -1,16 +1,22 @@
+using System.Net;
 using Microsoft.AspNetCore.Mvc;
-using TGC.HomeAutomation.API.Authentication;
 using TGC.HomeAutomation.API.Measure;
+using TGC.HomeAutomation.Application.Abstractions;
+using TGC.HomeAutomation.Application.Features.Measures.Commands.CreateDeviceMeasure;
+using TGC.HomeAutomation.Infrastructure.Authentication;
+using TGC.WebApi.Communication;
 
 namespace TGC.HomeAutomation.API.Controllers;
 
 public class MeasureController : HAControllerBase
 {
 	private readonly ICompositeMeasureService _measureService;
+	private readonly IMediator _mediator;
 
-	public MeasureController(ICompositeMeasureService measureService)
+	public MeasureController(ICompositeMeasureService measureService, IMediator mediator)
 	{
 		_measureService = measureService;
+		_mediator = mediator;
 	}
 
 	[HttpGet]
@@ -63,11 +69,13 @@ public class MeasureController : HAControllerBase
 	}
 
 	[HttpPost]
-	[APIKeyAuthorize]
+	[ApiKeyAuthorize]
 	[Route("measure/inside")]
 	[ProducesResponseType(StatusCodes.Status200OK)]
-	public async Task Create([FromBody] MeasureRequest request)
+	public async Task<IActionResult> Create([FromBody] MeasureRequest measureRequest)
 	{
-		await _measureService.AddRead(request);
+		var command = measureRequest.ToCommand();
+		await _mediator.HandleCommandAsync<CreateDeviceMeasureCommand, CreateDeviceMeasureResponse>(command);
+		return ApiResult.FromStatusCode(HttpStatusCode.OK).ToActionResult();
 	}
 }

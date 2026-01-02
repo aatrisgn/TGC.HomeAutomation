@@ -1,5 +1,6 @@
 ﻿using TGC.HomeAutomation.API.IntegrationTests.Generated;
 using TGC.HomeAutomation.Api.IntegrationTests.TestClient;
+using MeasureRequest = TGC.HomeAutomation.API.IntegrationTests.Generated.MeasureRequest;
 
 namespace TGC.HomeAutomation.Api.IntegrationTests.Tests;
 
@@ -183,6 +184,117 @@ public class MeasureTests : BaseApiTest
 
 		var client = testContext.GetClientBuilder().Build();
 		await client.Measure_CreateAsync(new MeasureRequest()).AssertUnauthorized();
+	}
+
+	[Fact]
+	public async Task WHEN_GetCurrentInsideMeasure_GIVEN_ValidToken_200IsReturned()
+	{
+		var testContext = _testContext
+			.NewApiServerTextContextBuilder()
+			.ReplacePortalAuthWithStub()
+			.Build();
+
+		var client = testContext.GetClientBuilder().WithJwtToken().Build();
+
+		await client.Measure_GetCurrentInsideAsync("Temperature").AssertOk();
+	}
+
+	[Fact]
+	public async Task WHEN_GetCurrentOutside_GIVEN_ValidToken_200IsReturned()
+	{
+		var testContext = _testContext
+			.NewApiServerTextContextBuilder()
+			.ReplacePortalAuthWithStub()
+			.Build();
+
+		var client = testContext.GetClientBuilder().WithJwtToken().Build();
+
+		await client.Measure_GetCurrentOutsideAsync("Temperature").AssertOk();
+	}
+
+	[Fact]
+	public async Task WHEN_GetMeasureByDate_GIVEN_ValidToken_200IsReturned()
+	{
+		var testContext = _testContext
+			.NewApiServerTextContextBuilder()
+			.ReplacePortalAuthWithStub()
+			.Build();
+
+		var client = testContext.GetClientBuilder().WithJwtToken().Build();
+
+		var startDate = DateTime.Now.AddDays(-1);
+		var endDate = DateTime.Now;
+
+		await client.Measure_GetMeasuresByDateAsync("Temperature", startDate, endDate).AssertOk();
+	}
+
+	[Fact]
+	public async Task WHEN_GetLatestActivityByDeviceId_GIVEN_ValidToken_200IsReturned()
+	{
+		var testContext = _testContext
+			.NewApiServerTextContextBuilder()
+			.ReplacePortalAuthWithStub()
+			.Build();
+
+		var client = testContext.GetClientBuilder().WithJwtToken().Build();
+
+		var deviceRequest = new DeviceRequest
+		{
+			MacAddress = "123456",
+			Name = "TestDevice"
+		};
+
+		var deviceResponse = await client.Device_CreateNewDeviceAsync(deviceRequest).AssertOk();
+
+		await client.Measure_GetLatestActivityByDeviceIdAsync(deviceResponse.Result.Id).AssertOk();
+	}
+
+	[Fact]
+	public async Task WHEN_GetMeasuresByDeviceIdAndDate_GIVEN_ValidToken_200IsReturned()
+	{
+		var testContext = _testContext
+			.NewApiServerTextContextBuilder()
+			.ReplacePortalAuthWithStub()
+			.Build();
+
+		var client = testContext.GetClientBuilder().WithJwtToken().Build();
+
+		var deviceRequest = new DeviceRequest
+		{
+			MacAddress = "123456",
+			Name = "TestDevice"
+		};
+
+		var deviceResponse = await client.Device_CreateNewDeviceAsync(deviceRequest).AssertOk();
+
+		var startDate = DateTime.Now.AddDays(-1);
+		var endDate = DateTime.Now;
+
+		await client.Measure_GetMeasuresByDeviceIdAndDateAsync(deviceResponse.Result.Id, startDate, endDate).AssertOk();
+	}
+
+	[Fact]
+	public async Task WHEN_GetMeasuresByDeviceIdMeasureTypeAndDate_GIVEN_ValidToken_200IsReturned()
+	{
+		var testContext = _testContext
+			.NewApiServerTextContextBuilder()
+			.ReplacePortalAuthWithStub()
+			.Build();
+
+		var client = testContext.GetClientBuilder().WithJwtToken().Build();
+
+		var deviceRequest = new DeviceRequest
+		{
+			MacAddress = "123456",
+			Name = "TestDevice"
+		};
+
+		var deviceResponse = await client.Device_CreateNewDeviceAsync(deviceRequest).AssertOk();
+
+		var startDate = DateTime.Now.AddDays(-1);
+		var endDate = DateTime.Now;
+
+		await client.Measure_GetMeasuresByDeviceIdMeasureTypeAndDateAsync(deviceResponse.Result.Id, "Temperature", startDate, endDate).AssertOk();
 	}
 
 	[Fact]
