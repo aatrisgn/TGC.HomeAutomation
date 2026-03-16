@@ -22,7 +22,7 @@ export class DeviceLookupService {
     return call;
   }
 
-  async getAllDevicesCached():DeviceResponse[] {
+  async getAllDevicesCached():Promise<DeviceResponse[]> {
 
     if(this.internalDeviceCache == undefined){
       var allData = await firstValueFrom(this.deviceClient.getAllDevices());
