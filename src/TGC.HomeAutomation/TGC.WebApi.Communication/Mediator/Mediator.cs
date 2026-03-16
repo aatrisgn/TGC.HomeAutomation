@@ -1,4 +1,5 @@
 ﻿using TGC.HomeAutomation.Application.Abstractions;
+using TGC.WebApi.Communication.Mediator;
 
 namespace TGC.HomeAutomation.API;
 
@@ -24,7 +25,7 @@ public class Mediator : IMediator
 	{
 		var handler = _queryHandlers.Single(h => h.Accepts(command));
 		var result = await handler.Handle<TQuery>(command);
-		return (TQueryResponse)result;
+		return (TQueryResponse)result.Value;
 	}
 
 	// Right now the code above could most likely be more DRY. But it's good enough for now.

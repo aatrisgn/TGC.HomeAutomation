@@ -27,20 +27,6 @@ public class OrderedMeasureService : IOrderedMeasureService
 		};
 	}
 
-	public async Task<IEnumerable<string>> GetUniqueMeasureTypesByDeviceId(Guid id)
-	{
-		var allOrderedMeasures = await _orderedMeasureRepository.GetAllAsync(d => d.DeviceId == id);
-
-		if (allOrderedMeasures is null || !allOrderedMeasures.Any())
-		{
-			return [];
-		}
-
-		var distinctValues = allOrderedMeasures.Select(m => m.Type);
-
-		return distinctValues.Distinct() ?? [];
-	}
-
 	public async Task<DeviceOrderedMeasureRangeResponse> GetSpecificMeasuresByDeviceId(string measureType, Guid deviceId, DateTime startDate, DateTime endDate)
 	{
 		var locatedOrderedMeasures = await _orderedMeasureRepository

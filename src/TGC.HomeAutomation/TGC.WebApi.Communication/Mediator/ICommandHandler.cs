@@ -1,3 +1,5 @@
+using TGC.WebApi.Communication.Mediator;
+
 namespace TGC.HomeAutomation.Application.Abstractions;
 
 public interface ICommandHandler

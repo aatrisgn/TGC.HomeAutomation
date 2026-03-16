@@ -1,0 +1,15 @@
+<app-card cardTitle="Temp. & Hum. (Outside & Inside)" [options]="false">
+  <div class="row">
+    <div class="col-md-3">
+      <p>Start date:</p>
+      <app-date-time [(selectedDate)]="startDate" (onChange)="onDateChange($event)" />
+    </div>
+    <div class="col-md-3">
+      <p>End date:</p>
+      <app-date-time [(selectedDate)]="endDate" (onChange)="onDateChange($event)" />
+    </div>
+  </div>
+  <div>
+    <app-line-chart title="All Device Data" [series$]="deviceData$"/>
+  </div>
+</app-card>

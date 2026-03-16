@@ -22,14 +22,14 @@ public class DeviceLookup : IDeviceLookup
 		return allEntities;
 	}
 
-	public async Task<DeviceEntity> GetByIdAsync(Guid id)
+	public async Task<DeviceEntity?> GetByIdAsync(Guid id)
 	{
 		var allEntities = await _deviceRepository.GetAllAsync(e => true);
 		var specificEntity = allEntities.SingleOrDefault(e => e.RowKey == id.ToString());
 		return specificEntity;
 	}
 	
-	public async Task<DeviceEntity> GetByMacAddress(string requestMacAddress)
+	public async Task<DeviceEntity?> GetByMacAddress(string requestMacAddress)
 	{
 		var entitiyMatch = await _deviceCache.GetEntity(requestMacAddress);
 		return entitiyMatch;

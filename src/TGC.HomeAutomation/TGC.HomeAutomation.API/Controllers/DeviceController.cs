@@ -2,10 +2,12 @@ using Microsoft.AspNetCore.Mvc;
 using TGC.HomeAutomation.API.Contracts.Device;
 using TGC.HomeAutomation.API.Device;
 using TGC.HomeAutomation.Application.Abstractions;
+using TGC.HomeAutomation.Application.Features.Devices.Commands.CreateDevice;
 using TGC.HomeAutomation.Application.Features.Devices.Commands.DeleteDevice;
 using TGC.HomeAutomation.Application.Features.Devices.Commands.UpsertApiKeyForDevice;
 using TGC.HomeAutomation.Application.Features.Devices.Queries.GetAllDevices;
 using TGC.HomeAutomation.Application.Features.Devices.Queries.GetDeviceById;
+using TGC.HomeAutomation.Application.Features.Measures.Queries.GetMeasuresByDeviceId;
 using TGC.WebApi.Communication;
 
 namespace TGC.HomeAutomation.API.Controllers;
@@ -63,8 +65,12 @@ public class DeviceController : HAControllerBase
 	[ProducesResponseType(StatusCodes.Status404NotFound)]
 	public async Task<IActionResult> GetAvailableMeasuresByDeviceId(Guid id)
 	{
-		var deviceMeasureTypesResponse = await _deviceService.GetAvailableMeasureTypesByDeviceId(id);
-		return deviceMeasureTypesResponse != null ? Ok(deviceMeasureTypesResponse) : NotFound();
+		var query = new GetMeasuresByDeviceIdQuery(id);
+
+		var result = await _mediator.HandleQueryAsync<GetMeasuresByDeviceIdQuery, GetMeasuresByDeviceIdResponse>(query);
+		var response = DeviceMeasureTypesResponse.FromQueryResponse(result);
+
+		return ApiResult<DeviceMeasureTypesResponse>.AsOk(response).ToActionResult();
 	}
 
 	[HttpPost]
@@ -73,8 +79,9 @@ public class DeviceController : HAControllerBase
 	[ProducesResponseType(StatusCodes.Status400BadRequest)]
 	public async Task<DeviceResponse> CreateNewDevice([FromBody] DeviceRequest deviceRequest)
 	{
-		var newDevice = await _deviceService.CreateAsync(deviceRequest);
-		return newDevice;
+		var command = deviceRequest.ToCommand();
+		var result = await _mediator.HandleCommandAsync<CreateDeviceCommand, CreateDeviceResponse>(command);
+		return DeviceResponse.FromCommandResponse(result);
 	}
 
 	[HttpPut]

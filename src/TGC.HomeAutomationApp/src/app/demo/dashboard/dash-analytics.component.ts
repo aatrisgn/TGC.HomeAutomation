@@ -13,10 +13,11 @@ import { DeviceClient, DeviceResponse, MeasureClient } from 'src/app/generated/a
 import { DeviceTableComponent } from "../../components/device-table/device-table.component";
 import { TemperatureSummaryComponent } from "../../components/temperature-summary/temperature-summary.component";
 import { DeviceChartComponent } from "../../components/single-device-chart/single-device-chart.component";
+import { AllDeviceDataView } from "src/app/views/all-device-data-view/all-device-data-view.component";
 @Component({
   selector: 'app-dash-analytics',
   standalone: true,
-  imports: [SharedModule, NgApexchartsModule, DeviceTableComponent, DeviceTableComponent, TemperatureSummaryComponent, DeviceChartComponent],
+  imports: [SharedModule, NgApexchartsModule, DeviceTableComponent, DeviceTableComponent, TemperatureSummaryComponent, DeviceChartComponent, AllDeviceDataView],
   providers: [DeviceClient, MeasureClient],
   templateUrl: './dash-analytics.component.html',
   styleUrls: ['./dash-analytics.component.scss']

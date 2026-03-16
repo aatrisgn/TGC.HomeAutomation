@@ -1,4 +1,5 @@
 using TGC.HomeAutomation.Application.Abstractions;
+using TGC.WebApi.Communication.Mediator;
 
 namespace TGC.HomeAutomation.Application.Features.Devices.Queries.GetDeviceById;
 
@@ -11,10 +12,10 @@ public class GetDeviceByIdHandler : BaseQueryHandler<GetDeviceByIdQuery>, IQuery
 		_deviceLookup = deviceLookup;
 	}
 	
-	public async Task<IQueryResponse> Handle<TQuery>(TQuery command) where TQuery : IQuery
+	public async Task<IResult<IQueryResponse>> Handle<TQuery>(TQuery command) where TQuery : IQuery
 	{
 		var castedCommand = GetTypedQuery(command);
 		var locatedEntity = await _deviceLookup.GetByIdAsync(castedCommand.DeviceId);
-		return GetDeviceByIdResponse.FromEntity(locatedEntity);
+		return Result<GetDeviceByIdResponse>.Success(GetDeviceByIdResponse.FromEntity(locatedEntity));
 	}
 }

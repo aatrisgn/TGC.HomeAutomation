@@ -1,5 +1,4 @@
 ﻿using TGC.AzureTableStorage;
-using TGC.HomeAutomation.API.Contracts.Device;
 using TGC.HomeAutomation.API.Measure;
 using TGC.HomeAutomation.API.Sensor;
 using TGC.HomeAutomation.Application.Abstractions;
@@ -27,19 +26,6 @@ public class DeviceService : IDeviceService
 	{
 		var entitiyMatch = await _deviceCache.GetEntity(requestMacAddress);
 		return entitiyMatch;
-	}
-
-	public async Task<DeviceResponse> CreateAsync(DeviceRequest deviceRequest)
-	{
-		await _deviceRepository.CreateAsync(deviceRequest.ToEntity());
-		var createdDevice = await _deviceRepository.GetSingleAsync(d => d.Name == deviceRequest.Name && d.MacAddress == deviceRequest.MacAddress);
-		return DeviceResponse.FromEntity(createdDevice);
-	}
-
-	public async Task<DeviceMeasureTypesResponse> GetAvailableMeasureTypesByDeviceId(Guid id)
-	{
-		var allMeasures = await _orderedMeasureService.GetUniqueMeasureTypesByDeviceId(id);
-		return new DeviceMeasureTypesResponse { DeviceId = id, MeasureTypes = allMeasures };
 	}
 
 	public Task<ApiResult> CheckDeviceHealthAsync(Guid id)

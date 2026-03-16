@@ -2,7 +2,7 @@ using TGC.HomeAutomation.Application.Abstractions;
 
 namespace TGC.HomeAutomation.Application.Features.Devices.Queries.GetDeviceById;
 
-public class GetDeviceByIdQuery : IQuery
+public class GetDeviceByIdQuery : BaseQuery
 {
 	public Guid DeviceId { get; }
 

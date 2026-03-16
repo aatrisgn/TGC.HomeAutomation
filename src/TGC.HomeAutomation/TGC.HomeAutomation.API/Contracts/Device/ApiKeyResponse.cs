@@ -13,8 +13,8 @@ public class ApiKeyResponse
 		return new ApiKeyResponse
 		{
 			ExpirationDate = result.ExpirationDate,
-			Name = result.Name,
-			Secret = result.Secret
+			Name = result.Name ?? string.Empty,
+			Secret = result.Secret ?? string.Empty
 		};
 	}
 }

@@ -1,6 +1,6 @@
-﻿using TGC.HomeAutomation.API.Contracts.Device;
-using TGC.HomeAutomation.API.Measure;
+﻿using TGC.HomeAutomation.API.Measure;
 using TGC.HomeAutomation.Application.Abstractions;
+using TGC.HomeAutomation.Application.Features.Devices.Commands.CreateDevice;
 using TGC.HomeAutomation.Application.Features.Devices.Commands.UpsertApiKeyForDevice;
 
 namespace TGC.HomeAutomation.API.Device;
@@ -53,12 +53,12 @@ public class FakeDeviceBackgroundWorker : BackgroundService
 
 			if (fakeDevice.Id == Guid.Empty)
 			{
-				var deviceService = scope.ServiceProvider.GetRequiredService<IDeviceService>();
+				var mediator = scope.ServiceProvider.GetRequiredService<IMediator>();
 				var apiKeyManager = scope.ServiceProvider.GetRequiredService<IApiKeyManager>();
 
-				var newDeviceRequest = new DeviceRequest { Name = fakeDevice.Name, MacAddress = fakeDevice.MacAddress, };
+				var createDeviceCommand = new CreateDeviceCommand(fakeDevice.Name, fakeDevice.MacAddress);
 
-				var newTestDevice = await deviceService.CreateAsync(newDeviceRequest);
+				var newTestDevice = await mediator.HandleCommandAsync<CreateDeviceCommand, CreateDeviceResponse>(createDeviceCommand);
 				var deviceAPIKey = await apiKeyManager.UpsertApiKeyAsync(
 					new UpsertApiKeyForDeviceCommand
 					{

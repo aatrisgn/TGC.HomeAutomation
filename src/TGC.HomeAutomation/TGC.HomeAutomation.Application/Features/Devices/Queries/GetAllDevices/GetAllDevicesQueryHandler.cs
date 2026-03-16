@@ -1,4 +1,5 @@
 using TGC.HomeAutomation.Application.Abstractions;
+using TGC.WebApi.Communication.Mediator;
 
 namespace TGC.HomeAutomation.Application.Features.Devices.Queries.GetAllDevices;
 
@@ -11,7 +12,7 @@ public class GetAllDevicesQueryHandler : BaseQueryHandler<GetAllDevicesQuery>, I
 		_deviceLookup = deviceLookup;
 	}
 	
-	public async Task<IQueryResponse> Handle<TQuery>(TQuery command)
+	public async Task<IResult<IQueryResponse>> Handle<TQuery>(TQuery command)
 		where TQuery : IQuery
 	{
 		var allDevices = await _deviceLookup.GetAllAsync();
@@ -25,6 +26,6 @@ public class GetAllDevicesQueryHandler : BaseQueryHandler<GetAllDevicesQuery>, I
 		
 		var response = new GetAllDevicesResponse { Devices = deviceDtos };
 
-		return response;
+		return Result<GetAllDevicesResponse>.Success(response);
 	}
 }

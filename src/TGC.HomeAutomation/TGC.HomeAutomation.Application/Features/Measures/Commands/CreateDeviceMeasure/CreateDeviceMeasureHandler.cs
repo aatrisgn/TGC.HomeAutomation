@@ -2,6 +2,7 @@ using TGC.AzureTableStorage;
 using TGC.HomeAutomation.API.Measure;
 using TGC.HomeAutomation.API.Sensor;
 using TGC.HomeAutomation.Application.Abstractions;
+using TGC.WebApi.Communication.Mediator;
 
 namespace TGC.HomeAutomation.Application.Features.Measures.Commands.CreateDeviceMeasure;
 

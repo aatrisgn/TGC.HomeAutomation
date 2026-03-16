@@ -1,9 +1,10 @@
 using TGC.HomeAutomation.API.Sensor;
 using TGC.HomeAutomation.Application.Abstractions;
+using TGC.WebApi.Communication.Mediator;
 
 namespace TGC.HomeAutomation.Application.Features.Devices.Queries.GetDeviceById;
 
-public class GetDeviceByIdResponse : IQueryResponse
+public class GetDeviceByIdResponse : BaseResponse, IQueryResponse
 {
 	public string Name { get; init; }
 	public string MacAddress { get; init; }

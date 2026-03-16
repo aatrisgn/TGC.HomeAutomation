@@ -12,6 +12,7 @@
         <option *ngFor="let availableMeasureType of availableMeasureTypes" [value]="availableMeasureType">{{ availableMeasureType }}</option>
       </select>
       <button (click)="keepData()" >Keep data</button>
+      <button (click)="clearMultiDeviceData()">Clear Multi-Device Data</button>
     </div>
     <div class="col-md-3">
       <p>Start date:</p>
@@ -23,6 +24,6 @@
     </div>
   </div>
   <div>
-    <app-line-chart [chartData]="getCurrentDataSelection()"/>
+    <app-line-chart title="Individual" [series$]="individualData$"/>
   </div>
 </app-card>

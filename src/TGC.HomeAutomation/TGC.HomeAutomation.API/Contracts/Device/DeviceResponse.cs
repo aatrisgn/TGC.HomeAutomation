@@ -1,4 +1,5 @@
 using TGC.HomeAutomation.API.Sensor;
+using TGC.HomeAutomation.Application.Features.Devices.Commands.CreateDevice;
 using TGC.HomeAutomation.Application.Features.Devices.Queries.GetDeviceById;
 
 namespace TGC.HomeAutomation.API.Contracts.Device;
@@ -19,6 +20,19 @@ public record DeviceResponse
 	}
 
 	public static DeviceResponse FromQueryResponse(GetDeviceByIdResponse response)
+	{
+		ArgumentNullException.ThrowIfNull(response);
+
+		return new DeviceResponse
+		{
+			Created = response.Created,
+			Id = response.Id,
+			MacAddress = response.MacAddress,
+			Name = response.Name
+		};
+	}
+
+	public static DeviceResponse FromCommandResponse(CreateDeviceResponse response)
 	{
 		ArgumentNullException.ThrowIfNull(response);
 
