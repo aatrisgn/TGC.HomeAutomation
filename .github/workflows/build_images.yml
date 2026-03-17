@@ -36,6 +36,12 @@ jobs:
     steps:
     - uses: actions/checkout@v3
 
+    - name: Set up QEMU
+      uses: docker/setup-qemu-action@v3
+
+    - name: Set up Docker Buildx
+      uses: docker/setup-buildx-action@v3
+
     - name: Setup NuGet
       uses: NuGet/setup-nuget@v1.0.5
 
@@ -63,8 +69,10 @@ jobs:
         tenant-id: ${{ secrets.HOMEAUTOMATION_DEV_TENANT_ID }}
         subscription-id: ${{ secrets.HOMEAUTOMATION_DEV_SUBSCRIPTION_ID }}
 
+    - name: Login to ACR
+      run: az acr login --name tgclzdevacr.azurecr.io
+
     - run: |
-        az acr login --name tgclzdevacr.azurecr.io
         cd src/TGC.HomeAutomation
 
         docker build . -t $acr_registry/$image_name:${{ github.sha }}
@@ -75,12 +83,12 @@ jobs:
       name: "Build and publish API to ACR"
 
     - run: |
-        az acr login --name tgclzdevacr.azurecr.io
         cd src/TGC.HomeAutomationApp
 
-        docker build . -t $acr_registry/$app_image_name:${{ github.sha }}
-        docker build . -t $acr_registry/$app_image_name:latest
+        docker buildx build . \
+          --platform linux/amd64,linux/arm64 \
+          --tag $acr_registry/$app_image_name:${{ github.sha }} \
+          --tag $acr_registry/$app_image_name:latest \
+          --push
 
-        docker push $acr_registry/$app_image_name:${{ github.sha }}
-        docker push $acr_registry/$app_image_name:latest
       name: "Build and publish NG App to ACR"

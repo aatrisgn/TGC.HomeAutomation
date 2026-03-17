@@ -107,7 +107,6 @@ export class DeviceChartComponent implements OnInit {
 
   clearMultiDeviceData(): void {
     this.multiDeviceData = {};
-    console.log('Cleared multi-device data');
   }
 
   groupMeasurementsByType(measurements: OrderedMeasureResponse[]):LineChartData[] {
